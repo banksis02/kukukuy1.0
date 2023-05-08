@@ -4344,5 +4344,6 @@ coroutine.resume(coroutine.create(function()
 	end
 end))
 
+setfpscap(5)
 print('Loader Suscuess!!')
 --#endregion 
