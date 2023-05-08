@@ -4344,16 +4344,5 @@ coroutine.resume(coroutine.create(function()
 	end
 end))
 
-function autoload()
-		pcall(function()
-				if exec == "Synapse X" then
-						syn.queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/iwhiteiwhite/iwhiteiwhite/main/ldScr.lua'))()")
-					else
-						queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/iwhiteiwhite/iwhiteiwhite/main/ldScr.lua'))()")
-				end
-		end)
-end
-autoload()
-
 print('Loader Suscuess!!')
 --#endregion 
