@@ -2659,7 +2659,7 @@ function webhook_finish()
 		getgenv().AutoStart = false
 		updatejson()
 		task.wait(2)
-		Nexus:SetAutoRelaunch(false)
+		--Nexus:SetAutoRelaunch(false)
 		task.wait(2)
 		game:Shutdown()
   end)
