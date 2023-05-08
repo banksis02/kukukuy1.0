@@ -3913,7 +3913,7 @@ coroutine.resume(coroutine.create(function()
 		local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
 		if game.PlaceId ~= 8304191830 then
 			--#region Teleport Gem
-			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" and _wave.Value >= 10  then
+			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" and _wave.Value >= 25  then
 				if tonumber(getgenv().textGem) <= 1 then
 					pcall(function () webhook_finish()  end)
 					task.wait(3)
