@@ -2421,52 +2421,62 @@ function update_data()
 	--
 	--tostring(Table_All_Items_New_data["six_eyes"]['Name']) .. ": x" .. tostring(Table_All_Items_New_data["six_eyes"]['Count'] or 0)
 	--Table_All_Items_New_data["six_eyes"]['Count'] or 0
-	if getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Alien Scouter" then
-		--getgenv().textGem = (getgenv().textGem - alien_scouter)
-		if tonumber(getgenv().textGem) >= alien_scouters then
-			pcall(function () webhook_finish() end)
+
+	for name, amount in pairs(itemDifference) do
+		if getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Alien Scouter" and name == "west_city_frieza_item" then
+			getgenv().textGem = (tonumber(getgenv().textGem) - amount)
+			if tonumber(getgenv().textGem) <= 1 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
 			updatejson()
-			return
-		end
-		updatejson()
-		task.wait(1)
-	elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Tomoe" then
-		--getgenv().textGem = (getgenv().textGem - tomoe)
-		if tonumber(getgenv().textGem) >= tomoe then
-			pcall(function () webhook_finish() end)
+			task.wait(1)
+			break
+		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Tomoe" and name == "uchiha_item" then
+			getgenv().textGem = (tonumber(getgenv().textGem) - amount)
+			if tonumber(getgenv().textGem) <= 1 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
 			updatejson()
-			return
-		end
-		updatejson()
-		task.wait(1)
-	elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Entertain Shard" then
-		--getgenv().textGem = (getgenv().textGem - entertainShard)
-		if tonumber(getgenv().textGem) >= entertainShard then
-			pcall(function () webhook_finish() end)
+			task.wait(1)
+			break
+		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Entertain Shard" and name == "entertainment_district_item" then
+			getgenv().textGem = (tonumber(getgenv().textGem) - amount)
+			if tonumber(getgenv().textGem) <= 1 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
 			updatejson()
-			return
-		end
-		updatejson()
-		task.wait(1)
-	elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Demon Shard" then
-		--getgenv().textGem = (getgenv().textGem - demonShard)
-		if tonumber(getgenv().textGem) >= demonShard then
-			pcall(function () webhook_finish() end)
+			task.wait(1)
+			break
+		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Demon Shard" and name == "april_symbol" then
+			getgenv().textGem = (tonumber(getgenv().textGem) - amount)
+			if tonumber(getgenv().textGem) <= 1 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
 			updatejson()
-			return
-		end
-		updatejson()
-		task.wait(1)
-	elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Relic Shard" then
-		--getgenv().textGem = (getgenv().textGem - relicShard)
-		if tonumber(getgenv().textGem) >= relicShard then
-			pcall(function () webhook_finish() end)
+			task.wait(1)
+			break
+		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Relic Shard" and name == "relic_shard" then
+			getgenv().textGem = (tonumber(getgenv().textGem) - amount)
+			if tonumber(getgenv().textGem) <= 0 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
 			updatejson()
-			return
+			task.wait(1)
+			break
 		end
-		updatejson()
-		task.wait(1)
 	end
+
+	
 
 	print('Log 6')
 
@@ -2698,7 +2708,7 @@ function PjxInit()
 		getgenv().autoSelectItem = data.autoSelectItem or "เลือกไอเท็มเรท"
 		getgenv().dreander3d = data.dreander3d or false
 		getgenv().autoportal = data.autoportal or false
-		getgenv().jobID = data.jobID or ""
+		getgenv().jobID = data.jobID or nil
 		getgenv().textGem = data.textGem or "0"
 		getgenv().resultGems = data.resultGems or 0
 		getgenv().BattlePass = data.BattlePass or 0
@@ -3186,7 +3196,7 @@ do
 
 		otherSetting:AddLabel("ระบบรีห้อง (หรือกด F5 เพื่อรีห้อง)")
 		otherSetting:AddButton("รีห้อง", function()
-			if getgenv().jobID ~= "" then
+			if getgenv().jobID ~= nil then
 				game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
 			else
 				game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
@@ -3194,7 +3204,7 @@ do
 		end)
 		function onKeyPress(inputObject, gameProcessedEvent)
 			if inputObject.KeyCode == Enum.KeyCode.F5 then
-				if getgenv().jobID ~= "" then
+				if getgenv().jobID ~= nil then
 					game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
 				else
 					game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
@@ -3354,6 +3364,8 @@ end
 --###### END UI ######--
 
 end
+
+
 
 --#region Check File JSon WorkSpace
 
@@ -3917,7 +3929,7 @@ coroutine.resume(coroutine.create(function()
 				if tonumber(getgenv().textGem) <= 1 then
 					pcall(function () webhook_finish()  end)
 					task.wait(3)
-					if getgenv().jobID ~= "" then
+					if getgenv().jobID ~= nil then
 						game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
 						break
 					else
@@ -3931,7 +3943,7 @@ coroutine.resume(coroutine.create(function()
 					else
 						pcall(function () webhook()  end)
 						task.wait(3)
-						if getgenv().jobID ~= "" then
+						if getgenv().jobID ~= nil then
 							game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
 							break
 						else
@@ -3951,7 +3963,7 @@ coroutine.resume(coroutine.create(function()
 					pcall(function () webhook()  end)
 				end
 				task.wait(3)
-				if getgenv().jobID ~= "" then
+				if getgenv().jobID ~= nil then
 					game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
 					break
 				else
@@ -3970,23 +3982,33 @@ end))
 
 local function gameisFinishAuto()
 	--// Next Story --//
+	task.wait(4)
+
+	-- // Replay // --
+	if getgenv().AutoReplay then
+		task.wait()
+		pcall(function() webhook() end)
+		local a = { [1] = "replay" }
+		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+	end
 	
-		-- // Raid // --
-		if getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" then
-			task.wait(3)
-			pcall(function() webhook() end)
-			if getgenv().AutoReplay then
-				local a = { [1] = "replay" }
-				game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-				game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-				wait(99)
-			end
-			if getgenv().jobID ~= "" then
-				game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
-			else
-				game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-			end
+	-- // Raid // --
+	if getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" then
+		task.wait(3)
+		pcall(function() webhook() end)
+		if getgenv().AutoReplay then
+			local a = { [1] = "replay" }
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+			wait(99)
 		end
+		if getgenv().jobID ~= nil then
+			game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
+		else
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		end
+	end
 
 	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มสตอรี่" then
 		pcall(function() webhook() end)
@@ -4056,10 +4078,10 @@ local function gameisFinishAuto()
 	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเวลตัวละคร" then
 		levePlayers = LocalPlayer.PlayerGui.spawn_units.Lives.Main.Desc.Level.Text
 		levelCheck = levePlayers:split(" ")
-		if levelCheck[2] >= getgenv().textGem then
+		if levelCheck[2] >= tonumber(getgenv().textGem) then
 			pcall(function() webhook_finish() end)
 			task.wait(3)
-			if getgenv().jobID ~= "" then
+			if getgenv().jobID ~= nil then
 				game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
 			else
 				game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
@@ -4074,26 +4096,50 @@ local function gameisFinishAuto()
 	end
 	-- Castle
 	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มหอคอย" then
-		infTower_check = game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Holder.LevelName.Text
-		infinityTower = infTower_check:split(" ")
-		if infinityTower[4] >= getgenv().textGem then
-			pcall(function() webhook_finish() end)
-		else
-			pcall(function() webhook() end)
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
-			wait(99)
-		end
-		-- Fruit
-		if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มผลไม้" then
-			pcall(function() webhook() end)
-			task.wait(3)
-			if getgenv().jobID ~= "" then
-				game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
-			else
-				game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-			end
-		end
+		task.wait(5)
+		-- local resultx = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Title.Text)
+		-- infTower_check = game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Holder.LevelName.Text
+		-- infinityTower = infTower_check:split(" ")
+		pcall(function() webhook() end)
+		game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+		game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+		wait(99)
+	end
+	-- if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มหอคอย" then
+	-- 	task.wait(5)
+	-- 	local resultx = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Title.Text)
+	-- 	infTower_check = game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Holder.LevelName.Text
+	-- 	infinityTower = infTower_check:split(" ")
+		
+	-- 	if resultx == "VICTORY" then
+	-- 		if infinityTower[4] >= tonumber(getgenv().textGem) then
+	-- 			pcall(function() webhook_finish() end)
+	-- 		else
+	-- 			pcall(function() webhook() end)
+	-- 			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+	-- 			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+	-- 		end
+	-- 	else
+	-- 		local a = { [1] = "replay" }
+	-- 		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+	-- 		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+	-- 	end
+	-- 	game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+	-- 	game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+	-- 	game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+	-- 	game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+	-- 	wait(99)
+	-- end
 
+	-- Fruit
+	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มผลไม้" then
+		pcall(function() webhook() end)
+		task.wait(3)
+		if getgenv().jobID ~= nil then
+			game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
+		else
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		end
 	end
 
 end
@@ -4344,7 +4390,36 @@ coroutine.resume(coroutine.create(function()
 	end
 end))
 
-wait(20)
+-- function autoload()
+-- 		pcall(function()
+-- 				if exec == "Synapse X" then
+-- 						syn.queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/iwhiteiwhite/iwhiteiwhite/main/ldScr.lua'))()")
+-- 					else
+-- 						queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/iwhiteiwhite/iwhiteiwhite/main/ldScr.lua'))()")
+-- 				end
+-- 		end)
+-- end
+-- autoload()
+
+
+--#endregion 
+
+--#region Auto Reconnect
+function auto_reconnect()
+  repeat task.wait() until game.CoreGui:FindFirstChild('RobloxPromptGui')
+  game.CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(e)
+    if e.Name == 'ErrorPrompt' then
+      warn("Trying to Reconnect")
+      repeat
+        game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+        task.wait(3)
+      until false
+    end
+  end)
+end
+auto_reconnect()
+--#endregion
+
+wait(15)
 setfpscap(5)
 print('Loader Suscuess!!')
---#endregion 
