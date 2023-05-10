@@ -2676,6 +2676,7 @@ function webhook_finish()
 end
 --#endregion
 
+
 --------------------
 --#region Modul Units --
 
@@ -3366,7 +3367,6 @@ end
 end
 
 
-
 --#region Check File JSon WorkSpace
 
 if isfile(savefilename) then
@@ -3925,7 +3925,7 @@ coroutine.resume(coroutine.create(function()
 		local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
 		if game.PlaceId ~= 8304191830 then
 			--#region Teleport Gem
-			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" and _wave.Value >= 25  then
+			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" and tonumber(_wave.Value) >= tonumber(25)  then
 				if tonumber(getgenv().textGem) <= 1 then
 					pcall(function () webhook_finish()  end)
 					task.wait(3)
@@ -3952,7 +3952,6 @@ coroutine.resume(coroutine.create(function()
 						end
 					end
 				end
-
 			end
 			--#endregion
 			--#region Teleport BattlePass
@@ -3985,7 +3984,7 @@ local function gameisFinishAuto()
 	task.wait(4)
 
 	-- // Replay // --
-	if getgenv().AutoReplay then
+	if getgenv().AutoReplay and  getgenv().autoSelectMode == "เลือกโหมดที่ต้องการฟาร์ม"  then
 		task.wait()
 		pcall(function() webhook() end)
 		local a = { [1] = "replay" }
@@ -4095,41 +4094,37 @@ local function gameisFinishAuto()
 		end
 	end
 	-- Castle
-	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มหอคอย" then
-		task.wait(5)
-		-- local resultx = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Title.Text)
-		-- infTower_check = game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Holder.LevelName.Text
-		-- infinityTower = infTower_check:split(" ")
-		pcall(function() webhook() end)
-		game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
-		game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
-		wait(99)
-	end
+
 	-- if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มหอคอย" then
 	-- 	task.wait(5)
-	-- 	local resultx = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Title.Text)
-	-- 	infTower_check = game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Holder.LevelName.Text
-	-- 	infinityTower = infTower_check:split(" ")
-		
-	-- 	if resultx == "VICTORY" then
-	-- 		if infinityTower[4] >= tonumber(getgenv().textGem) then
-	-- 			pcall(function() webhook_finish() end)
-	-- 		else
-	-- 			pcall(function() webhook() end)
-	-- 			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
-	-- 			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
-	-- 		end
-	-- 	else
-	-- 		local a = { [1] = "replay" }
-	-- 		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-	-- 		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-	-- 	end
+	-- 	pcall(function() webhook() end)
 	-- 	game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
 	-- 	game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
-	-- 	game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-	-- 	game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
 	-- 	wait(99)
 	-- end
+
+	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มหอคอย" then
+		task.wait(5)
+		local resultx = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Title.Text)
+		infTower_check = game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Holder.LevelName.Text
+		infinityTower = infTower_check:split(" ")
+		
+		if resultx == "VICTORY" then
+			if tonumber(infinityTower[4]) >= tonumber(getgenv().textGem) then
+				pcall(function() webhook_finish() end)
+			else
+				pcall(function() webhook() end)
+				game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+				game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+				wait(99)
+			end
+		else
+			local a = { [1] = "replay" }
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+			wait(99)
+		end
+	end
 
 	-- Fruit
 	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มผลไม้" then
@@ -4420,6 +4415,6 @@ end
 auto_reconnect()
 --#endregion
 
-wait(15)
+wait(30)
 setfpscap(5)
 print('Loader Suscuess!!')
