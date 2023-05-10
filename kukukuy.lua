@@ -2424,7 +2424,7 @@ function update_data()
 
 	for name, amount in pairs(itemDifference) do
 		if getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Alien Scouter" and name == "west_city_frieza_item" then
-			getgenv().textGem = (tonumber(getgenv().textGem) - amount)
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
 			if tonumber(getgenv().textGem) <= 1 then
 				pcall(function () webhook_finish() end)
 				updatejson()
@@ -2434,7 +2434,7 @@ function update_data()
 			task.wait(1)
 			break
 		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Tomoe" and name == "uchiha_item" then
-			getgenv().textGem = (tonumber(getgenv().textGem) - amount)
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
 			if tonumber(getgenv().textGem) <= 1 then
 				pcall(function () webhook_finish() end)
 				updatejson()
@@ -2444,7 +2444,7 @@ function update_data()
 			task.wait(1)
 			break
 		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Entertain Shard" and name == "entertainment_district_item" then
-			getgenv().textGem = (tonumber(getgenv().textGem) - amount)
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
 			if tonumber(getgenv().textGem) <= 1 then
 				pcall(function () webhook_finish() end)
 				updatejson()
@@ -2454,7 +2454,7 @@ function update_data()
 			task.wait(1)
 			break
 		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Demon Shard" and name == "april_symbol" then
-			getgenv().textGem = (tonumber(getgenv().textGem) - amount)
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
 			if tonumber(getgenv().textGem) <= 1 then
 				pcall(function () webhook_finish() end)
 				updatejson()
@@ -2464,7 +2464,7 @@ function update_data()
 			task.wait(1)
 			break
 		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Relic Shard" and name == "relic_shard" then
-			getgenv().textGem = (tonumber(getgenv().textGem) - amount)
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
 			if tonumber(getgenv().textGem) <= 0 then
 				pcall(function () webhook_finish() end)
 				updatejson()
@@ -3955,7 +3955,7 @@ coroutine.resume(coroutine.create(function()
 			end
 			--#endregion
 			--#region Teleport BattlePass
-			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์ม BattlePass" and tonumber(_wave.Value) >= tonumber(35)  then
+			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์ม BattlePass" and _wave.Value >= 35  then
 				if tonumber(getgenv().textGem) >= getgent().BattlePass then
 					pcall(function () webhook_finish()  end)
 				else
