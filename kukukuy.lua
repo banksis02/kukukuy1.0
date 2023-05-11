@@ -3956,7 +3956,7 @@ coroutine.resume(coroutine.create(function()
 			--#endregion
 			--#region Teleport BattlePass
 			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์ม BattlePass" and tonumber(_wave.Value) >= tonumber(40)  then
-				if tonumber(getgenv().textGem) >= tonumber(getgent().BattlePass) then
+				if tonumber(getgenv().textGem) >= tonumber(getgenv().BattlePass) then
 					pcall(function () webhook_finish()  end)
 				else
 					pcall(function () webhook()  end)
