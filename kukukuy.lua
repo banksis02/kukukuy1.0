@@ -2387,7 +2387,7 @@ function webhook_finish()
     local http = { Url = url, Body = body, Method = "POST", Headers = headers }
     request(http)
 		getgenv().resultGems = 0
-		getgenv().autostart = false
+		getgenv().AutoStart = false
 		updatejson()
 		task.wait(2)
 		--Nexus:SetAutoRelaunch(false)
@@ -2435,7 +2435,7 @@ function PjxInit()
 	getgenv().warpfriend = data.warpfriend or false
 
 	--Suto Start
-	getgenv().autostart = data.autostart or false
+	getgenv().AutoStart = data.AutoStart or false
 	getgenv().AutoReplay = data.AutoReplay or false
 	--Select Mode
 	getgenv().autoSelectMode = data.autoSelectMode or "เลือกโหมดที่ต้องการฟาร์ม"
@@ -2479,7 +2479,7 @@ function PjxInit()
 			-- Warp Friends
 			warpfriend = getgenv().warpfriend,
 			-- Auto Start
-			autostart = getgenv().autostart,
+			AutoStart = getgenv().AutoStart,
 			AutoReplay = getgenv().AutoReplay,
 			--Select Mode
 			autoSelectMode	= getgenv().autoSelectMode,
@@ -2521,21 +2521,25 @@ function PjxInit()
 --#region setting Map
 
 	--เช็คแบทเทิลพาส
-	pcall(function()
-		repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.FurthestRoom.V.Text ~= "99" 
-		levelBattlepass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.FurthestRoom.V.Text
-		--getgenv().BattlePass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text .. "[" .. levelBattlepass .."]"
-		getgenv().BattlePass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text
-		updatejson()
-	end)
 	
+	
+	if game.PlaceId == 8304191830 then --//Battle Pass
+		pcall(function()
+			repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.FurthestRoom.V.Text ~= "99" 
+			levelBattlepass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.FurthestRoom.V.Text
+			--getgenv().BattlePass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text .. "[" .. levelBattlepass .."]"
+			getgenv().BattlePass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text
+			updatejson()
+		end)
+	end
+
 	local Tab = Window:MakeTab({Name = "🌎 เลือกระบบที่ต้องการ",Icon = "rbxassetid://6022668966",PremiumOnly = false,}) -- MAP
 
 	Tab:AddToggle({
 		Name = "🛠️ เริ่มเกมอัตโนมัติ",
-		Default = getgenv().autostart,
+		Default = getgenv().AutoStart,
 		Callback = function(bool)
-				getgenv().autostart = bool
+				getgenv().AutoStart = bool
 				updatejson()
 		end,
 	})
@@ -3347,7 +3351,7 @@ else
 		-- Warp Friends
 		warpfriend = false,
 		-- Auto Start
-		autostart = false,
+		AutoStart = false,
 		AutoReplay = false,
 		-- Select Mode
 		autoSelectMode = "เลือกโหมดที่ต้องการฟาร์ม",
@@ -3969,7 +3973,7 @@ end
 
 coroutine.resume(coroutine.create(function()
 	while wait(3) do
-		if getgenv().autostart then
+		if getgenv().AutoStart then
 			modefarm()
 		end
 	end
