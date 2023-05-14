@@ -4550,7 +4550,7 @@ function auto_reconnect()
       warn("Trying to Reconnect")
       repeat
         TeleportService:Teleport(game.PlaceId)
-        task.wait(0.6)
+        task.wait(3)
       until false
     end
   end)
@@ -4561,7 +4561,7 @@ auto_reconnect()
 --#region Lag Server
 
 coroutine.resume(coroutine.create(function()
-	while task.wait(1) do
+	while task.wait(0.6) do
 		if game.PlaceId ~= 8304191830 then
 			if getgenv().timelock then
 				while wait(getgenv().takeTime) do
