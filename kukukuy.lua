@@ -4550,7 +4550,7 @@ function auto_reconnect()
       warn("Trying to Reconnect")
       repeat
         TeleportService:Teleport(game.PlaceId)
-        task.wait(3)
+        task.wait(0.6)
       until false
     end
   end)
