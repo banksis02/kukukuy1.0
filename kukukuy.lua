@@ -4561,10 +4561,10 @@ auto_reconnect()
 --#region Lag Server
 
 coroutine.resume(coroutine.create(function()
-	while task.wait(0.6) do
+	while task.wait(1) do
 		if game.PlaceId ~= 8304191830 then
 			if getgenv().timelock then
-				while wait(getgenv().takeTime) do
+				while wait(0.6) do
 					if getgenv().timelock == false then
 						break
 					end
