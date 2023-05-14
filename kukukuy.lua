@@ -3000,6 +3000,7 @@ function PjxInit()
 							and v.Name ~= "crashed spaceships"
 							and v.Name ~= "bridge nocollide"
 							and v.Name ~= "Support_Beam"
+							and v.Name ~= "hay"
 							then
 								v:Destroy()
 							end
@@ -3521,6 +3522,11 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = -2959.61, y = 94.53, z = -696.83 }, -- hill unit position
 					[3] = { x = -2952.06, y = 94.41, z = -721.40 }, -- hill unit position
 				})
+				elseif game.Workspace._map:FindFirstChild("hay") then  -- ONE PICE
+				auto_place_units({
+					[1] = { x = pos_x, y = 2.60, z = pos_z }, -- ground unit position 
+					[2] = { x = -41.454, y = 5.986, z = -185.049 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+				})
 				elseif game.Workspace._map:FindFirstChild("bridge nocollide") then  -- MY HERO
 				auto_place_units({
 					[1] = { x = pos_x, y = -13.24, z = pos_z }, -- ground unit position
@@ -3641,11 +3647,7 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = -130.05, y = 504.78, z = -93.73 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
 					[3] = { x = -97.27, y = -97.27, z = -92.03 }, -- hill unit position -97.27552032470703, 500.6242980957031, -92.03937530517578
 				})
-				elseif game.Workspace._map:FindFirstChild("hay") then  -- ONE PICE
-				auto_place_units({
-					[1] = { x = pos_x, y = 2.60, z = pos_z }, -- ground unit position 
-					[2] = { x = -41.454, y = 5.986, z = -185.049 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
-				})
+				
 			end
 		end
 	end
