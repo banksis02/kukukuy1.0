@@ -4290,7 +4290,6 @@ function gameisFinishAuto()
 	-- // infinityTower --
 	if getgenv().autoSelectMode == "ฟาร์มหอคอย" then
 		task.wait(5)
-		local resultx = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Title.Text)
 		infTower_check = game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Holder.LevelName.Text
 		infinityTower = infTower_check:split(" ")
 		
@@ -4305,9 +4304,8 @@ function gameisFinishAuto()
 			end
 		else
 			pcall(function() webhook() end)
-			local a = { [1] = "replay" }
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
 			wait(99)
 		end
 	end
@@ -4564,7 +4562,7 @@ coroutine.resume(coroutine.create(function()
 	while task.wait(1) do
 		if game.PlaceId ~= 8304191830 then
 			if getgenv().timelock then
-				while wait(0.6) do
+				while wait(0.4) do
 					if getgenv().timelock == false then
 						break
 					end
