@@ -4251,12 +4251,12 @@ function gameisFinishAuto()
 	if getgenv().autoSelectMode == "ฟาร์มสตอรี่" then
 		pcall(function() webhook() end)
 		if resultx == "VICTORY" then
-			local args = {
-				[1] = "next_story"
-			}
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(args))
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(args))
-			wait(99)
+			while task.wait(5) do
+                local args = {
+                    [1] = "next_story"
+                }
+                game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(args))
+            end
 		else
 			local a = { [1] = "replay" }
 			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
