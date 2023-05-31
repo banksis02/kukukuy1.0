@@ -1,4 +1,4 @@
----@diagnostic disable: undefined-global, lowercase-global, deprecated, undefined-field, ambiguity-1, unbalanced-assignments, redundant-parameter
+---@diagnostic disable: undefined-global, lowercase-global, deprecated, undefined-field, ambiguity-1, unbalanced-assignments, redundant-parameter, cast-local-type
 task.wait(2)
 repeat task.wait() until game:IsLoaded()
 if game.PlaceId == 8304191830 then
@@ -15,7 +15,7 @@ task.wait(5)
 
 --#region Setting in Game PlayerID And WorkSpace
 
-local versionx = " - auto 1x"
+local versionx = " - auto 3x"
 local map_dun1 = "_lobbytemplate_event227"
 local key_dun1 = "key_jjk_finger"
 local map_dun2 = "_lobbytemplate_event428"
@@ -2676,7 +2676,7 @@ function webhook_finish()
 end
 --#endregion
 
-
+----
 --------------------
 --#region Modul Units --
 
@@ -2896,6 +2896,8 @@ do
 		AutoFarm:AddButton("รับโค้ดทั้งหมด", function()
 			if game.PlaceId == 8304191830 then
 				local redeem_code = {
+					"DRESSROSA",
+					"BILLION",
 					"ENTERTAINMENT",
 					"HAPPYEASTER",
 					"VIGILANTE",
@@ -3155,6 +3157,7 @@ do
 						and v.Name ~= "crashed spaceships"
 						and v.Name ~= "bridge nocollide"
 						and v.Name ~= "Support_Beam"
+						and v.Name ~= "hay"
 						then
 							v:Destroy()
 						end
@@ -3396,6 +3399,7 @@ else
 		dctage = "",
 		BattlePass = "",
 		autoSelectItem = "เลือกไอเท็มเรท",
+
 		xselectedUnits = {},
 		-- MANUAL
 		manualStart = false,
@@ -3418,6 +3422,7 @@ function auto_place_units(position)
 			if unit_data ~= nil then
 				local unit_id = unit_data:split(" #")[2]
 				local unit_name = unit_data:split(" #")[1]
+				print(i..' plate unit Funcition')
 				if unit_name ~= "metal_knight_evolved" then
 					-- place ground unit
 					unitPostion = math.random(2,3)
@@ -3454,7 +3459,6 @@ end
 coroutine.resume(coroutine.create(function()
 	while task.wait(1) do
 		local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
-
 		if game.PlaceId ~= 8304191830 then
 			for i, v in ipairs(game.Workspace["_UNITS"]:GetChildren()) do
 				if v:FindFirstChild("_stats") then
@@ -3471,6 +3475,7 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = -2959.61, y = 94.53, z = -696.83 }, -- hill unit position
 					[3] = { x = -2952.06, y = 94.41, z = -721.40 }, -- hill unit position
 				})
+
 				elseif game.Workspace._map:FindFirstChild("bridge nocollide") then  -- MY HERO
 				auto_place_units({
 					[1] = { x = pos_x, y = -13.24, z = pos_z }, -- ground unit position
@@ -3591,12 +3596,18 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = -130.05, y = 504.78, z = -93.73 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
 					[3] = { x = -97.27, y = -97.27, z = -92.03 }, -- hill unit position -97.27552032470703, 500.6242980957031, -92.03937530517578
 				})
+				elseif game.Workspace._map:FindFirstChild("hay") then  -- ONE PICE
+				auto_place_units({
+					[1] = { x = pos_x, y = 2.60, z = pos_z }, -- ground unit position 
+					[2] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+					[3] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+				})
+				
 			end
 		end
-
 	end
 end))
-
+--Puppet Island
 --#endregion 
 
 --#region SelectUnit
@@ -3620,7 +3631,7 @@ coroutine.resume(coroutine.create(function()
 	while task.wait(0) do
 		if game.PlaceId ~= 8304191830 then
 			local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
-			if _wave.Value >= 6 then
+			if _wave.Value >= 4 then
 				pcall(function() --///
 					repeat task.wait() until game:GetService("Workspace"):WaitForChild("_UNITS")
 					for _, v in ipairs(game:GetService("Workspace")["_UNITS"]:GetChildren()) do
@@ -3919,23 +3930,18 @@ local function amReplay()
 		end
 	end
 end
-
 coroutine.resume(coroutine.create(function()
 	while task.wait() do
 		local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
 		if game.PlaceId ~= 8304191830 then
 			--#region Teleport Gem
+			
 			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" and tonumber(_wave.Value) >= tonumber(25)  then
 				if tonumber(getgenv().textGem) <= 1 then
 					pcall(function () webhook_finish()  end)
 					task.wait(3)
-					if getgenv().jobID ~= nil then
-						game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
-						break
-					else
-						game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-						break
-					end
+					game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+					break
 				else
 					if getgenv().AutoReplay then
 						amReplay()
@@ -3943,39 +3949,36 @@ coroutine.resume(coroutine.create(function()
 					else
 						pcall(function () webhook()  end)
 						task.wait(3)
-						if getgenv().jobID ~= nil then
-							game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
-							break
-						else
-							game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-							break
-						end
+						game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+						break
 					end
-				end
-			end
-			--#endregion
-			--#region Teleport BattlePass
-			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์ม BattlePass" and _wave.Value >= 35  then
-				if tonumber(getgenv().textGem) >= tonumber(getgenv().BattlePass) then
-					pcall(function () webhook_finish()  end)
-				else
-					pcall(function () webhook()  end)
-				end
-				task.wait(3)
-				if getgenv().jobID ~= nil then
-					game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
-					break
-				else
-					game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-					break
 				end
 			end
 			--#endregion
 		end
 	end
 end))
+--#endregion
+
+--#region Farm BattlePass
+
+coroutine.resume(coroutine.create(function()
+	while task.wait() do
+		local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
+		if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์ม BattlePass" and tonumber(_wave.Value) >= tonumber(55)  then
+			if tonumber(getgenv().textGem) <= tonumber(getgenv().BattlePass) then
+				pcall(function () webhook_finish()  end)
+			else
+				pcall(function () webhook()  end)
+			end
+			task.wait(3)
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		end
+	end
+end))
 
 --#endregion
+
 
 --#region GameFinished Auto
 
@@ -3991,6 +3994,17 @@ local function gameisFinishAuto()
 		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
 		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
 	end
+	-- // Exit Room //--
+	if getgenv().autoSelectMode == "เลือกโหมดที่ต้องการฟาร์ม"  then
+		task.wait()
+		pcall(function() webhook() end)
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		for i = 1, 180 do
+			warn("Game restart in : " .. i)
+			task.wait(1)
+		end
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+	end
 	
 	-- // Raid // --
 	if getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" then
@@ -4000,7 +4014,17 @@ local function gameisFinishAuto()
 			local a = { [1] = "replay" }
 			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
 			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-			wait(99)
+			for i = 1, 180 do
+				warn("Game restart in : " .. i)
+				task.wait(1)
+			end
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+			for i = 1, 60 do
+				warn("game Shutdown in : " .. i)
+				task.wait(1)
+			end
+			game:Shutdown()
 		end
 		if getgenv().jobID ~= nil then
 			game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
@@ -4067,17 +4091,30 @@ local function gameisFinishAuto()
 	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" then
 		task.wait()
 		pcall(function() webhook() end)
-		local a = { [1] = "replay" }
-		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-		wait(99)
+		if getgenv().AutoReplay then
+			local a = { [1] = "replay" }
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+		end
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		for i = 1, 180 do
+			warn("Game restart in : " .. i)
+			task.wait(1)
+		end
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		for i = 1, 60 do
+			warn("game Shutdown in : " .. i)
+			task.wait(1)
+		end
+		game:Shutdown()
 	end
 
 	--// Level Players --//
 	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเวลตัวละคร" then
 		levePlayers = LocalPlayer.PlayerGui.spawn_units.Lives.Main.Desc.Level.Text
 		levelCheck = levePlayers:split(" ")
-		if levelCheck[2] >= tonumber(getgenv().textGem) then
+		if tonumber(levelCheck[2]) >= tonumber(getgenv().textGem) then
 			pcall(function() webhook_finish() end)
 			task.wait(3)
 			if getgenv().jobID ~= nil then
@@ -4119,9 +4156,8 @@ local function gameisFinishAuto()
 				wait(99)
 			end
 		else
-			local a = { [1] = "replay" }
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
 			wait(99)
 		end
 	end
@@ -4413,6 +4449,19 @@ function auto_reconnect()
   end)
 end
 auto_reconnect()
+--#endregion
+
+--#region Check Status
+coroutine.resume(coroutine.create(function()
+	while task.wait(4) do
+		game:GetService("StarterGui"):SetCore("SendNotification",{
+			Title = "check status", -- Required
+			Text = "ระบบกำลังทำงาน..", -- Required
+			Icon = "rbxthumb://type=AvatarHeadShot&id=" .. plr.UserId .. "&w=180&h=180 true";
+			Duration = 2
+		})
+	end
+end))
 --#endregion
 
 wait(30)
