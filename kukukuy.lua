@@ -3489,6 +3489,12 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = -2959.61, y = 94.53, z = -696.83 }, -- hill unit position
 					[3] = { x = -2952.06, y = 94.41, z = -721.40 }, -- hill unit position
 				})
+				elseif game.Workspace._map:FindFirstChild("fireflies") then  -- NEW STORY
+				auto_place_units({
+					[1] = { x = pos_x, y =  37.53, z = pos_z }, -- ground unit position 
+					[2] = { x = 99.65, y = 41.67, z = 16.28 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+					[3] = { x = 157.75, y = 41.67, z = -19.18}, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+				})
                 elseif game.Workspace._map:FindFirstChild("mha_city_night_rain") then  -- NEW RAID
 				auto_place_units({
 					[1] = { x = pos_x, y =  -13.24, z = pos_z }, -- ground unit position 
@@ -3621,12 +3627,7 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
 					[3] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
 				})
-                elseif game.Workspace._map:FindFirstChild("fireflies") then  -- NEW STORY
-				auto_place_units({
-					[1] = { x = pos_x, y =  37.53, z = pos_z }, -- ground unit position 
-					[2] = { x = 99.65, y = 41.67, z = 16.28 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
-					[3] = { x = 157.75, y = 41.67, z = -19.18}, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
-				})
+                
                 
 			end
 		end
