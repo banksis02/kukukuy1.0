@@ -15,7 +15,7 @@ task.wait(5)
 
 --#region Setting in Game PlayerID And WorkSpace
 
-local versionx = " - auto 3x"
+local versionx = " - auto 4x"
 local map_dun1 = "_lobbytemplate_event227"
 local key_dun1 = "key_jjk_finger"
 local map_dun2 = "_lobbytemplate_event428"
@@ -2473,7 +2473,18 @@ function update_data()
 			updatejson()
 			task.wait(1)
 			break
+		elseif getgenv().autoSelectMode == "ฟาร์มตาโกโจ" and getgenv().autoSelectItem == "SIX EYE" and name == "six_eyes" then
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
+			if tonumber(getgenv().textGem) <= 0 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
+			updatejson()
+			task.wait(1)
+			break
 		end
+		
 	end
 
 	
@@ -2677,6 +2688,7 @@ end
 --#endregion
 
 ----
+
 --------------------
 --#region Modul Units --
 
@@ -2838,7 +2850,7 @@ do
 			getgenv().autoSelectMode = object
 			updatejson()
 		end)
-		local myMode = {"เลือกโหมดที่ต้องการฟาร์ม","ฟาร์มสตอรี่","ฟาร์มเพชร","ฟาร์ม BattlePass","ฟาร์มเวลตัวละคร","ฟาร์มหอคอย","ฟาร์มผลไม้","ฟาร์มไก่เพชร","ฟาร์มไอเท็มเรด"}
+		local myMode = {"เลือกโหมดที่ต้องการฟาร์ม","ฟาร์มสตอรี่","ฟาร์มเพชร","ฟาร์มตาโกโจ","ฟาร์ม BattlePass","ฟาร์มเวลตัวละคร","ฟาร์มหอคอย","ฟาร์มผลไม้","ฟาร์มไก่เพชร","ฟาร์มไอเท็มเรด"}
 		for _,v in pairs(myMode) do
 			mymodeFuction:Add(tostring(v))
 		end
@@ -2848,7 +2860,7 @@ do
 			getgenv().autoSelectItem = object
 			updatejson()
 		end)
-		local myRaid = {"เลือกไอเท็มเรท","Alien Scouter","Tomoe","Entertain Shard","Demon Shard","Relic Shard"}
+		local myRaid = {"เลือกไอเท็มเรท","Alien Scouter","Tomoe","Entertain Shard","Demon Shard","Relic Shard","SIX EYE"}
 		for _,v in pairs(myRaid) do
 			mymodeRaid:Add(tostring(v))
 		end
@@ -3158,6 +3170,8 @@ do
 						and v.Name ~= "bridge nocollide"
 						and v.Name ~= "Support_Beam"
 						and v.Name ~= "hay"
+                        and v.Name ~= "mha_city_night_rain"
+                        and v.Name ~= "fireflies"
 						then
 							v:Destroy()
 						end
@@ -3475,7 +3489,12 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = -2959.61, y = 94.53, z = -696.83 }, -- hill unit position
 					[3] = { x = -2952.06, y = 94.41, z = -721.40 }, -- hill unit position
 				})
-
+                elseif game.Workspace._map:FindFirstChild("mha_city_night_rain") then  -- NEW RAID
+				auto_place_units({
+					[1] = { x = pos_x, y =  -13.24, z = pos_z }, -- ground unit position 
+					[2] = { x = -55.57, y = -8.89, z = 3.31 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+					[3] = { x = -50.44, y = -8.89, z = 3.05}, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+				})
 				elseif game.Workspace._map:FindFirstChild("bridge nocollide") then  -- MY HERO
 				auto_place_units({
 					[1] = { x = pos_x, y = -13.24, z = pos_z }, -- ground unit position
@@ -3602,7 +3621,13 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
 					[3] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
 				})
-				
+                elseif game.Workspace._map:FindFirstChild("fireflies") then  -- NEW STORY
+				auto_place_units({
+					[1] = { x = pos_x, y =  37.53, z = pos_z }, -- ground unit position 
+					[2] = { x = 99.65, y = 41.67, z = 16.28 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+					[3] = { x = 157.75, y = 41.67, z = -19.18}, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+				})
+                
 			end
 		end
 	end
@@ -3755,6 +3780,45 @@ coroutine.resume(coroutine.create(function()
 								local args = {
 									[1] = tostring(v.Parent.Name), -- Lobby
 									[2] = "namek_infinite", -- World
+									[3] = false, -- Friends Only or not
+									[4] = "Hard",
+								}
+								game:GetService("ReplicatedStorage").endpoints.client_to_server.request_lock_level:InvokeServer(unpack(args))
+							end
+							task.wait(2)
+							local args = {
+								[1] = tostring(v.Parent.Name),
+							}
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
+							getgenv().door = v.Parent.Name
+							plr.Character.HumanoidRootPart.CFrame = v.Parent.Door.CFrame
+							break
+						end
+					end
+				end
+				task.wait()
+				plr.Character.HumanoidRootPart.CFrame = cpos
+			end
+		end
+		--#endregion
+
+		--#region Farm Gojo
+		if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มตาโกโจ" then
+			if game.PlaceId == 8304191830 then
+				local cpos = plr.Character.HumanoidRootPart.CFrame
+				if tostring(Workspace._LOBBIES.Story[getgenv().door].Owner.Value) ~= plr.Name then
+					for _, v in pairs(game:GetService("Workspace")["_LOBBIES"].Story:GetDescendants()) do
+						if v.Name == "Owner" and v.Value == nil then
+							local args = {
+								[1] = tostring(v.Parent.Name),
+							}
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
+							task.wait(4)
+							if getgenv().autoSelectMode == "ฟาร์มตาโกโจ" then
+								local args = {
+									[1] = tostring(v.Parent.Name), -- Lobby
+									[2] = "jjk_infinite", -- World
 									[3] = false, -- Friends Only or not
 									[4] = "Hard",
 								}
@@ -3935,9 +3999,28 @@ coroutine.resume(coroutine.create(function()
 		local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
 		if game.PlaceId ~= 8304191830 then
 			--#region Teleport Gem
-			
-			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" and tonumber(_wave.Value) >= tonumber(25)  then
+			levePlayers = LocalPlayer.PlayerGui.spawn_units.Lives.Main.Desc.Level.Text
+			levelCheck = levePlayers:split(" ")
+			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" and tonumber(levelCheck[2]) <= tonumber(50) and tonumber(_wave.Value) >= tonumber(15) then
 				if tonumber(getgenv().textGem) <= 1 then
+					pcall(function () webhook_finish()  end)
+					task.wait(3)
+					game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+					break
+				else
+					if getgenv().AutoReplay then
+						amReplay()
+						break
+					else
+						pcall(function () webhook()  end)
+						task.wait(3)
+						game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+						break
+					end
+				end
+			end
+			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มตาโกโจ" and tonumber(_wave.Value) >= tonumber(32)  then
+				if tonumber(getgenv().textGem) <= 0 then
 					pcall(function () webhook_finish()  end)
 					task.wait(3)
 					game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
@@ -3993,7 +4076,6 @@ local function gameisFinishAuto()
 		local a = { [1] = "replay" }
 		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
 		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-		wait(99)
 	end
 	-- // Exit Room //--
 	if getgenv().autoSelectMode == "เลือกโหมดที่ต้องการฟาร์ม"  then
@@ -4027,11 +4109,7 @@ local function gameisFinishAuto()
 			end
 			game:Shutdown()
 		end
-		if getgenv().jobID ~= nil then
-			game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
-		else
-			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-		end
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
 	end
 
 	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มสตอรี่" then
@@ -4118,11 +4196,7 @@ local function gameisFinishAuto()
 		if tonumber(levelCheck[2]) >= tonumber(getgenv().textGem) then
 			pcall(function() webhook_finish() end)
 			task.wait(3)
-			if getgenv().jobID ~= nil then
-				game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
-			else
-				game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-			end
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
 		else
 			pcall(function() webhook() end)
 			local a = { [1] = "replay" }
@@ -4167,11 +4241,7 @@ local function gameisFinishAuto()
 	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มผลไม้" then
 		pcall(function() webhook() end)
 		task.wait(3)
-		if getgenv().jobID ~= nil then
-			game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
-		else
-			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-		end
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
 	end
 
 end
