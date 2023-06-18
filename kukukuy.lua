@@ -3495,140 +3495,139 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = 101.85, y = 41.67, z = 16.34 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
 					[3] = { x = 105.29, y = 41.67, z = 16.93}, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
 				})
-                -- elseif game.Workspace._map:FindFirstChild("mha_city_night_rain") then  -- NEW RAID
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y =  -13.24, z = pos_z }, -- ground unit position 
-				-- 	[2] = { x = -55.57, y = -8.89, z = 3.31 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
-				-- 	[3] = { x = -50.44, y = -8.89, z = 3.05}, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("bridge nocollide") then  -- MY HERO
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = -13.24, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -31.49, y = -10.02, z = 21.95 }, -- hill unit position
-				-- 	[3] = { x = -54.03, y = -8.89, z = 3.62 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("houses_new") then -- Shiganshinu District
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 33.74, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -3026.78, y = 38.41, z = -677.81 }, -- hill unit position
-				-- 	[3] = { x = -3019.03, y = 38.41, z = -689.49 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("Snow Particles") then -- Snowy Town
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 34.34, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -2876.02, y = 37.24, z = -150.81 }, -- hill unit position
-				-- 	[3] = { x = -2879.09, y = 39.57, z = -124.25 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("sand_gate") then -- Hidden Sand Village
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 25.28, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -910.64, y = 33.14, z = 294.41 }, -- hill unit position
-				-- 	[3] = { x = -893.90, y = 29.56, z = 318.74 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("icebergs") then -- Marine's Ford
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 25.21, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -2571.46, y = 29.50, z = -49.31 }, -- hill unit position
-				-- 	[3] = { x = -2581.62, y = 28.35, z = -66.97 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("Helicopter Pad") then -- Ghoul City
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 58.58, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -2985.60, y = 66.70, z = -54.09 }, -- hill unit position
-				-- 	[3] = { x = -2956.22, y = 62.82, z = -49.40 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("castle top") then -- Hollow World
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 132.66, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -184.33, y = 136.34, z = -757.71 }, -- hill unit position
-				-- 	[3] = { x = -174.58, y = 136.34, z = -710.48 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("Village Path") then -- Ant Kingdom
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 23.01, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -145.86, y = 26.72, z = 2965.56 }, -- hill unit position
-				-- 	[3] = { x = -191.47, y = 27.20, z = 2952.01 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("wooden stacks") then -- Magic Town
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 6.74, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -596.36, y = 13.99, z = -824.33 }, -- hill unit position
-				-- 	[3] = { x = -586.75, y = 13.88, z = -824.23 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("skeleton") then -- Cursed Academy
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 1.23, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -167.89, y = 5.03, z = -41.00 }, -- hill unit position
-				-- 	[3] = { x = -124.5, y = 4.86, z = -44.06 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("SpaceCenter") then -- Clover Kingdom
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 15.25, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -107.81, y = 19.62, z = -526.78 }, -- hill unit position
-				-- 	[3] = { x = -111.71, y = 19.62, z = -502.85 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("boat and bus") then  -- Devil Portal
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 1, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -361.46, y = 3.91, z = -544.41 }, -- hill unit position
-				-- 	[3] = { x = -385.43, y = 5.86, z = -559.16 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("LanternsGround") then 
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 122.06, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = 394.85, y = 124.44, z = -74.23 }, -- hill unit position
-				-- 	[3] = { x = 365.35, y = 125.39, z = -95.78 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace:FindFirstChild("opm_1") then -- Alien Spaceship
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 361.21, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -336.19, y = 365.26, z = 1389.11 }, -- hill unit position
-				-- 	[3] = { x = -336.18, y = 365.26, z = 1391.78 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("ThreeDTextObject") then -- RAID UCHIHA
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 536.89, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = 304.59, y = 539.89, z = -588.45 }, -- hill unit position
-				-- 	[3] = { x = 267.66, y = 539.89, z = -560.54 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("misc nonocollide obstacles") then -- 7DPS
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 212.96, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -87.39, y = 216.99, z = -214.06 }, -- hill unit position
-				-- 	[3] = { x = -102.37, y = 219.20, z = -204.66 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("parking spots") then
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 36.04, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -188.33, y = 46.76, z = 552.44 }, -- hill unit position
-				-- 	[3] = { x = -179.47, y = 46.63, z = 552.69 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("vegetation") then  -- RAID WESTCITY
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 19.76, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -2334.15, y = 31.41, z = -79.33 }, -- hill unit position
-				-- 	[3] = { x = -2339.57, y = 32.03, z = -90.32 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("crashed spaceships") then  -- RAID Freeze
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 19.76, z = pos_z }, -- ground unit position
-				-- 	[2] = { x = -2334.15, y = 31.41, z = -79.33 }, -- hill unit position
-				-- 	[3] = { x = -2339.57, y = 32.03, z = -90.32 }, -- hill unit position
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("Support_Beam") then  -- RAID Gyegoro
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 495.600, z = pos_z }, -- ground unit position 
-				-- 	[2] = { x = -130.05, y = 504.78, z = -93.73 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
-				-- 	[3] = { x = -97.27, y = -97.27, z = -92.03 }, -- hill unit position -97.27552032470703, 500.6242980957031, -92.03937530517578
-				-- })
-				-- elseif game.Workspace._map:FindFirstChild("hay") then  -- ONE PICE
-				-- auto_place_units({
-				-- 	[1] = { x = pos_x, y = 2.60, z = pos_z }, -- ground unit position 
-				-- 	[2] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
-				-- 	[3] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
-				-- })
-                
-                
+                elseif game.Workspace._map:FindFirstChild("mha_city_night_rain") then  -- NEW RAID
+				auto_place_units({
+					[1] = { x = pos_x, y =  -13.24, z = pos_z }, -- ground unit position 
+					[2] = { x = -55.57, y = -8.89, z = 3.31 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+					[3] = { x = -50.44, y = -8.89, z = 3.05}, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+				})
+				elseif game.Workspace._map:FindFirstChild("bridge nocollide") then  -- MY HERO
+				auto_place_units({
+					[1] = { x = pos_x, y = -13.24, z = pos_z }, -- ground unit position
+					[2] = { x = -31.49, y = -10.02, z = 21.95 }, -- hill unit position
+					[3] = { x = -54.03, y = -8.89, z = 3.62 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("houses_new") then -- Shiganshinu District
+				auto_place_units({
+					[1] = { x = pos_x, y = 33.74, z = pos_z }, -- ground unit position
+					[2] = { x = -3026.78, y = 38.41, z = -677.81 }, -- hill unit position
+					[3] = { x = -3019.03, y = 38.41, z = -689.49 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("Snow Particles") then -- Snowy Town
+				auto_place_units({
+					[1] = { x = pos_x, y = 34.34, z = pos_z }, -- ground unit position
+					[2] = { x = -2876.02, y = 37.24, z = -150.81 }, -- hill unit position
+					[3] = { x = -2879.09, y = 39.57, z = -124.25 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("sand_gate") then -- Hidden Sand Village
+				auto_place_units({
+					[1] = { x = pos_x, y = 25.28, z = pos_z }, -- ground unit position
+					[2] = { x = -910.64, y = 33.14, z = 294.41 }, -- hill unit position
+					[3] = { x = -893.90, y = 29.56, z = 318.74 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("icebergs") then -- Marine's Ford
+				auto_place_units({
+					[1] = { x = pos_x, y = 25.21, z = pos_z }, -- ground unit position
+					[2] = { x = -2571.46, y = 29.50, z = -49.31 }, -- hill unit position
+					[3] = { x = -2581.62, y = 28.35, z = -66.97 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("Helicopter Pad") then -- Ghoul City
+				auto_place_units({
+					[1] = { x = pos_x, y = 58.58, z = pos_z }, -- ground unit position
+					[2] = { x = -2985.60, y = 66.70, z = -54.09 }, -- hill unit position
+					[3] = { x = -2956.22, y = 62.82, z = -49.40 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("castle top") then -- Hollow World
+				auto_place_units({
+					[1] = { x = pos_x, y = 132.66, z = pos_z }, -- ground unit position
+					[2] = { x = -184.33, y = 136.34, z = -757.71 }, -- hill unit position
+					[3] = { x = -174.58, y = 136.34, z = -710.48 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("Village Path") then -- Ant Kingdom
+				auto_place_units({
+					[1] = { x = pos_x, y = 23.01, z = pos_z }, -- ground unit position
+					[2] = { x = -145.86, y = 26.72, z = 2965.56 }, -- hill unit position
+					[3] = { x = -191.47, y = 27.20, z = 2952.01 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("wooden stacks") then -- Magic Town
+				auto_place_units({
+					[1] = { x = pos_x, y = 6.74, z = pos_z }, -- ground unit position
+					[2] = { x = -596.36, y = 13.99, z = -824.33 }, -- hill unit position
+					[3] = { x = -586.75, y = 13.88, z = -824.23 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("skeleton") then -- Cursed Academy
+				auto_place_units({
+					[1] = { x = pos_x, y = 1.23, z = pos_z }, -- ground unit position
+					[2] = { x = -167.89, y = 5.03, z = -41.00 }, -- hill unit position
+					[3] = { x = -124.5, y = 4.86, z = -44.06 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("SpaceCenter") then -- Clover Kingdom
+				auto_place_units({
+					[1] = { x = pos_x, y = 15.25, z = pos_z }, -- ground unit position
+					[2] = { x = -107.81, y = 19.62, z = -526.78 }, -- hill unit position
+					[3] = { x = -111.71, y = 19.62, z = -502.85 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("boat and bus") then  -- Devil Portal
+				auto_place_units({
+					[1] = { x = pos_x, y = 1, z = pos_z }, -- ground unit position
+					[2] = { x = -361.46, y = 3.91, z = -544.41 }, -- hill unit position
+					[3] = { x = -385.43, y = 5.86, z = -559.16 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("LanternsGround") then 
+				auto_place_units({
+					[1] = { x = pos_x, y = 122.06, z = pos_z }, -- ground unit position
+					[2] = { x = 394.85, y = 124.44, z = -74.23 }, -- hill unit position
+					[3] = { x = 365.35, y = 125.39, z = -95.78 }, -- hill unit position
+				})
+				elseif game.Workspace:FindFirstChild("opm_1") then -- Alien Spaceship
+				auto_place_units({
+					[1] = { x = pos_x, y = 361.21, z = pos_z }, -- ground unit position
+					[2] = { x = -336.19, y = 365.26, z = 1389.11 }, -- hill unit position
+					[3] = { x = -336.18, y = 365.26, z = 1391.78 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("ThreeDTextObject") then -- RAID UCHIHA
+				auto_place_units({
+					[1] = { x = pos_x, y = 536.89, z = pos_z }, -- ground unit position
+					[2] = { x = 304.59, y = 539.89, z = -588.45 }, -- hill unit position
+					[3] = { x = 267.66, y = 539.89, z = -560.54 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("misc nonocollide obstacles") then -- 7DPS
+				auto_place_units({
+					[1] = { x = pos_x, y = 212.96, z = pos_z }, -- ground unit position
+					[2] = { x = -87.39, y = 216.99, z = -214.06 }, -- hill unit position
+					[3] = { x = -102.37, y = 219.20, z = -204.66 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("parking spots") then
+				auto_place_units({
+					[1] = { x = pos_x, y = 36.04, z = pos_z }, -- ground unit position
+					[2] = { x = -188.33, y = 46.76, z = 552.44 }, -- hill unit position
+					[3] = { x = -179.47, y = 46.63, z = 552.69 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("vegetation") then  -- RAID WESTCITY
+				auto_place_units({
+					[1] = { x = pos_x, y = 19.76, z = pos_z }, -- ground unit position
+					[2] = { x = -2334.15, y = 31.41, z = -79.33 }, -- hill unit position
+					[3] = { x = -2339.57, y = 32.03, z = -90.32 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("crashed spaceships") then  -- RAID Freeze
+				auto_place_units({
+					[1] = { x = pos_x, y = 19.76, z = pos_z }, -- ground unit position
+					[2] = { x = -2334.15, y = 31.41, z = -79.33 }, -- hill unit position
+					[3] = { x = -2339.57, y = 32.03, z = -90.32 }, -- hill unit position
+				})
+				elseif game.Workspace._map:FindFirstChild("Support_Beam") then  -- RAID Gyegoro
+				auto_place_units({
+					[1] = { x = pos_x, y = 495.600, z = pos_z }, -- ground unit position 
+					[2] = { x = -130.05, y = 504.78, z = -93.73 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+					[3] = { x = -97.27, y = -97.27, z = -92.03 }, -- hill unit position -97.27552032470703, 500.6242980957031, -92.03937530517578
+				})
+				elseif game.Workspace._map:FindFirstChild("hay") then  -- ONE PICE
+				auto_place_units({
+					[1] = { x = pos_x, y = 2.60, z = pos_z }, -- ground unit position 
+					[2] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+					[3] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+				})
+
 			end
 		end
 	end
