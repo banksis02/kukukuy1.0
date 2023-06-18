@@ -1,5 +1,4 @@
 ---@diagnostic disable: undefined-global, lowercase-global, deprecated, undefined-field, ambiguity-1, unbalanced-assignments, redundant-parameter, cast-local-type
--- ใช้เอง ############################################
 task.wait(2)
 repeat task.wait() until game:IsLoaded()
 if game.PlaceId == 8304191830 then
@@ -12,49 +11,12 @@ else
 	repeat task.wait() until game:GetService("Workspace")["_waves_started"].Value == true
 end
 
--- --// WHITELIST //--
---#region WhiteList
-
-
--- local HWIDTable = loadstring(game:HttpGet("https://www.project-hub.shop/whilelistmember.php"))()
--- local HWID = game:GetService("RbxAnalyticsService"):GetClientId()
--- HWIDCHECK = false
-
--- for i, v in pairs(HWIDTable) do
--- 	if v == HWID then
--- 		HWIDCHECK = true
--- 		task.wait(2)
--- 		break
--- 	else
--- 		print("Step 1")
--- 	end
--- end
-
--- if HWIDCHECK == true then
--- 	print("Successfully!!")
--- else
--- 	local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
--- 	OrionLib:MakeNotification({
--- 		Name = "API ERROR!",
--- 		Content = "ไม่พบ API. ของคุณในระบบ. นี่คือเลข API ของคุณ : "
--- 			.. HWID
--- 			.. " [AUTO COPY]",
--- 		Image = "rbxassetid://2795966663",
--- 		Time = 5,
--- 	})
--- 	setclipboard(HWID)
--- 	task.wait(6)
--- 	game.Players.LocalPlayer:Kick("API Not match. Plase Connact Support.." .. "[API] : " .. HWID)
--- 	task.wait(99)
--- end
-
---#endregion
------------------
+task.wait(5)
 
 --#region Setting in Game PlayerID And WorkSpace
 
-local versionx = "1.3.9 Entertainment" 
-local map_dun1 = "_lobbytemplate_event222"
+local versionx = " - auto 4x"
+local map_dun1 = "_lobbytemplate_event227"
 local key_dun1 = "key_jjk_finger"
 local map_dun2 = "_lobbytemplate_event428"
 local key_dun2 = "key_yamamoto"
@@ -66,7 +28,6 @@ local players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local Workspace = game:GetService("Workspace")
 local LocalPlayer = game:GetService("Players").LocalPlayer
-local PlaceId = 8304191830
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -74,1817 +35,10 @@ local Mouse = LocalPlayer:GetMouse()
 local ReplicatedFirst = game:GetService("ReplicatedFirst")
 local playerGui = LocalPlayer:WaitForChild("PlayerGui")
 
-httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
-JobId = game.JobId
-
 -----------------------------------------------------------------
 
 --#endregion
 
---#region Main Loaded --
-
-function olionLib()
-	--@diagnostic disable: undefined-global, redundant-parameter, undefined-field, deprecated, unbalanced-assignments, lowercase-global
-	local OrionLib = {
-		Elements = {},
-		ThemeObjects = {},
-		Connections = {},
-		Flags = {},
-		Themes = {
-			Default = {
-				Main = Color3.fromRGB(25, 25, 25),
-				Second = Color3.fromRGB(32, 32, 32),
-				Stroke = Color3.fromRGB(60, 60, 60),
-				Divider = Color3.fromRGB(60, 60, 60),
-				Text = Color3.fromRGB(240, 240, 240),
-				TextDark = Color3.fromRGB(150, 150, 150)
-			}
-		},
-		SelectedTheme = "Default",
-		Folder = nil,
-		SaveCfg = false
-	}
-
-	--Feather Icons https://github.com/evoincorp/lucideblox/tree/master/src/modules/util - Created by 7kayoh
-	local Icons = {}
-
-	local Success, Response = pcall(function()
-		Icons = HttpService:JSONDecode(game:HttpGetAsync("https://raw.githubusercontent.com/evoincorp/lucideblox/master/src/modules/util/icons.json")).icons
-	end)
-
-	if not Success then
-		warn("\nOrion Library - Failed to load Feather Icons. Error code: " .. Response .. "\n")
-	end	
-
-	local function GetIcon(IconName)
-		if Icons[IconName] ~= nil then
-			return Icons[IconName]
-		else
-			return nil
-		end
-	end   
-
-	local Orion = Instance.new("ScreenGui")
-	Orion.Name = "Orion"
-	if syn then
-		syn.protect_gui(Orion)
-		Orion.Parent = game.CoreGui
-	else
-		Orion.Parent = gethui() or game.CoreGui
-	end
-
-	if gethui then
-		for _, Interface in ipairs(gethui():GetChildren()) do
-			if Interface.Name == Orion.Name and Interface ~= Orion then
-				Interface:Destroy()
-			end
-		end
-	else
-		for _, Interface in ipairs(game.CoreGui:GetChildren()) do
-			if Interface.Name == Orion.Name and Interface ~= Orion then
-				Interface:Destroy()
-			end
-		end
-	end
-
-	function OrionLib:IsRunning()
-		if gethui then
-			return Orion.Parent == gethui()
-		else
-			return Orion.Parent == game:GetService("CoreGui")
-		end
-
-	end
-
-	local function AddConnection(Signal, Function)
-		if (not OrionLib:IsRunning()) then
-			return
-		end
-		local SignalConnect = Signal:Connect(Function)
-		table.insert(OrionLib.Connections, SignalConnect)
-		return SignalConnect
-	end
-
-	task.spawn(function()
-		while (OrionLib:IsRunning()) do
-			wait()
-		end
-
-		for _, Connection in next, OrionLib.Connections do
-			Connection:Disconnect()
-		end
-	end)
-
-	local function MakeDraggable(DragPoint, Main)
-		pcall(function()
-			local Dragging, DragInput, MousePos, FramePos = false
-			AddConnection(DragPoint.InputBegan, function(Input)
-				if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-					Dragging = true
-					MousePos = Input.Position
-					FramePos = Main.Position
-
-					Input.Changed:Connect(function()
-						if Input.UserInputState == Enum.UserInputState.End then
-							Dragging = false
-						end
-					end)
-				end
-			end)
-			AddConnection(DragPoint.InputChanged, function(Input)
-				if Input.UserInputType == Enum.UserInputType.MouseMovement then
-					DragInput = Input
-				end
-			end)
-			AddConnection(UserInputService.InputChanged, function(Input)
-				if Input == DragInput and Dragging then
-					local Delta = Input.Position - MousePos
-					--TweenService:Create(Main, TweenInfo.new(0.05, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)}):Play()
-					Main.Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)
-				end
-			end)
-		end)
-	end    
-
-	local function Create(Name, Properties, Children)
-		local Object = Instance.new(Name)
-		for i, v in next, Properties or {} do
-			Object[i] = v
-		end
-		for i, v in next, Children or {} do
-			v.Parent = Object
-		end
-		return Object
-	end
-
-	local function CreateElement(ElementName, ElementFunction)
-		OrionLib.Elements[ElementName] = function(...)
-			return ElementFunction(...)
-		end
-	end
-
-	local function MakeElement(ElementName, ...)
-		local NewElement = OrionLib.Elements[ElementName](...)
-		return NewElement
-	end
-
-	local function SetProps(Element, Props)
-		table.foreach(Props, function(Property, Value)
-			Element[Property] = Value
-		end)
-		return Element
-	end
-
-	local function SetChildren(Element, Children)
-		table.foreach(Children, function(_, Child)
-			Child.Parent = Element
-		end)
-		return Element
-	end
-
-	local function Round(Number, Factor)
-		local Result = math.floor(Number/Factor + (math.sign(Number) * 0.5)) * Factor
-		if Result < 0 then Result = Result + Factor end
-		return Result
-	end
-
-	local function ReturnProperty(Object)
-		if Object:IsA("Frame") or Object:IsA("TextButton") then
-			return "BackgroundColor3"
-		end 
-		if Object:IsA("ScrollingFrame") then
-			return "ScrollBarImageColor3"
-		end 
-		if Object:IsA("UIStroke") then
-			return "Color"
-		end 
-		if Object:IsA("TextLabel") or Object:IsA("TextBox") then
-			return "TextColor3"
-		end   
-		if Object:IsA("ImageLabel") or Object:IsA("ImageButton") then
-			return "ImageColor3"
-		end   
-	end
-
-	local function AddThemeObject(Object, Type)
-		if not OrionLib.ThemeObjects[Type] then
-			OrionLib.ThemeObjects[Type] = {}
-		end    
-		table.insert(OrionLib.ThemeObjects[Type], Object)
-		Object[ReturnProperty(Object)] = OrionLib.Themes[OrionLib.SelectedTheme][Type]
-		return Object
-	end    
-
-	local function SetTheme()
-		for Name, Type in pairs(OrionLib.ThemeObjects) do
-			for _, Object in pairs(Type) do
-				Object[ReturnProperty(Object)] = OrionLib.Themes[OrionLib.SelectedTheme][Name]
-			end    
-		end    
-	end
-
-	local function PackColor(Color)
-		return {R = Color.R * 255, G = Color.G * 255, B = Color.B * 255}
-	end    
-
-	local function UnpackColor(Color)
-		return Color3.fromRGB(Color.R, Color.G, Color.B)
-	end
-
-	local function LoadCfg(Config)
-		local Data = HttpService:JSONDecode(Config)
-		table.foreach(Data, function(a,b)
-			if OrionLib.Flags[a] then
-				spawn(function() 
-					if OrionLib.Flags[a].Type == "Colorpicker" then
-						OrionLib.Flags[a]:Set(UnpackColor(b))
-					else
-						OrionLib.Flags[a]:Set(b)
-					end    
-				end)
-			else
-				warn("Orion Library Config Loader - Could not find ", a ,b)
-			end
-		end)
-	end
-
-	local function SaveCfg(Name)
-		local Data = {}
-		for i,v in pairs(OrionLib.Flags) do
-			if v.Save then
-				if v.Type == "Colorpicker" then
-					Data[i] = PackColor(v.Value)
-				else
-					Data[i] = v.Value
-				end
-			end	
-		end
-		writefile(OrionLib.Folder .. "/" .. Name .. ".txt", tostring(HttpService:JSONEncode(Data)))
-	end
-
-	local WhitelistedMouse = {Enum.UserInputType.MouseButton1, Enum.UserInputType.MouseButton2,Enum.UserInputType.MouseButton3}
-	local BlacklistedKeys = {Enum.KeyCode.Unknown,Enum.KeyCode.W,Enum.KeyCode.A,Enum.KeyCode.S,Enum.KeyCode.D,Enum.KeyCode.Up,Enum.KeyCode.Left,Enum.KeyCode.Down,Enum.KeyCode.Right,Enum.KeyCode.Slash,Enum.KeyCode.Tab,Enum.KeyCode.Backspace,Enum.KeyCode.Escape}
-
-	local function CheckKey(Table, Key)
-		for _, v in next, Table do
-			if v == Key then
-				return true
-			end
-		end
-	end
-
-	CreateElement("Corner", function(Scale, Offset)
-		local Corner = Create("UICorner", {
-			CornerRadius = UDim.new(Scale or 0, Offset or 10)
-		})
-		return Corner
-	end)
-
-	CreateElement("Stroke", function(Color, Thickness)
-		local Stroke = Create("UIStroke", {
-			Color = Color or Color3.fromRGB(255, 255, 255),
-			Thickness = Thickness or 1
-		})
-		return Stroke
-	end)
-
-	CreateElement("List", function(Scale, Offset)
-		local List = Create("UIListLayout", {
-			SortOrder = Enum.SortOrder.LayoutOrder,
-			Padding = UDim.new(Scale or 0, Offset or 0)
-		})
-		return List
-	end)
-
-	CreateElement("Padding", function(Bottom, Left, Right, Top)
-		local Padding = Create("UIPadding", {
-			PaddingBottom = UDim.new(0, Bottom or 4),
-			PaddingLeft = UDim.new(0, Left or 4),
-			PaddingRight = UDim.new(0, Right or 4),
-			PaddingTop = UDim.new(0, Top or 4)
-		})
-		return Padding
-	end)
-
-	CreateElement("TFrame", function()
-		local TFrame = Create("Frame", {
-			BackgroundTransparency = 1
-		})
-		return TFrame
-	end)
-
-	CreateElement("Frame", function(Color)
-		local Frame = Create("Frame", {
-			BackgroundColor3 = Color or Color3.fromRGB(255, 255, 255),
-			BorderSizePixel = 0
-		})
-		return Frame
-	end)
-
-	CreateElement("RoundFrame", function(Color, Scale, Offset)
-		local Frame = Create("Frame", {
-			BackgroundColor3 = Color or Color3.fromRGB(255, 255, 255),
-			BorderSizePixel = 0
-		}, {
-			Create("UICorner", {
-				CornerRadius = UDim.new(Scale, Offset)
-			})
-		})
-		return Frame
-	end)
-
-	CreateElement("Button", function()
-		local Button = Create("TextButton", {
-			Text = "",
-			AutoButtonColor = false,
-			BackgroundTransparency = 1,
-			BorderSizePixel = 0
-		})
-		return Button
-	end)
-
-	CreateElement("ScrollFrame", function(Color, Width)
-		local ScrollFrame = Create("ScrollingFrame", {
-			BackgroundTransparency = 1,
-			MidImage = "rbxassetid://7445543667",
-			BottomImage = "rbxassetid://7445543667",
-			TopImage = "rbxassetid://7445543667",
-			ScrollBarImageColor3 = Color,
-			BorderSizePixel = 0,
-			ScrollBarThickness = Width,
-			CanvasSize = UDim2.new(0, 0, 0, 0)
-		})
-		return ScrollFrame
-	end)
-
-	CreateElement("Image", function(ImageID)
-		local ImageNew = Create("ImageLabel", {
-			Image = ImageID,
-			BackgroundTransparency = 1
-		})
-
-		if GetIcon(ImageID) ~= nil then
-			ImageNew.Image = GetIcon(ImageID)
-		end	
-
-		return ImageNew
-	end)
-
-	CreateElement("ImageButton", function(ImageID)
-		local Image = Create("ImageButton", {
-			Image = ImageID,
-			BackgroundTransparency = 1
-		})
-		return Image
-	end)
-
-	CreateElement("Label", function(Text, TextSize, Transparency)
-		local Label = Create("TextLabel", {
-			Text = Text or "",
-			TextColor3 = Color3.fromRGB(240, 240, 240),
-			TextTransparency = Transparency or 0,
-			TextSize = TextSize or 15,
-			Font = Enum.Font.Gotham,
-			RichText = true,
-			BackgroundTransparency = 1,
-			TextXAlignment = Enum.TextXAlignment.Left
-		})
-		return Label
-	end)
-
-	local NotificationHolder = SetProps(SetChildren(MakeElement("TFrame"), {
-		SetProps(MakeElement("List"), {
-			HorizontalAlignment = Enum.HorizontalAlignment.Center,
-			SortOrder = Enum.SortOrder.LayoutOrder,
-			VerticalAlignment = Enum.VerticalAlignment.Bottom,
-			Padding = UDim.new(0, 5)
-		})
-	}), {
-		Position = UDim2.new(1, -25, 1, -25),
-		Size = UDim2.new(0, 300, 1, -25),
-		AnchorPoint = Vector2.new(1, 1),
-		Parent = Orion
-	})
-
-	function OrionLib:MakeNotification(NotificationConfig)
-		spawn(function()
-			NotificationConfig.Name = NotificationConfig.Name or "Notification"
-			NotificationConfig.Content = NotificationConfig.Content or "Test"
-			NotificationConfig.Image = NotificationConfig.Image or "rbxassetid://4384403532"
-			NotificationConfig.Time = NotificationConfig.Time or 15
-
-			local NotificationParent = SetProps(MakeElement("TFrame"), {
-				Size = UDim2.new(1, 0, 0, 0),
-				AutomaticSize = Enum.AutomaticSize.Y,
-				Parent = NotificationHolder
-			})
-
-			local NotificationFrame = SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(25, 25, 25), 0, 10), {
-				Parent = NotificationParent, 
-				Size = UDim2.new(1, 0, 0, 0),
-				Position = UDim2.new(1, -55, 0, 0),
-				BackgroundTransparency = 0,
-				AutomaticSize = Enum.AutomaticSize.Y
-			}), {
-				MakeElement("Stroke", Color3.fromRGB(93, 93, 93), 1.2),
-				MakeElement("Padding", 12, 12, 12, 12),
-				SetProps(MakeElement("Image", NotificationConfig.Image), {
-					Size = UDim2.new(0, 20, 0, 20),
-					ImageColor3 = Color3.fromRGB(240, 240, 240),
-					Name = "Icon"
-				}),
-				SetProps(MakeElement("Label", NotificationConfig.Name, 15), {
-					Size = UDim2.new(1, -30, 0, 20),
-					Position = UDim2.new(0, 30, 0, 0),
-					Font = Enum.Font.GothamBold,
-					Name = "Title"
-				}),
-				SetProps(MakeElement("Label", NotificationConfig.Content, 14), {
-					Size = UDim2.new(1, 0, 0, 0),
-					Position = UDim2.new(0, 0, 0, 25),
-					Font = Enum.Font.GothamSemibold,
-					Name = "Content",
-					AutomaticSize = Enum.AutomaticSize.Y,
-					TextColor3 = Color3.fromRGB(200, 200, 200),
-					TextWrapped = true
-				})
-			})
-
-			TweenService:Create(NotificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 0, 0, 0)}):Play()
-
-			wait(NotificationConfig.Time - 0.88)
-			TweenService:Create(NotificationFrame.Icon, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
-			TweenService:Create(NotificationFrame, TweenInfo.new(0.8, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.6}):Play()
-			wait(0.3)
-			TweenService:Create(NotificationFrame.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 0.9}):Play()
-			TweenService:Create(NotificationFrame.Title, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0.4}):Play()
-			TweenService:Create(NotificationFrame.Content, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0.5}):Play()
-			wait(0.05)
-
-			NotificationFrame:TweenPosition(UDim2.new(1, 20, 0, 0),'In','Quint',0.8,true)
-			wait(1.35)
-			NotificationFrame:Destroy()
-		end)
-	end    
-
-	function OrionLib:Init()
-		if OrionLib.SaveCfg then	
-			pcall(function()
-				if isfile(OrionLib.Folder .. "/" .. game.GameId .. ".txt") then
-					LoadCfg(readfile(OrionLib.Folder .. "/" .. game.GameId .. ".txt"))
-					OrionLib:MakeNotification({
-						Name = "Configuration",
-						Content = "Auto-loaded configuration for the game " .. game.GameId .. ".",
-						Time = 5
-					})
-				end
-			end)		
-		end	
-	end	
-
-	function OrionLib:MakeWindow(WindowConfig)
-		local FirstTab = true
-		local Minimized = false
-		local Loaded = false
-		local UIHidden = false
-
-		WindowConfig = WindowConfig or {}
-		WindowConfig.Name = WindowConfig.Name or "Orion Library"
-		WindowConfig.ConfigFolder = WindowConfig.ConfigFolder or WindowConfig.Name
-		WindowConfig.SaveConfig = WindowConfig.SaveConfig or false
-		WindowConfig.HidePremium = WindowConfig.HidePremium or false
-		if WindowConfig.IntroEnabled == nil then
-			WindowConfig.IntroEnabled = true
-		end
-		WindowConfig.IntroText = WindowConfig.IntroText or "Orion Library"
-		WindowConfig.CloseCallback = WindowConfig.CloseCallback or function() end
-		WindowConfig.ShowIcon = WindowConfig.ShowIcon or false
-		WindowConfig.Icon = WindowConfig.Icon or "rbxassetid://8834748103"
-		WindowConfig.IntroIcon = WindowConfig.IntroIcon or "rbxassetid://8834748103"
-		WindowConfig.AutoHideUI = WindowConfig.AutoHideUI or false
-		WindowConfig.AutoMinimizeUI = WindowConfig.AutoMinimizeUI or false
-		OrionLib.Folder = WindowConfig.ConfigFolder
-		OrionLib.SaveCfg = WindowConfig.SaveConfig
-
-		if WindowConfig.SaveConfig then
-			if not isfolder(WindowConfig.ConfigFolder) then
-				makefolder(WindowConfig.ConfigFolder)
-			end	
-		end
-
-		local TabHolder = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 4), {
-			Size = UDim2.new(1, 0, 1, -50)
-		}), {
-			MakeElement("List"),
-			MakeElement("Padding", 8, 0, 0, 8)
-		}), "Divider")
-
-		AddConnection(TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-			TabHolder.CanvasSize = UDim2.new(0, 0, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 16)
-		end)
-
-		local CloseBtn = SetChildren(SetProps(MakeElement("Button"), {
-			Size = UDim2.new(0.5, 0, 1, 0),
-			Position = UDim2.new(0.5, 0, 0, 0),
-			BackgroundTransparency = 1
-		}), {
-			AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072725342"), {
-				Position = UDim2.new(0, 9, 0, 6),
-				Size = UDim2.new(0, 18, 0, 18)
-			}), "Text")
-		})
-
-		local MinimizeBtn = SetChildren(SetProps(MakeElement("Button"), {
-			Size = UDim2.new(0.5, 0, 1, 0),
-			BackgroundTransparency = 1
-		}), {
-			AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072719338"), {
-				Position = UDim2.new(0, 9, 0, 6),
-				Size = UDim2.new(0, 18, 0, 18),
-				Name = "Ico"
-			}), "Text")
-		})
-
-		local DragPoint = SetProps(MakeElement("TFrame"), {
-			Size = UDim2.new(1, 0, 0, 50)
-		})
-
-		local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 10), {
-			Size = UDim2.new(0, 150, 1, -50),
-			Position = UDim2.new(0, 0, 0, 50)
-		}), {
-			AddThemeObject(SetProps(MakeElement("Frame"), {
-				Size = UDim2.new(1, 0, 0, 10),
-				Position = UDim2.new(0, 0, 0, 0)
-			}), "Second"), 
-			AddThemeObject(SetProps(MakeElement("Frame"), {
-				Size = UDim2.new(0, 10, 1, 0),
-				Position = UDim2.new(1, -10, 0, 0)
-			}), "Second"), 
-			AddThemeObject(SetProps(MakeElement("Frame"), {
-				Size = UDim2.new(0, 1, 1, 0),
-				Position = UDim2.new(1, -1, 0, 0)
-			}), "Stroke"), 
-			TabHolder,
-			SetChildren(SetProps(MakeElement("TFrame"), {
-				Size = UDim2.new(1, 0, 0, 50),
-				Position = UDim2.new(0, 0, 1, -50)
-			}), {
-				AddThemeObject(SetProps(MakeElement("Frame"), {
-					Size = UDim2.new(1, 0, 0, 1)
-				}), "Stroke"), 
-				AddThemeObject(SetChildren(SetProps(MakeElement("Frame"), {
-					AnchorPoint = Vector2.new(0, 0.5),
-					Size = UDim2.new(0, 32, 0, 32),
-					Position = UDim2.new(0, 10, 0.5, 0)
-				}), {
-					SetProps(MakeElement("Image", "https://www.roblox.com/headshot-thumbnail/image?userId=".. LocalPlayer.UserId .."&width=420&height=420&format=png"), {
-						Size = UDim2.new(1, 0, 1, 0)
-					}),
-					AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://4031889928"), {
-						Size = UDim2.new(1, 0, 1, 0),
-					}), "Second"),
-					MakeElement("Corner", 1)
-				}), "Divider"),
-				SetChildren(SetProps(MakeElement("TFrame"), {
-					AnchorPoint = Vector2.new(0, 0.5),
-					Size = UDim2.new(0, 32, 0, 32),
-					Position = UDim2.new(0, 10, 0.5, 0)
-				}), {
-					AddThemeObject(MakeElement("Stroke"), "Stroke"),
-					MakeElement("Corner", 1)
-				}),
-				AddThemeObject(SetProps(MakeElement("Label", LocalPlayer.Name, WindowConfig.HidePremium and 14 or 13), {
-					Size = UDim2.new(1, -60, 0, 13),
-					Position = WindowConfig.HidePremium and UDim2.new(0, 50, 0, 19) or UDim2.new(0, 50, 0, 12),
-					Font = Enum.Font.GothamBold,
-					ClipsDescendants = true
-				}), "Text"),
-				AddThemeObject(SetProps(MakeElement("Label", "", 12), {
-					Size = UDim2.new(1, -60, 0, 12),
-					Position = UDim2.new(0, 50, 1, -25),
-					Visible = not WindowConfig.HidePremium
-				}), "TextDark")
-			}),
-		}), "Second")
-
-		local WindowName = AddThemeObject(SetProps(MakeElement("Label", WindowConfig.Name, 14), {
-			Size = UDim2.new(1, -30, 2, 0),
-			Position = UDim2.new(0, 25, 0, -24),
-			Font = Enum.Font.GothamBlack,
-			TextSize = 20
-		}), "Text")
-
-		local WindowTopBarLine = AddThemeObject(SetProps(MakeElement("Frame"), {
-			Size = UDim2.new(1, 0, 0, 1),
-			Position = UDim2.new(0, 0, 1, -1)
-		}), "Stroke")
-
-		local MainWindow = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 10), {
-			Parent = Orion,
-			Position = UDim2.new(0.5, -307, 0.5, -172),
-			Size = UDim2.new(0, 615, 0, 344),
-			ClipsDescendants = true
-		}), {
-			--SetProps(MakeElement("Image", "rbxassetid://3523728077"), {
-			--	AnchorPoint = Vector2.new(0.5, 0.5),
-			--	Position = UDim2.new(0.5, 0, 0.5, 0),
-			--	Size = UDim2.new(1, 80, 1, 320),
-			--	ImageColor3 = Color3.fromRGB(33, 33, 33),
-			--	ImageTransparency = 0.7
-			--}),
-			SetChildren(SetProps(MakeElement("TFrame"), {
-				Size = UDim2.new(1, 0, 0, 50),
-				Name = "TopBar"
-			}), {
-				WindowName,
-				WindowTopBarLine,
-				AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 7), {
-					Size = UDim2.new(0, 70, 0, 30),
-					Position = UDim2.new(1, -90, 0, 10)
-				}), {
-					AddThemeObject(MakeElement("Stroke"), "Stroke"),
-					AddThemeObject(SetProps(MakeElement("Frame"), {
-						Size = UDim2.new(0, 1, 1, 0),
-						Position = UDim2.new(0.5, 0, 0, 0)
-					}), "Stroke"), 
-					CloseBtn,
-					MinimizeBtn
-				}), "Second"), 
-			}),
-			DragPoint,
-			WindowStuff
-		}), "Main")
-
-		if WindowConfig.ShowIcon then
-			WindowName.Position = UDim2.new(0, 50, 0, -24)
-			local WindowIcon = SetProps(MakeElement("Image", WindowConfig.Icon), {
-				Size = UDim2.new(0, 20, 0, 20),
-				Position = UDim2.new(0, 25, 0, 15)
-			})
-			WindowIcon.Parent = MainWindow.TopBar
-		end	
-
-		MakeDraggable(DragPoint, MainWindow)
-
-		AddConnection(CloseBtn.MouseButton1Up, function()
-			MainWindow.Visible = false
-			UIHidden = true
-			OrionLib:MakeNotification({
-				Name = "Interface Hidden",
-				Content = "Tap RightShift to reopen the interface",
-				Time = 5
-			})
-			WindowConfig.CloseCallback()
-		end)
-
-		local Hidden = false
-		UserInputService.InputBegan:Connect(function(input, processed)
-			if (input.KeyCode == Enum.KeyCode.RightShift and not processed) then
-				--if Debounce then return end
-				if UIHidden then
-					MainWindow.Visible = true
-					OrionLib:MakeNotification({
-						Name = "Open Interface",
-						Content = "Tap RightShift to reopen the interface",
-						Time = 5
-					})
-					UIHidden = false
-					return
-				end
-				if Hidden then
-					Hidden = false
-					MainWindow.Visible = true
-					OrionLib:MakeNotification({
-						Name = "Open Interface",
-						Content = "Tap RightShift to reopen the interface",
-						Time = 5
-					})
-				else
-					Hidden = true
-					MainWindow.Visible = false
-					OrionLib:MakeNotification({
-						Name = "Hide Interface",
-						Content = "Tap RightShift to reopen the interface",
-						Time = 5
-					})
-				end
-			end
-		end)
-
-		-- AddConnection(UserInputService.InputBegan, function(Input)
-		-- 	if Input.KeyCode == Enum.KeyCode.RightShift and UIHidden then
-		-- 		MainWindow.Visible = true
-		-- 	end
-		-- end)
-
-		
-		AddConnection(MinimizeBtn.MouseButton1Up, function()
-			if Minimized then
-				TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, 615, 0, 344)}):Play()
-				MinimizeBtn.Ico.Image = "rbxassetid://7072719338"
-				wait(.02)
-				MainWindow.ClipsDescendants = false
-				WindowStuff.Visible = true
-				WindowTopBarLine.Visible = true
-			else
-				MainWindow.ClipsDescendants = true
-				WindowTopBarLine.Visible = false
-				MinimizeBtn.Ico.Image = "rbxassetid://7072720870"
-
-				TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, WindowName.TextBounds.X + 140, 0, 50)}):Play()
-				wait(0.1)
-				WindowStuff.Visible = false	
-			end
-			Minimized = not Minimized    
-		end)
-
-		local function LoadSequence()
-			MainWindow.Visible = false
-			local LoadSequenceLogo = SetProps(MakeElement("Image", WindowConfig.IntroIcon), {
-				Parent = Orion,
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.new(0.5, 0, 0.4, 0),
-				Size = UDim2.new(0, 28, 0, 28),
-				ImageColor3 = Color3.fromRGB(255, 255, 255),
-				ImageTransparency = 1
-			})
-
-			local LoadSequenceText = SetProps(MakeElement("Label", WindowConfig.IntroText, 14), {
-				Parent = Orion,
-				Size = UDim2.new(1, 0, 1, 0),
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.new(0.5, 19, 0.5, 0),
-				TextXAlignment = Enum.TextXAlignment.Center,
-				Font = Enum.Font.GothamBold,
-				TextTransparency = 1
-			})
-
-			TweenService:Create(LoadSequenceLogo, TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0, Position = UDim2.new(0.5, 0, 0.5, 0)}):Play()
-			wait(0.8)
-			TweenService:Create(LoadSequenceLogo, TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -(LoadSequenceText.TextBounds.X/2), 0.5, 0)}):Play()
-			wait(0.3)
-			TweenService:Create(LoadSequenceText, TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
-			wait(2)
-			TweenService:Create(LoadSequenceText, TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
-			MainWindow.Visible = true
-			LoadSequenceLogo:Destroy()
-			LoadSequenceText:Destroy()
-		end 
-
-		if WindowConfig.IntroEnabled then
-			LoadSequence()
-		end	
-		
-		if WindowConfig.AutoHideUI then
-			MainWindow.Visible = false
-			UIHidden = true
-			OrionLib:MakeNotification({
-				Name = "Interface Hidden",
-				Content = "Tap RightShift to reopen the interface",
-				Time = 5
-			})
-			WindowConfig.CloseCallback()
-		end
-
-		if WindowConfig.AutoMinimizeUI then
-			if Minimized then
-				TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, 615, 0, 344)}):Play()
-				MinimizeBtn.Ico.Image = "rbxassetid://7072719338"
-				wait(.02)
-				MainWindow.ClipsDescendants = false
-				WindowStuff.Visible = true
-				WindowTopBarLine.Visible = true
-			else
-				MainWindow.ClipsDescendants = true
-				WindowTopBarLine.Visible = false
-				MinimizeBtn.Ico.Image = "rbxassetid://7072720870"
-
-				TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, WindowName.TextBounds.X + 140, 0, 50)}):Play()
-				wait(0.1)
-				WindowStuff.Visible = false	
-			end
-			Minimized = not Minimized
-		end
-
-		local TabFunction = {}
-		function TabFunction:MakeTab(TabConfig)
-			TabConfig = TabConfig or {}
-			TabConfig.Name = TabConfig.Name or "Tab"
-			TabConfig.Icon = TabConfig.Icon or ""
-			TabConfig.PremiumOnly = TabConfig.PremiumOnly or false
-
-			local TabFrame = SetChildren(SetProps(MakeElement("Button"), {
-				Size = UDim2.new(1, 0, 0, 30),
-				Parent = TabHolder
-			}), {
-				AddThemeObject(SetProps(MakeElement("Image", TabConfig.Icon), {
-					AnchorPoint = Vector2.new(0, 0.5),
-					Size = UDim2.new(0, 18, 0, 18),
-					Position = UDim2.new(0, 10, 0.5, 0),
-					ImageTransparency = 0.4,
-					Name = "Ico"
-				}), "Text"),
-				AddThemeObject(SetProps(MakeElement("Label", TabConfig.Name, 14), {
-					Size = UDim2.new(1, -35, 1, 0),
-					Position = UDim2.new(0, 35, 0, 0),
-					Font = Enum.Font.GothamSemibold,
-					TextTransparency = 0.4,
-					Name = "Title"
-				}), "Text")
-			})
-
-			if GetIcon(TabConfig.Icon) ~= nil then
-				TabFrame.Ico.Image = GetIcon(TabConfig.Icon)
-			end	
-
-			local Container = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 5), {
-				Size = UDim2.new(1, -150, 1, -50),
-				Position = UDim2.new(0, 150, 0, 50),
-				Parent = MainWindow,
-				Visible = false,
-				Name = "ItemContainer"
-			}), {
-				MakeElement("List", 0, 6),
-				MakeElement("Padding", 15, 10, 10, 15)
-			}), "Divider")
-
-			AddConnection(Container.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-				Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 30)
-			end)
-
-			if FirstTab then
-				FirstTab = false
-				TabFrame.Ico.ImageTransparency = 0
-				TabFrame.Title.TextTransparency = 0
-				TabFrame.Title.Font = Enum.Font.GothamBlack
-				Container.Visible = true
-			end    
-
-			AddConnection(TabFrame.MouseButton1Click, function()
-				for _, Tab in next, TabHolder:GetChildren() do
-					if Tab:IsA("TextButton") then
-						Tab.Title.Font = Enum.Font.GothamSemibold
-						TweenService:Create(Tab.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0.4}):Play()
-						TweenService:Create(Tab.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 0.4}):Play()
-					end    
-				end
-				for _, ItemContainer in next, MainWindow:GetChildren() do
-					if ItemContainer.Name == "ItemContainer" then
-						ItemContainer.Visible = false
-					end    
-				end  
-				TweenService:Create(TabFrame.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
-				TweenService:Create(TabFrame.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
-				TabFrame.Title.Font = Enum.Font.GothamBlack
-				Container.Visible = true   
-			end)
-
-			local function GetElements(ItemParent)
-				local ElementFunction = {}
-				function ElementFunction:AddLabel(Text)
-					local LabelFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-						Size = UDim2.new(1, 0, 0, 30),
-						BackgroundTransparency = 0.7,
-						Parent = ItemParent
-					}), {
-						AddThemeObject(SetProps(MakeElement("Label", Text, 15), {
-							Size = UDim2.new(1, -12, 1, 0),
-							Position = UDim2.new(0, 12, 0, 0),
-							Font = Enum.Font.GothamBold,
-							Name = "Content"
-						}), "Text"),
-						AddThemeObject(MakeElement("Stroke"), "Stroke")
-					}), "Second")
-
-					local LabelFunction = {}
-					function LabelFunction:Set(ToChange)
-						LabelFrame.Content.Text = ToChange
-					end
-					return LabelFunction
-				end
-				function ElementFunction:AddParagraph(Text, Content)
-					Text = Text or "Text"
-					Content = Content or "Content"
-
-					local ParagraphFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-						Size = UDim2.new(1, 0, 0, 30),
-						BackgroundTransparency = 0.7,
-						Parent = ItemParent
-					}), {
-						AddThemeObject(SetProps(MakeElement("Label", Text, 15), {
-							Size = UDim2.new(1, -12, 0, 14),
-							Position = UDim2.new(0, 12, 0, 10),
-							Font = Enum.Font.GothamBold,
-							Name = "Title"
-						}), "Text"),
-						AddThemeObject(SetProps(MakeElement("Label", "", 13), {
-							Size = UDim2.new(1, -24, 0, 0),
-							Position = UDim2.new(0, 12, 0, 26),
-							Font = Enum.Font.GothamSemibold,
-							Name = "Content",
-							TextWrapped = true
-						}), "TextDark"),
-						AddThemeObject(MakeElement("Stroke"), "Stroke")
-					}), "Second")
-
-					AddConnection(ParagraphFrame.Content:GetPropertyChangedSignal("Text"), function()
-						ParagraphFrame.Content.Size = UDim2.new(1, -24, 0, ParagraphFrame.Content.TextBounds.Y)
-						ParagraphFrame.Size = UDim2.new(1, 0, 0, ParagraphFrame.Content.TextBounds.Y + 35)
-					end)
-
-					ParagraphFrame.Content.Text = Content
-
-					local ParagraphFunction = {}
-					function ParagraphFunction:Set(ToChange)
-						ParagraphFrame.Content.Text = ToChange
-					end
-					return ParagraphFunction
-				end    
-				function ElementFunction:AddButton(ButtonConfig)
-					ButtonConfig = ButtonConfig or {}
-					ButtonConfig.Name = ButtonConfig.Name or "Button"
-					ButtonConfig.Callback = ButtonConfig.Callback or function() end
-					ButtonConfig.Icon = ButtonConfig.Icon or "rbxassetid://3944703587"
-
-					local Button = {}
-
-					local Click = SetProps(MakeElement("Button"), {
-						Size = UDim2.new(1, 0, 1, 0)
-					})
-
-					local ButtonFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-						Size = UDim2.new(1, 0, 0, 33),
-						Parent = ItemParent
-					}), {
-						AddThemeObject(SetProps(MakeElement("Label", ButtonConfig.Name, 15), {
-							Size = UDim2.new(1, -12, 1, 0),
-							Position = UDim2.new(0, 12, 0, 0),
-							Font = Enum.Font.GothamBold,
-							Name = "Content"
-						}), "Text"),
-						AddThemeObject(SetProps(MakeElement("Image", ButtonConfig.Icon), {
-							Size = UDim2.new(0, 20, 0, 20),
-							Position = UDim2.new(1, -30, 0, 7),
-						}), "TextDark"),
-						AddThemeObject(MakeElement("Stroke"), "Stroke"),
-						Click
-					}), "Second")
-
-					AddConnection(Click.MouseEnter, function()
-						TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-					end)
-
-					AddConnection(Click.MouseLeave, function()
-						TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
-					end)
-
-					AddConnection(Click.MouseButton1Up, function()
-						TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-						spawn(function()
-							ButtonConfig.Callback()
-						end)
-					end)
-
-					AddConnection(Click.MouseButton1Down, function()
-						TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
-					end)
-
-					function Button:Set(ButtonText)
-						ButtonFrame.Content.Text = ButtonText
-					end	
-
-					return Button
-				end    
-				function ElementFunction:AddToggle(ToggleConfig)
-					ToggleConfig = ToggleConfig or {}
-					ToggleConfig.Name = ToggleConfig.Name or "Toggle"
-					ToggleConfig.Default = ToggleConfig.Default or false
-					ToggleConfig.Callback = ToggleConfig.Callback or function() end
-					ToggleConfig.Color = ToggleConfig.Color or Color3.fromRGB(9, 99, 195)
-					ToggleConfig.Flag = ToggleConfig.Flag or nil
-					ToggleConfig.Save = ToggleConfig.Save or false
-
-					local Toggle = {Value = ToggleConfig.Default, Save = ToggleConfig.Save}
-
-					local Click = SetProps(MakeElement("Button"), {
-						Size = UDim2.new(1, 0, 1, 0)
-					})
-
-					local ToggleBox = SetChildren(SetProps(MakeElement("RoundFrame", ToggleConfig.Color, 0, 4), {
-						Size = UDim2.new(0, 24, 0, 24),
-						Position = UDim2.new(1, -24, 0.5, 0),
-						AnchorPoint = Vector2.new(0.5, 0.5)
-					}), {
-						SetProps(MakeElement("Stroke"), {
-							Color = ToggleConfig.Color,
-							Name = "Stroke",
-							Transparency = 0.5
-						}),
-						SetProps(MakeElement("Image", "rbxassetid://3944680095"), {
-							Size = UDim2.new(0, 20, 0, 20),
-							AnchorPoint = Vector2.new(0.5, 0.5),
-							Position = UDim2.new(0.5, 0, 0.5, 0),
-							ImageColor3 = Color3.fromRGB(255, 255, 255),
-							Name = "Ico"
-						}),
-					})
-
-					local ToggleFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-						Size = UDim2.new(1, 0, 0, 38),
-						Parent = ItemParent
-					}), {
-						AddThemeObject(SetProps(MakeElement("Label", ToggleConfig.Name, 15), {
-							Size = UDim2.new(1, -12, 1, 0),
-							Position = UDim2.new(0, 12, 0, 0),
-							Font = Enum.Font.GothamBold,
-							Name = "Content"
-						}), "Text"),
-						AddThemeObject(MakeElement("Stroke"), "Stroke"),
-						ToggleBox,
-						Click
-					}), "Second")
-
-					function Toggle:Set(Value)
-						Toggle.Value = Value
-						TweenService:Create(ToggleBox, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Toggle.Value and ToggleConfig.Color or OrionLib.Themes.Default.Divider}):Play()
-						TweenService:Create(ToggleBox.Stroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Color = Toggle.Value and ToggleConfig.Color or OrionLib.Themes.Default.Stroke}):Play()
-						TweenService:Create(ToggleBox.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = Toggle.Value and 0 or 1, Size = Toggle.Value and UDim2.new(0, 20, 0, 20) or UDim2.new(0, 8, 0, 8)}):Play()
-						ToggleConfig.Callback(Toggle.Value)
-					end    
-
-					Toggle:Set(Toggle.Value)
-
-					AddConnection(Click.MouseEnter, function()
-						TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-					end)
-
-					AddConnection(Click.MouseLeave, function()
-						TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
-					end)
-
-					AddConnection(Click.MouseButton1Up, function()
-						TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-						SaveCfg(game.GameId)
-						Toggle:Set(not Toggle.Value)
-					end)
-
-					AddConnection(Click.MouseButton1Down, function()
-						TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
-					end)
-
-					if ToggleConfig.Flag then
-						OrionLib.Flags[ToggleConfig.Flag] = Toggle
-					end	
-					return Toggle
-				end  
-				function ElementFunction:AddSlider(SliderConfig)
-					SliderConfig = SliderConfig or {}
-					SliderConfig.Name = SliderConfig.Name or "Slider"
-					SliderConfig.Min = SliderConfig.Min or 0
-					SliderConfig.Max = SliderConfig.Max or 100
-					SliderConfig.Increment = SliderConfig.Increment or 1
-					SliderConfig.Default = SliderConfig.Default or 50
-					SliderConfig.Callback = SliderConfig.Callback or function() end
-					SliderConfig.ValueName = SliderConfig.ValueName or ""
-					SliderConfig.Color = SliderConfig.Color or Color3.fromRGB(9, 149, 98)
-					SliderConfig.Flag = SliderConfig.Flag or nil
-					SliderConfig.Save = SliderConfig.Save or false
-
-					local Slider = {Value = SliderConfig.Default, Save = SliderConfig.Save}
-					local Dragging = false
-
-					local SliderDrag = SetChildren(SetProps(MakeElement("RoundFrame", SliderConfig.Color, 0, 5), {
-						Size = UDim2.new(0, 0, 1, 0),
-						BackgroundTransparency = 0.3,
-						ClipsDescendants = true
-					}), {
-						AddThemeObject(SetProps(MakeElement("Label", "value", 13), {
-							Size = UDim2.new(1, -12, 0, 14),
-							Position = UDim2.new(0, 12, 0, 6),
-							Font = Enum.Font.GothamBold,
-							Name = "Value",
-							TextTransparency = 0
-						}), "Text")
-					})
-
-					local SliderBar = SetChildren(SetProps(MakeElement("RoundFrame", SliderConfig.Color, 0, 5), {
-						Size = UDim2.new(1, -24, 0, 26),
-						Position = UDim2.new(0, 12, 0, 30),
-						BackgroundTransparency = 0.9
-					}), {
-						SetProps(MakeElement("Stroke"), {
-							Color = SliderConfig.Color
-						}),
-						AddThemeObject(SetProps(MakeElement("Label", "value", 13), {
-							Size = UDim2.new(1, -12, 0, 14),
-							Position = UDim2.new(0, 12, 0, 6),
-							Font = Enum.Font.GothamBold,
-							Name = "Value",
-							TextTransparency = 0.8
-						}), "Text"),
-						SliderDrag
-					})
-
-					local SliderFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
-						Size = UDim2.new(1, 0, 0, 65),
-						Parent = ItemParent
-					}), {
-						AddThemeObject(SetProps(MakeElement("Label", SliderConfig.Name, 15), {
-							Size = UDim2.new(1, -12, 0, 14),
-							Position = UDim2.new(0, 12, 0, 10),
-							Font = Enum.Font.GothamBold,
-							Name = "Content"
-						}), "Text"),
-						AddThemeObject(MakeElement("Stroke"), "Stroke"),
-						SliderBar
-					}), "Second")
-
-					SliderBar.InputBegan:Connect(function(Input)
-						if Input.UserInputType == Enum.UserInputType.MouseButton1 then 
-							Dragging = true 
-						end 
-					end)
-					SliderBar.InputEnded:Connect(function(Input) 
-						if Input.UserInputType == Enum.UserInputType.MouseButton1 then 
-							Dragging = false 
-						end 
-					end)
-
-					UserInputService.InputChanged:Connect(function(Input)
-						if Dragging and Input.UserInputType == Enum.UserInputType.MouseMovement then 
-							local SizeScale = math.clamp((Input.Position.X - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
-							Slider:Set(SliderConfig.Min + ((SliderConfig.Max - SliderConfig.Min) * SizeScale)) 
-							SaveCfg(game.GameId)
-						end
-					end)
-
-					function Slider:Set(Value)
-						self.Value = math.clamp(Round(Value, SliderConfig.Increment), SliderConfig.Min, SliderConfig.Max)
-						TweenService:Create(SliderDrag,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = UDim2.fromScale((self.Value - SliderConfig.Min) / (SliderConfig.Max - SliderConfig.Min), 1)}):Play()
-						SliderBar.Value.Text = tostring(self.Value) .. " " .. SliderConfig.ValueName
-						SliderDrag.Value.Text = tostring(self.Value) .. " " .. SliderConfig.ValueName
-						SliderConfig.Callback(self.Value)
-					end      
-
-					Slider:Set(Slider.Value)
-					if SliderConfig.Flag then				
-						OrionLib.Flags[SliderConfig.Flag] = Slider
-					end
-					return Slider
-				end  
-				function ElementFunction:AddDropdown(DropdownConfig)
-					DropdownConfig = DropdownConfig or {}
-					DropdownConfig.Name = DropdownConfig.Name or "Dropdown"
-					DropdownConfig.Options = DropdownConfig.Options or {}
-					DropdownConfig.Default = DropdownConfig.Default or ""
-					DropdownConfig.Callback = DropdownConfig.Callback or function() end
-					DropdownConfig.Flag = DropdownConfig.Flag or nil
-					DropdownConfig.Save = DropdownConfig.Save or false
-
-					local Dropdown = {Value = DropdownConfig.Default, Options = DropdownConfig.Options, Buttons = {}, Toggled = false, Type = "Dropdown", Save = DropdownConfig.Save}
-					local MaxElements = 5
-
-					if not table.find(Dropdown.Options, Dropdown.Value) then
-						Dropdown.Value = "..."
-					end
-
-					local DropdownList = MakeElement("List")
-
-					local DropdownContainer = AddThemeObject(SetProps(SetChildren(MakeElement("ScrollFrame", Color3.fromRGB(40, 40, 40), 4), {
-						DropdownList
-					}), {
-						Parent = ItemParent,
-						Position = UDim2.new(0, 0, 0, 38),
-						Size = UDim2.new(1, 0, 1, -38),
-						ClipsDescendants = true
-					}), "Divider")
-
-					local Click = SetProps(MakeElement("Button"), {
-						Size = UDim2.new(1, 0, 1, 0)
-					})
-
-					local DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-						Size = UDim2.new(1, 0, 0, 38),
-						Parent = ItemParent,
-						ClipsDescendants = true
-					}), {
-						DropdownContainer,
-						SetProps(SetChildren(MakeElement("TFrame"), {
-							AddThemeObject(SetProps(MakeElement("Label", DropdownConfig.Name, 15), {
-								Size = UDim2.new(1, -12, 1, 0),
-								Position = UDim2.new(0, 12, 0, 0),
-								Font = Enum.Font.GothamBold,
-								Name = "Content"
-							}), "Text"),
-							AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072706796"), {
-								Size = UDim2.new(0, 20, 0, 20),
-								AnchorPoint = Vector2.new(0, 0.5),
-								Position = UDim2.new(1, -30, 0.5, 0),
-								ImageColor3 = Color3.fromRGB(240, 240, 240),
-								Name = "Ico"
-							}), "TextDark"),
-							AddThemeObject(SetProps(MakeElement("Label", "Selected", 13), {
-								Size = UDim2.new(1, -40, 1, 0),
-								Font = Enum.Font.Gotham,
-								Name = "Selected",
-								TextXAlignment = Enum.TextXAlignment.Right
-							}), "TextDark"),
-							AddThemeObject(SetProps(MakeElement("Frame"), {
-								Size = UDim2.new(1, 0, 0, 1),
-								Position = UDim2.new(0, 0, 1, -1),
-								Name = "Line",
-								Visible = false
-							}), "Stroke"), 
-							Click
-						}), {
-							Size = UDim2.new(1, 0, 0, 38),
-							ClipsDescendants = true,
-							Name = "F"
-						}),
-						AddThemeObject(MakeElement("Stroke"), "Stroke"),
-						MakeElement("Corner")
-					}), "Second")
-
-					AddConnection(DropdownList:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-						DropdownContainer.CanvasSize = UDim2.new(0, 0, 0, DropdownList.AbsoluteContentSize.Y)
-					end)  
-
-					local function AddOptions(Options)
-						for _, Option in pairs(Options) do
-							local OptionBtn = AddThemeObject(SetProps(SetChildren(MakeElement("Button", Color3.fromRGB(40, 40, 40)), {
-								MakeElement("Corner", 0, 6),
-								AddThemeObject(SetProps(MakeElement("Label", Option, 13, 0.4), {
-									Position = UDim2.new(0, 8, 0, 0),
-									Size = UDim2.new(1, -8, 1, 0),
-									Name = "Title"
-								}), "Text")
-							}), {
-								Parent = DropdownContainer,
-								Size = UDim2.new(1, 0, 0, 28),
-								BackgroundTransparency = 1,
-								ClipsDescendants = true
-							}), "Divider")
-
-							AddConnection(OptionBtn.MouseButton1Click, function()
-								Dropdown:Set(Option)
-								SaveCfg(game.GameId)
-							end)
-
-							Dropdown.Buttons[Option] = OptionBtn
-						end
-					end	
-
-					function Dropdown:Refresh(Options, Delete)
-						if Delete then
-							for _,v in pairs(Dropdown.Buttons) do
-								v:Destroy()
-							end    
-							table.clear(Dropdown.Options)
-							table.clear(Dropdown.Buttons)
-						end
-						Dropdown.Options = Options
-						AddOptions(Dropdown.Options)
-					end  
-
-					function Dropdown:Set(Value)
-						if not table.find(Dropdown.Options, Value) then
-							Dropdown.Value = "..."
-							DropdownFrame.F.Selected.Text = Dropdown.Value
-							for _, v in pairs(Dropdown.Buttons) do
-								TweenService:Create(v,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 1}):Play()
-								TweenService:Create(v.Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0.4}):Play()
-							end	
-							return
-						end
-
-						Dropdown.Value = Value
-						DropdownFrame.F.Selected.Text = Dropdown.Value
-
-						for _, v in pairs(Dropdown.Buttons) do
-							TweenService:Create(v,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 1}):Play()
-							TweenService:Create(v.Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0.4}):Play()
-						end	
-						TweenService:Create(Dropdown.Buttons[Value],TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 0}):Play()
-						TweenService:Create(Dropdown.Buttons[Value].Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0}):Play()
-						return DropdownConfig.Callback(Dropdown.Value)
-					end
-
-					AddConnection(Click.MouseButton1Click, function()
-						Dropdown.Toggled = not Dropdown.Toggled
-						DropdownFrame.F.Line.Visible = Dropdown.Toggled
-						TweenService:Create(DropdownFrame.F.Ico,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Rotation = Dropdown.Toggled and 180 or 0}):Play()
-						if #Dropdown.Options > MaxElements then
-							TweenService:Create(DropdownFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1, 0, 0, 38 + (MaxElements * 28)) or UDim2.new(1, 0, 0, 38)}):Play()
-						else
-							TweenService:Create(DropdownFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1, 0, 0, DropdownList.AbsoluteContentSize.Y + 38) or UDim2.new(1, 0, 0, 38)}):Play()
-						end
-					end)
-
-					Dropdown:Refresh(Dropdown.Options, false)
-					Dropdown:Set(Dropdown.Value)
-					if DropdownConfig.Flag then				
-						OrionLib.Flags[DropdownConfig.Flag] = Dropdown
-					end
-					return Dropdown
-				end
-				function ElementFunction:AddBind(BindConfig)
-					BindConfig.Name = BindConfig.Name or "Bind"
-					BindConfig.Default = BindConfig.Default or Enum.KeyCode.Unknown
-					BindConfig.Hold = BindConfig.Hold or false
-					BindConfig.Callback = BindConfig.Callback or function() end
-					BindConfig.Flag = BindConfig.Flag or nil
-					BindConfig.Save = BindConfig.Save or false
-
-					local Bind = {Value, Binding = false, Type = "Bind", Save = BindConfig.Save}
-					local Holding = false
-
-					local Click = SetProps(MakeElement("Button"), {
-						Size = UDim2.new(1, 0, 1, 0)
-					})
-
-					local BindBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
-						Size = UDim2.new(0, 24, 0, 24),
-						Position = UDim2.new(1, -12, 0.5, 0),
-						AnchorPoint = Vector2.new(1, 0.5)
-					}), {
-						AddThemeObject(MakeElement("Stroke"), "Stroke"),
-						AddThemeObject(SetProps(MakeElement("Label", BindConfig.Name, 14), {
-							Size = UDim2.new(1, 0, 1, 0),
-							Font = Enum.Font.GothamBold,
-							TextXAlignment = Enum.TextXAlignment.Center,
-							Name = "Value"
-						}), "Text")
-					}), "Main")
-
-					local BindFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-						Size = UDim2.new(1, 0, 0, 38),
-						Parent = ItemParent
-					}), {
-						AddThemeObject(SetProps(MakeElement("Label", BindConfig.Name, 15), {
-							Size = UDim2.new(1, -12, 1, 0),
-							Position = UDim2.new(0, 12, 0, 0),
-							Font = Enum.Font.GothamBold,
-							Name = "Content"
-						}), "Text"),
-						AddThemeObject(MakeElement("Stroke"), "Stroke"),
-						BindBox,
-						Click
-					}), "Second")
-
-					AddConnection(BindBox.Value:GetPropertyChangedSignal("Text"), function()
-						--BindBox.Size = UDim2.new(0, BindBox.Value.TextBounds.X + 16, 0, 24)
-						TweenService:Create(BindBox, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, BindBox.Value.TextBounds.X + 16, 0, 24)}):Play()
-					end)
-
-					AddConnection(Click.InputEnded, function(Input)
-						if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-							if Bind.Binding then return end
-							Bind.Binding = true
-							BindBox.Value.Text = ""
-						end
-					end)
-
-					AddConnection(UserInputService.InputBegan, function(Input)
-						if UserInputService:GetFocusedTextBox() then return end
-						if (Input.KeyCode.Name == Bind.Value or Input.UserInputType.Name == Bind.Value) and not Bind.Binding then
-							if BindConfig.Hold then
-								Holding = true
-								BindConfig.Callback(Holding)
-							else
-								BindConfig.Callback()
-							end
-						elseif Bind.Binding then
-							local Key
-							pcall(function()
-								if not CheckKey(BlacklistedKeys, Input.KeyCode) then
-									Key = Input.KeyCode
-								end
-							end)
-							pcall(function()
-								if CheckKey(WhitelistedMouse, Input.UserInputType) and not Key then
-									Key = Input.UserInputType
-								end
-							end)
-							Key = Key or Bind.Value
-							Bind:Set(Key)
-							SaveCfg(game.GameId)
-						end
-					end)
-
-					AddConnection(UserInputService.InputEnded, function(Input)
-						if Input.KeyCode.Name == Bind.Value or Input.UserInputType.Name == Bind.Value then
-							if BindConfig.Hold and Holding then
-								Holding = false
-								BindConfig.Callback(Holding)
-							end
-						end
-					end)
-
-					AddConnection(Click.MouseEnter, function()
-						TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-					end)
-
-					AddConnection(Click.MouseLeave, function()
-						TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
-					end)
-
-					AddConnection(Click.MouseButton1Up, function()
-						TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-					end)
-
-					AddConnection(Click.MouseButton1Down, function()
-						TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
-					end)
-
-					function Bind:Set(Key)
-						Bind.Binding = false
-						Bind.Value = Key or Bind.Value
-						Bind.Value = Bind.Value.Name or Bind.Value
-						BindBox.Value.Text = Bind.Value
-					end
-
-					Bind:Set(BindConfig.Default)
-					if BindConfig.Flag then				
-						OrionLib.Flags[BindConfig.Flag] = Bind
-					end
-					return Bind
-				end  
-				function ElementFunction:AddTextbox(TextboxConfig)
-					TextboxConfig = TextboxConfig or {}
-					TextboxConfig.Name = TextboxConfig.Name or "Textbox"
-					TextboxConfig.Default = TextboxConfig.Default or ""
-					TextboxConfig.TextDisappear = TextboxConfig.TextDisappear or false
-					TextboxConfig.Callback = TextboxConfig.Callback or function() end
-
-					local Click = SetProps(MakeElement("Button"), {
-						Size = UDim2.new(1, 0, 1, 0)
-					})
-
-					local TextboxActual = AddThemeObject(Create("TextBox", {
-						Size = UDim2.new(1, 0, 1, 0),
-						BackgroundTransparency = 1,
-						TextColor3 = Color3.fromRGB(255, 255, 255),
-						PlaceholderColor3 = Color3.fromRGB(210,210,210),
-						PlaceholderText = "Input",
-						Font = Enum.Font.GothamSemibold,
-						TextXAlignment = Enum.TextXAlignment.Center,
-						TextSize = 14,
-						ClearTextOnFocus = false
-					}), "Text")
-
-					local TextContainer = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
-						Size = UDim2.new(0, 24, 0, 24),
-						Position = UDim2.new(1, -12, 0.5, 0),
-						AnchorPoint = Vector2.new(1, 0.5)
-					}), {
-						AddThemeObject(MakeElement("Stroke"), "Stroke"),
-						TextboxActual
-					}), "Main")
-
-
-					local TextboxFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-						Size = UDim2.new(1, 0, 0, 38),
-						Parent = ItemParent
-					}), {
-						AddThemeObject(SetProps(MakeElement("Label", TextboxConfig.Name, 15), {
-							Size = UDim2.new(1, -12, 1, 0),
-							Position = UDim2.new(0, 12, 0, 0),
-							Font = Enum.Font.GothamBold,
-							Name = "Content"
-						}), "Text"),
-						AddThemeObject(MakeElement("Stroke"), "Stroke"),
-						TextContainer,
-						Click
-					}), "Second")
-
-					AddConnection(TextboxActual:GetPropertyChangedSignal("Text"), function()
-						--TextContainer.Size = UDim2.new(0, TextboxActual.TextBounds.X + 16, 0, 24)
-						TweenService:Create(TextContainer, TweenInfo.new(0.45, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, TextboxActual.TextBounds.X + 16, 0, 24)}):Play()
-					end)
-
-					AddConnection(TextboxActual.FocusLost, function()
-						TextboxConfig.Callback(TextboxActual.Text)
-						if TextboxConfig.TextDisappear then
-							TextboxActual.Text = ""
-						end	
-					end)
-
-					TextboxActual.Text = TextboxConfig.Default
-
-					AddConnection(Click.MouseEnter, function()
-						TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-					end)
-
-					AddConnection(Click.MouseLeave, function()
-						TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
-					end)
-
-					AddConnection(Click.MouseButton1Up, function()
-						TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-						TextboxActual:CaptureFocus()
-					end)
-
-					AddConnection(Click.MouseButton1Down, function()
-						TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
-					end)
-				end 
-				function ElementFunction:AddColorpicker(ColorpickerConfig)
-					ColorpickerConfig = ColorpickerConfig or {}
-					ColorpickerConfig.Name = ColorpickerConfig.Name or "Colorpicker"
-					ColorpickerConfig.Default = ColorpickerConfig.Default or Color3.fromRGB(255,255,255)
-					ColorpickerConfig.Callback = ColorpickerConfig.Callback or function() end
-					ColorpickerConfig.Flag = ColorpickerConfig.Flag or nil
-					ColorpickerConfig.Save = ColorpickerConfig.Save or false
-
-					local ColorH, ColorS, ColorV = 1, 1, 1
-					local Colorpicker = {Value = ColorpickerConfig.Default, Toggled = false, Type = "Colorpicker", Save = ColorpickerConfig.Save}
-
-					local ColorSelection = Create("ImageLabel", {
-						Size = UDim2.new(0, 18, 0, 18),
-						Position = UDim2.new(select(3, Color3.toHSV(Colorpicker.Value))),
-						ScaleType = Enum.ScaleType.Fit,
-						AnchorPoint = Vector2.new(0.5, 0.5),
-						BackgroundTransparency = 1,
-						Image = "http://www.roblox.com/asset/?id=4805639000"
-					})
-
-					local HueSelection = Create("ImageLabel", {
-						Size = UDim2.new(0, 18, 0, 18),
-						Position = UDim2.new(0.5, 0, 1 - select(1, Color3.toHSV(Colorpicker.Value))),
-						ScaleType = Enum.ScaleType.Fit,
-						AnchorPoint = Vector2.new(0.5, 0.5),
-						BackgroundTransparency = 1,
-						Image = "http://www.roblox.com/asset/?id=4805639000"
-					})
-
-					local Color = Create("ImageLabel", {
-						Size = UDim2.new(1, -25, 1, 0),
-						Visible = false,
-						Image = "rbxassetid://4155801252"
-					}, {
-						Create("UICorner", {CornerRadius = UDim.new(0, 5)}),
-						ColorSelection
-					})
-
-					local Hue = Create("Frame", {
-						Size = UDim2.new(0, 20, 1, 0),
-						Position = UDim2.new(1, -20, 0, 0),
-						Visible = false
-					}, {
-						Create("UIGradient", {Rotation = 270, Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 4)), ColorSequenceKeypoint.new(0.20, Color3.fromRGB(234, 255, 0)), ColorSequenceKeypoint.new(0.40, Color3.fromRGB(21, 255, 0)), ColorSequenceKeypoint.new(0.60, Color3.fromRGB(0, 255, 255)), ColorSequenceKeypoint.new(0.80, Color3.fromRGB(0, 17, 255)), ColorSequenceKeypoint.new(0.90, Color3.fromRGB(255, 0, 251)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 0, 4))},}),
-						Create("UICorner", {CornerRadius = UDim.new(0, 5)}),
-						HueSelection
-					})
-
-					local ColorpickerContainer = Create("Frame", {
-						Position = UDim2.new(0, 0, 0, 32),
-						Size = UDim2.new(1, 0, 1, -32),
-						BackgroundTransparency = 1,
-						ClipsDescendants = true
-					}, {
-						Hue,
-						Color,
-						Create("UIPadding", {
-							PaddingLeft = UDim.new(0, 35),
-							PaddingRight = UDim.new(0, 35),
-							PaddingBottom = UDim.new(0, 10),
-							PaddingTop = UDim.new(0, 17)
-						})
-					})
-
-					local Click = SetProps(MakeElement("Button"), {
-						Size = UDim2.new(1, 0, 1, 0)
-					})
-
-					local ColorpickerBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
-						Size = UDim2.new(0, 24, 0, 24),
-						Position = UDim2.new(1, -12, 0.5, 0),
-						AnchorPoint = Vector2.new(1, 0.5)
-					}), {
-						AddThemeObject(MakeElement("Stroke"), "Stroke")
-					}), "Main")
-
-					local ColorpickerFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-						Size = UDim2.new(1, 0, 0, 38),
-						Parent = ItemParent
-					}), {
-						SetProps(SetChildren(MakeElement("TFrame"), {
-							AddThemeObject(SetProps(MakeElement("Label", ColorpickerConfig.Name, 15), {
-								Size = UDim2.new(1, -12, 1, 0),
-								Position = UDim2.new(0, 12, 0, 0),
-								Font = Enum.Font.GothamBold,
-								Name = "Content"
-							}), "Text"),
-							ColorpickerBox,
-							Click,
-							AddThemeObject(SetProps(MakeElement("Frame"), {
-								Size = UDim2.new(1, 0, 0, 1),
-								Position = UDim2.new(0, 0, 1, -1),
-								Name = "Line",
-								Visible = false
-							}), "Stroke"), 
-						}), {
-							Size = UDim2.new(1, 0, 0, 38),
-							ClipsDescendants = true,
-							Name = "F"
-						}),
-						ColorpickerContainer,
-						AddThemeObject(MakeElement("Stroke"), "Stroke"),
-					}), "Second")
-
-					AddConnection(Click.MouseButton1Click, function()
-						Colorpicker.Toggled = not Colorpicker.Toggled
-						TweenService:Create(ColorpickerFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Colorpicker.Toggled and UDim2.new(1, 0, 0, 148) or UDim2.new(1, 0, 0, 38)}):Play()
-						Color.Visible = Colorpicker.Toggled
-						Hue.Visible = Colorpicker.Toggled
-						ColorpickerFrame.F.Line.Visible = Colorpicker.Toggled
-					end)
-
-					local function UpdateColorPicker()
-						ColorpickerBox.BackgroundColor3 = Color3.fromHSV(ColorH, ColorS, ColorV)
-						Color.BackgroundColor3 = Color3.fromHSV(ColorH, 1, 1)
-						Colorpicker:Set(ColorpickerBox.BackgroundColor3)
-						ColorpickerConfig.Callback(ColorpickerBox.BackgroundColor3)
-						SaveCfg(game.GameId)
-					end
-
-					ColorH = 1 - (math.clamp(HueSelection.AbsolutePosition.Y - Hue.AbsolutePosition.Y, 0, Hue.AbsoluteSize.Y) / Hue.AbsoluteSize.Y)
-					ColorS = (math.clamp(ColorSelection.AbsolutePosition.X - Color.AbsolutePosition.X, 0, Color.AbsoluteSize.X) / Color.AbsoluteSize.X)
-					ColorV = 1 - (math.clamp(ColorSelection.AbsolutePosition.Y - Color.AbsolutePosition.Y, 0, Color.AbsoluteSize.Y) / Color.AbsoluteSize.Y)
-
-					AddConnection(Color.InputBegan, function(input)
-						if input.UserInputType == Enum.UserInputType.MouseButton1 then
-							if ColorInput then
-								ColorInput:Disconnect()
-							end
-							ColorInput = AddConnection(RunService.RenderStepped, function()
-								local ColorX = (math.clamp(Mouse.X - Color.AbsolutePosition.X, 0, Color.AbsoluteSize.X) / Color.AbsoluteSize.X)
-								local ColorY = (math.clamp(Mouse.Y - Color.AbsolutePosition.Y, 0, Color.AbsoluteSize.Y) / Color.AbsoluteSize.Y)
-								ColorSelection.Position = UDim2.new(ColorX, 0, ColorY, 0)
-								ColorS = ColorX
-								ColorV = 1 - ColorY
-								UpdateColorPicker()
-							end)
-						end
-					end)
-
-					AddConnection(Color.InputEnded, function(input)
-						if input.UserInputType == Enum.UserInputType.MouseButton1 then
-							if ColorInput then
-								ColorInput:Disconnect()
-							end
-						end
-					end)
-
-					AddConnection(Hue.InputBegan, function(input)
-						if input.UserInputType == Enum.UserInputType.MouseButton1 then
-							if HueInput then
-								HueInput:Disconnect()
-							end;
-
-							HueInput = AddConnection(RunService.RenderStepped, function()
-								local HueY = (math.clamp(Mouse.Y - Hue.AbsolutePosition.Y, 0, Hue.AbsoluteSize.Y) / Hue.AbsoluteSize.Y)
-
-								HueSelection.Position = UDim2.new(0.5, 0, HueY, 0)
-								ColorH = 1 - HueY
-
-								UpdateColorPicker()
-							end)
-						end
-					end)
-
-					AddConnection(Hue.InputEnded, function(input)
-						if input.UserInputType == Enum.UserInputType.MouseButton1 then
-							if HueInput then
-								HueInput:Disconnect()
-							end
-						end
-					end)
-
-					function Colorpicker:Set(Value)
-						Colorpicker.Value = Value
-						ColorpickerBox.BackgroundColor3 = Colorpicker.Value
-						ColorpickerConfig.Callback(Colorpicker.Value)
-					end
-
-					Colorpicker:Set(Colorpicker.Value)
-					if ColorpickerConfig.Flag then				
-						OrionLib.Flags[ColorpickerConfig.Flag] = Colorpicker
-					end
-					return Colorpicker
-				end  
-				return ElementFunction   
-			end	
-
-			local ElementFunction = {}
-
-			function ElementFunction:AddSection(SectionConfig)
-				SectionConfig.Name = SectionConfig.Name or "Section"
-
-				local SectionFrame = SetChildren(SetProps(MakeElement("TFrame"), {
-					Size = UDim2.new(1, 0, 0, 26),
-					Parent = Container
-				}), {
-					AddThemeObject(SetProps(MakeElement("Label", SectionConfig.Name, 14), {
-						Size = UDim2.new(1, -12, 0, 16),
-						Position = UDim2.new(0, 0, 0, 3),
-						Font = Enum.Font.GothamSemibold
-					}), "TextDark"),
-					SetChildren(SetProps(MakeElement("TFrame"), {
-						AnchorPoint = Vector2.new(0, 0),
-						Size = UDim2.new(1, 0, 1, -24),
-						Position = UDim2.new(0, 0, 0, 23),
-						Name = "Holder"
-					}), {
-						MakeElement("List", 0, 6)
-					}),
-				})
-
-				AddConnection(SectionFrame.Holder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-					SectionFrame.Size = UDim2.new(1, 0, 0, SectionFrame.Holder.UIListLayout.AbsoluteContentSize.Y + 31)
-					SectionFrame.Holder.Size = UDim2.new(1, 0, 0, SectionFrame.Holder.UIListLayout.AbsoluteContentSize.Y)
-				end)
-
-				local SectionFunction = {}
-				for i, v in next, GetElements(SectionFrame.Holder) do
-					SectionFunction[i] = v 
-				end
-				return SectionFunction
-			end	
-
-			for i, v in next, GetElements(Container) do
-				ElementFunction[i] = v 
-			end
-
-			if TabConfig.PremiumOnly then
-				for i, v in next, ElementFunction do
-					ElementFunction[i] = function() end
-				end    
-				Container:FindFirstChild("UIListLayout"):Destroy()
-				Container:FindFirstChild("UIPadding"):Destroy()
-				SetChildren(SetProps(MakeElement("TFrame"), {
-					Size = UDim2.new(1, 0, 1, 0),
-					Parent = ItemParent
-				}), {
-					AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://3610239960"), {
-						Size = UDim2.new(0, 18, 0, 18),
-						Position = UDim2.new(0, 15, 0, 15),
-						ImageTransparency = 0.4
-					}), "Text"),
-					AddThemeObject(SetProps(MakeElement("Label", "Unauthorised Access", 14), {
-						Size = UDim2.new(1, -38, 0, 14),
-						Position = UDim2.new(0, 38, 0, 18),
-						TextTransparency = 0.4
-					}), "Text"),
-					AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://4483345875"), {
-						Size = UDim2.new(0, 56, 0, 56),
-						Position = UDim2.new(0, 84, 0, 110),
-					}), "Text"),
-					AddThemeObject(SetProps(MakeElement("Label", "Premium Features", 14), {
-						Size = UDim2.new(1, -150, 0, 14),
-						Position = UDim2.new(0, 150, 0, 112),
-						Font = Enum.Font.GothamBold
-					}), "Text"),
-					AddThemeObject(SetProps(MakeElement("Label", "This part of the script is locked to Sirius Premium users. Purchase Premium in the Discord server (discord.gg/sirius)", 12), {
-						Size = UDim2.new(1, -200, 0, 14),
-						Position = UDim2.new(0, 150, 0, 138),
-						TextWrapped = true,
-						TextTransparency = 0.4
-					}), "Text")
-				})
-			end
-			return ElementFunction
-		end  
-
-		return TabFunction
-	end   
-
-	function OrionLib:Destroy()
-		Orion:Destroy()
-	end
-
-	return OrionLib
-	
-end
-local OrionLib =  olionLib()
---local OrionLib = loadstring(game:HttpGet(('https://www.project-hub.shop/ffe0b90f223def9540ef4e8b7cc71ad4/Olion_UI.lua')))()
------------------
-OrionLib:MakeNotification({
-	Name = "WELCOME TO PROJECT X!",
-	Content = "Script Loaded..",
-	Image = "rbxassetid://6026568227",
-	Time = 5,
-}) -- Notifi
-
-if game.PlaceId == 8304191830 then
-	local ChangeName = game:GetService("Players").LocalPlayer.PlayerGui.UpdateNumber:WaitForChild("VersionNumber")
-	if ChangeName then
-		game:GetService("Players").LocalPlayer.PlayerGui.UpdateNumber.VersionNumber.Text = game.Players.LocalPlayer.Name
-	end
-end
---#endregion
------------------
 --#region Setting Script
 local a = 'IprojectX' -- Paste Name
 if not isfolder(a) then
@@ -1940,6 +94,2026 @@ function handle_select_units()
       updatejson()
     end
   end
+end
+--#endregion
+
+--#region Main UI
+
+local ui_options = {
+	main_color = Color3.fromRGB(41, 74, 122),
+	min_size = Vector2.new(400, 300),
+	toggle_key = Enum.KeyCode.RightShift,
+	can_resize = true,
+}
+
+do
+	local imgui = game:GetService("CoreGui"):FindFirstChild("imgui")
+	if imgui then imgui:Destroy() end
+end
+
+local imgui = Instance.new("ScreenGui")
+local Prefabs = Instance.new("Frame")
+local Label = Instance.new("TextLabel")
+local Window = Instance.new("ImageLabel")
+local Resizer = Instance.new("Frame")
+local Bar = Instance.new("Frame")
+local Toggle = Instance.new("ImageButton")
+local Base = Instance.new("ImageLabel")
+local Top = Instance.new("ImageLabel")
+local Tabs = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local TabSelection = Instance.new("ImageLabel")
+local TabButtons = Instance.new("Frame")
+local UIListLayout = Instance.new("UIListLayout")
+local Frame = Instance.new("Frame")
+local Tab = Instance.new("Frame")
+local UIListLayout_2 = Instance.new("UIListLayout")
+local TextBox = Instance.new("TextBox")
+local TextBox_Roundify_4px = Instance.new("ImageLabel")
+local Slider = Instance.new("ImageLabel")
+local Title_2 = Instance.new("TextLabel")
+local Indicator = Instance.new("ImageLabel")
+local Value = Instance.new("TextLabel")
+local TextLabel = Instance.new("TextLabel")
+local TextLabel_2 = Instance.new("TextLabel")
+local Circle = Instance.new("ImageLabel")
+local UIListLayout_3 = Instance.new("UIListLayout")
+local Dropdown = Instance.new("TextButton")
+local Indicator_2 = Instance.new("ImageLabel")
+local Box = Instance.new("ImageButton")
+local Objects = Instance.new("ScrollingFrame")
+local UIListLayout_4 = Instance.new("UIListLayout")
+local TextButton_Roundify_4px = Instance.new("ImageLabel")
+local TabButton = Instance.new("TextButton")
+local TextButton_Roundify_4px_2 = Instance.new("ImageLabel")
+local Folder = Instance.new("ImageLabel")
+local Button = Instance.new("TextButton")
+local TextButton_Roundify_4px_3 = Instance.new("ImageLabel")
+local Toggle_2 = Instance.new("ImageLabel")
+local Objects_2 = Instance.new("Frame")
+local UIListLayout_5 = Instance.new("UIListLayout")
+local HorizontalAlignment = Instance.new("Frame")
+local UIListLayout_6 = Instance.new("UIListLayout")
+local Console = Instance.new("ImageLabel")
+local ScrollingFrame = Instance.new("ScrollingFrame")
+local Source = Instance.new("TextBox")
+local Comments = Instance.new("TextLabel")
+local Globals = Instance.new("TextLabel")
+local Keywords = Instance.new("TextLabel")
+local RemoteHighlight = Instance.new("TextLabel")
+local Strings = Instance.new("TextLabel")
+local Tokens = Instance.new("TextLabel")
+local Numbers = Instance.new("TextLabel")
+local Info = Instance.new("TextLabel")
+local Lines = Instance.new("TextLabel")
+local ColorPicker = Instance.new("ImageLabel")
+local Palette = Instance.new("ImageLabel")
+local Indicator_3 = Instance.new("ImageLabel")
+local Sample = Instance.new("ImageLabel")
+local Saturation = Instance.new("ImageLabel")
+local Indicator_4 = Instance.new("Frame")
+local Switch = Instance.new("TextButton")
+local TextButton_Roundify_4px_4 = Instance.new("ImageLabel")
+local Title_3 = Instance.new("TextLabel")
+local Button_2 = Instance.new("TextButton")
+local TextButton_Roundify_4px_5 = Instance.new("ImageLabel")
+local DropdownButton = Instance.new("TextButton")
+local Keybind = Instance.new("ImageLabel")
+local Title_4 = Instance.new("TextLabel")
+local Input = Instance.new("TextButton")
+local Input_Roundify_4px = Instance.new("ImageLabel")
+local Windows = Instance.new("Frame")
+
+imgui.Name = "imgui"
+imgui.Parent = game:GetService("CoreGui")
+
+Prefabs.Name = "Prefabs"
+Prefabs.Parent = imgui
+Prefabs.BackgroundColor3 = Color3.new(1, 1, 1)
+Prefabs.Size = UDim2.new(0, 100, 0, 100)
+Prefabs.Visible = false
+
+Label.Name = "Label"
+Label.Parent = Prefabs
+Label.BackgroundColor3 = Color3.new(1, 1, 1)
+Label.BackgroundTransparency = 1
+Label.Size = UDim2.new(0, 200, 0, 20)
+Label.Font = Enum.Font.GothamSemibold
+Label.Text = "Hello, world 123"
+Label.TextColor3 = Color3.new(1, 1, 1)
+Label.TextSize = 14
+Label.TextXAlignment = Enum.TextXAlignment.Left
+
+Window.Name = "Window"
+Window.Parent = Prefabs
+Window.Active = true
+Window.BackgroundColor3 = Color3.new(1, 1, 1)
+Window.BackgroundTransparency = 1
+Window.ClipsDescendants = true
+Window.Position = UDim2.new(0, 20, 0, 20)
+Window.Selectable = true
+Window.Size = UDim2.new(0, 200, 0, 200)
+Window.Image = "rbxassetid://2851926732"
+Window.ImageColor3 = Color3.new(0.0823529, 0.0862745, 0.0901961)
+Window.ScaleType = Enum.ScaleType.Slice
+Window.SliceCenter = Rect.new(12, 12, 12, 12)
+
+Resizer.Name = "Resizer"
+Resizer.Parent = Window
+Resizer.Active = true
+Resizer.BackgroundColor3 = Color3.new(1, 1, 1)
+Resizer.BackgroundTransparency = 1
+Resizer.BorderSizePixel = 0
+Resizer.Position = UDim2.new(1, -20, 1, -20)
+Resizer.Size = UDim2.new(0, 20, 0, 20)
+
+Bar.Name = "Bar"
+Bar.Parent = Window
+Bar.BackgroundColor3 = Color3.new(0.160784, 0.290196, 0.478431)
+Bar.BorderSizePixel = 0
+Bar.Position = UDim2.new(0, 0, 0, 5)
+Bar.Size = UDim2.new(1, 0, 0, 15)
+
+Toggle.Name = "Toggle"
+Toggle.Parent = Bar
+Toggle.BackgroundColor3 = Color3.new(1, 1, 1)
+Toggle.BackgroundTransparency = 1
+Toggle.Position = UDim2.new(0, 5, 0, -2)
+Toggle.Rotation = 90
+Toggle.Size = UDim2.new(0, 20, 0, 20)
+Toggle.ZIndex = 2
+Toggle.Image = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=4731371541"
+
+Base.Name = "Base"
+Base.Parent = Bar
+Base.BackgroundColor3 = Color3.new(0.160784, 0.290196, 0.478431)
+Base.BorderSizePixel = 0
+Base.Position = UDim2.new(0, 0, 0.800000012, 0)
+Base.Size = UDim2.new(1, 0, 0, 10)
+Base.Image = "rbxassetid://2851926732"
+Base.ImageColor3 = Color3.new(0.160784, 0.290196, 0.478431)
+Base.ScaleType = Enum.ScaleType.Slice
+Base.SliceCenter = Rect.new(12, 12, 12, 12)
+
+Top.Name = "Top"
+Top.Parent = Bar
+Top.BackgroundColor3 = Color3.new(1, 1, 1)
+Top.BackgroundTransparency = 1
+Top.Position = UDim2.new(0, 0, 0, -5)
+Top.Size = UDim2.new(1, 0, 0, 10)
+Top.Image = "rbxassetid://2851926732"
+Top.ImageColor3 = Color3.new(0.160784, 0.290196, 0.478431)
+Top.ScaleType = Enum.ScaleType.Slice
+Top.SliceCenter = Rect.new(12, 12, 12, 12)
+
+Tabs.Name = "Tabs"
+Tabs.Parent = Window
+Tabs.BackgroundColor3 = Color3.new(1, 1, 1)
+Tabs.BackgroundTransparency = 1
+Tabs.Position = UDim2.new(0, 15, 0, 60)
+Tabs.Size = UDim2.new(1, -30, 1, -60)
+
+Title.Name = "Title"
+Title.Parent = Window
+Title.BackgroundColor3 = Color3.new(1, 1, 1)
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 30, 0, 3)
+Title.Size = UDim2.new(0, 200, 0, 20)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "Gamer Time"
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.TextSize = 14
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+TabSelection.Name = "TabSelection"
+TabSelection.Parent = Window
+TabSelection.BackgroundColor3 = Color3.new(1, 1, 1)
+TabSelection.BackgroundTransparency = 1
+TabSelection.Position = UDim2.new(0, 15, 0, 30)
+TabSelection.Size = UDim2.new(1, -30, 0, 25)
+TabSelection.Visible = false
+TabSelection.Image = "rbxassetid://2851929490"
+TabSelection.ImageColor3 = Color3.new(0.145098, 0.14902, 0.156863)
+TabSelection.ScaleType = Enum.ScaleType.Slice
+TabSelection.SliceCenter = Rect.new(4, 4, 4, 4)
+
+TabButtons.Name = "TabButtons"
+TabButtons.Parent = TabSelection
+TabButtons.BackgroundColor3 = Color3.new(1, 1, 1)
+TabButtons.BackgroundTransparency = 1
+TabButtons.Size = UDim2.new(1, 0, 1, 0)
+
+UIListLayout.Parent = TabButtons
+UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 2)
+
+Frame.Parent = TabSelection
+Frame.BackgroundColor3 = Color3.new(0.12549, 0.227451, 0.372549)
+Frame.BorderColor3 = Color3.new(0.105882, 0.164706, 0.207843)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0, 0, 1, 0)
+Frame.Size = UDim2.new(1, 0, 0, 2)
+
+Tab.Name = "Tab"
+Tab.Parent = Prefabs
+Tab.BackgroundColor3 = Color3.new(1, 1, 1)
+Tab.BackgroundTransparency = 1
+Tab.Size = UDim2.new(1, 0, 1, 0)
+Tab.Visible = false
+
+UIListLayout_2.Parent = Tab
+UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout_2.Padding = UDim.new(0, 5)
+
+TextBox.Parent = Prefabs
+TextBox.BackgroundColor3 = Color3.new(1, 1, 1)
+TextBox.BackgroundTransparency = 1
+TextBox.BorderSizePixel = 0
+TextBox.Size = UDim2.new(1, 0, 0, 20)
+TextBox.ZIndex = 2
+TextBox.Font = Enum.Font.GothamSemibold
+TextBox.PlaceholderColor3 = Color3.new(0.698039, 0.698039, 0.698039)
+TextBox.PlaceholderText = "Input Text"
+TextBox.Text = ""
+TextBox.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+TextBox.TextSize = 14
+
+TextBox_Roundify_4px.Name = "TextBox_Roundify_4px"
+TextBox_Roundify_4px.Parent = TextBox
+TextBox_Roundify_4px.BackgroundColor3 = Color3.new(1, 1, 1)
+TextBox_Roundify_4px.BackgroundTransparency = 1
+TextBox_Roundify_4px.Size = UDim2.new(1, 0, 1, 0)
+TextBox_Roundify_4px.Image = "rbxassetid://2851929490"
+TextBox_Roundify_4px.ImageColor3 = Color3.new(0.203922, 0.207843, 0.219608)
+TextBox_Roundify_4px.ScaleType = Enum.ScaleType.Slice
+TextBox_Roundify_4px.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Slider.Name = "Slider"
+Slider.Parent = Prefabs
+Slider.BackgroundColor3 = Color3.new(1, 1, 1)
+Slider.BackgroundTransparency = 1
+Slider.Position = UDim2.new(0, 0, 0.178571433, 0)
+Slider.Size = UDim2.new(1, 0, 0, 20)
+Slider.Image = "rbxassetid://2851929490"
+Slider.ImageColor3 = Color3.new(0.145098, 0.14902, 0.156863)
+Slider.ScaleType = Enum.ScaleType.Slice
+Slider.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Title_2.Name = "Title"
+Title_2.Parent = Slider
+Title_2.BackgroundColor3 = Color3.new(1, 1, 1)
+Title_2.BackgroundTransparency = 1
+Title_2.Position = UDim2.new(0.5, 0, 0.5, -10)
+Title_2.Size = UDim2.new(0, 0, 0, 20)
+Title_2.ZIndex = 2
+Title_2.Font = Enum.Font.GothamBold
+Title_2.Text = "Slider"
+Title_2.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+Title_2.TextSize = 14
+
+Indicator.Name = "Indicator"
+Indicator.Parent = Slider
+Indicator.BackgroundColor3 = Color3.new(1, 1, 1)
+Indicator.BackgroundTransparency = 1
+Indicator.Size = UDim2.new(0, 0, 0, 20)
+Indicator.Image = "rbxassetid://2851929490"
+Indicator.ImageColor3 = Color3.new(0.254902, 0.262745, 0.278431)
+Indicator.ScaleType = Enum.ScaleType.Slice
+Indicator.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Value.Name = "Value"
+Value.Parent = Slider
+Value.BackgroundColor3 = Color3.new(1, 1, 1)
+Value.BackgroundTransparency = 1
+Value.Position = UDim2.new(1, -55, 0.5, -10)
+Value.Size = UDim2.new(0, 50, 0, 20)
+Value.Font = Enum.Font.GothamBold
+Value.Text = "0%"
+Value.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+Value.TextSize = 14
+
+TextLabel.Parent = Slider
+TextLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+TextLabel.BackgroundTransparency = 1
+TextLabel.Position = UDim2.new(1, -20, -0.75, 0)
+TextLabel.Size = UDim2.new(0, 26, 0, 50)
+TextLabel.Font = Enum.Font.GothamBold
+TextLabel.Text = "]"
+TextLabel.TextColor3 = Color3.new(0.627451, 0.627451, 0.627451)
+TextLabel.TextSize = 14
+
+TextLabel_2.Parent = Slider
+TextLabel_2.BackgroundColor3 = Color3.new(1, 1, 1)
+TextLabel_2.BackgroundTransparency = 1
+TextLabel_2.Position = UDim2.new(1, -65, -0.75, 0)
+TextLabel_2.Size = UDim2.new(0, 26, 0, 50)
+TextLabel_2.Font = Enum.Font.GothamBold
+TextLabel_2.Text = "["
+TextLabel_2.TextColor3 = Color3.new(0.627451, 0.627451, 0.627451)
+TextLabel_2.TextSize = 14
+
+Circle.Name = "Circle"
+Circle.Parent = Prefabs
+Circle.BackgroundColor3 = Color3.new(1, 1, 1)
+Circle.BackgroundTransparency = 1
+Circle.Image = "rbxassetid://266543268"
+Circle.ImageTransparency = 0.5
+
+UIListLayout_3.Parent = Prefabs
+UIListLayout_3.FillDirection = Enum.FillDirection.Horizontal
+UIListLayout_3.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout_3.Padding = UDim.new(0, 20)
+
+Dropdown.Name = "Dropdown"
+Dropdown.Parent = Prefabs
+Dropdown.BackgroundColor3 = Color3.new(1, 1, 1)
+Dropdown.BackgroundTransparency = 1
+Dropdown.BorderSizePixel = 0
+Dropdown.Position = UDim2.new(-0.055555556, 0, 0.0833333284, 0)
+Dropdown.Size = UDim2.new(0, 200, 0, 20)
+Dropdown.ZIndex = 2
+Dropdown.Font = Enum.Font.GothamBold
+Dropdown.Text = "      Dropdown"
+Dropdown.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+Dropdown.TextSize = 14
+Dropdown.TextXAlignment = Enum.TextXAlignment.Left
+
+Indicator_2.Name = "Indicator"
+Indicator_2.Parent = Dropdown
+Indicator_2.BackgroundColor3 = Color3.new(1, 1, 1)
+Indicator_2.BackgroundTransparency = 1
+Indicator_2.Position = UDim2.new(0.899999976, -10, 0.100000001, 0)
+Indicator_2.Rotation = -90
+Indicator_2.Size = UDim2.new(0, 15, 0, 15)
+Indicator_2.ZIndex = 2
+Indicator_2.Image = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=4744658743"
+
+Box.Name = "Box"
+Box.Parent = Dropdown
+Box.BackgroundColor3 = Color3.new(1, 1, 1)
+Box.BackgroundTransparency = 1
+Box.Position = UDim2.new(0, 0, 0, 25)
+Box.Size = UDim2.new(1, 0, 0, 150)
+Box.ZIndex = 3
+Box.Image = "rbxassetid://2851929490"
+Box.ImageColor3 = Color3.new(0.129412, 0.133333, 0.141176)
+Box.ScaleType = Enum.ScaleType.Slice
+Box.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Objects.Name = "Objects"
+Objects.Parent = Box
+Objects.BackgroundColor3 = Color3.new(1, 1, 1)
+Objects.BackgroundTransparency = 1
+Objects.BorderSizePixel = 0
+Objects.Size = UDim2.new(1, 0, 1, 0)
+Objects.ZIndex = 3
+Objects.CanvasSize = UDim2.new(0, 0, 0, 0)
+Objects.ScrollBarThickness = 8
+
+UIListLayout_4.Parent = Objects
+UIListLayout_4.SortOrder = Enum.SortOrder.LayoutOrder
+
+TextButton_Roundify_4px.Name = "TextButton_Roundify_4px"
+TextButton_Roundify_4px.Parent = Dropdown
+TextButton_Roundify_4px.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton_Roundify_4px.BackgroundTransparency = 1
+TextButton_Roundify_4px.Size = UDim2.new(1, 0, 1, 0)
+TextButton_Roundify_4px.Image = "rbxassetid://2851929490"
+TextButton_Roundify_4px.ImageColor3 = Color3.new(0.203922, 0.207843, 0.219608)
+TextButton_Roundify_4px.ScaleType = Enum.ScaleType.Slice
+TextButton_Roundify_4px.SliceCenter = Rect.new(4, 4, 4, 4)
+
+TabButton.Name = "TabButton"
+TabButton.Parent = Prefabs
+TabButton.BackgroundColor3 = Color3.new(0.160784, 0.290196, 0.478431)
+TabButton.BackgroundTransparency = 1
+TabButton.BorderSizePixel = 0
+TabButton.Position = UDim2.new(0.185185179, 0, 0, 0)
+TabButton.Size = UDim2.new(0, 71, 0, 20)
+TabButton.ZIndex = 2
+TabButton.Font = Enum.Font.GothamSemibold
+TabButton.Text = "Test tab"
+TabButton.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+TabButton.TextSize = 14
+
+TextButton_Roundify_4px_2.Name = "TextButton_Roundify_4px"
+TextButton_Roundify_4px_2.Parent = TabButton
+TextButton_Roundify_4px_2.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton_Roundify_4px_2.BackgroundTransparency = 1
+TextButton_Roundify_4px_2.Size = UDim2.new(1, 0, 1, 0)
+TextButton_Roundify_4px_2.Image = "rbxassetid://2851929490"
+TextButton_Roundify_4px_2.ImageColor3 = Color3.new(0.203922, 0.207843, 0.219608)
+TextButton_Roundify_4px_2.ScaleType = Enum.ScaleType.Slice
+TextButton_Roundify_4px_2.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Folder.Name = "Folder"
+Folder.Parent = Prefabs
+Folder.BackgroundColor3 = Color3.new(1, 1, 1)
+Folder.BackgroundTransparency = 1
+Folder.Position = UDim2.new(0, 0, 0, 50)
+Folder.Size = UDim2.new(1, 0, 0, 20)
+Folder.Image = "rbxassetid://2851929490"
+Folder.ImageColor3 = Color3.new(0.0823529, 0.0862745, 0.0901961)
+Folder.ScaleType = Enum.ScaleType.Slice
+Folder.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Button.Name = "Button"
+Button.Parent = Folder
+Button.BackgroundColor3 = Color3.new(0.160784, 0.290196, 0.478431)
+Button.BackgroundTransparency = 1
+Button.BorderSizePixel = 0
+Button.Size = UDim2.new(1, 0, 0, 20)
+Button.ZIndex = 2
+Button.Font = Enum.Font.GothamSemibold
+Button.Text = "      Folder"
+Button.TextColor3 = Color3.new(1, 1, 1)
+Button.TextSize = 14
+Button.TextXAlignment = Enum.TextXAlignment.Left
+
+TextButton_Roundify_4px_3.Name = "TextButton_Roundify_4px"
+TextButton_Roundify_4px_3.Parent = Button
+TextButton_Roundify_4px_3.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton_Roundify_4px_3.BackgroundTransparency = 1
+TextButton_Roundify_4px_3.Size = UDim2.new(1, 0, 1, 0)
+TextButton_Roundify_4px_3.Image = "rbxassetid://2851929490"
+TextButton_Roundify_4px_3.ImageColor3 = Color3.new(0.160784, 0.290196, 0.478431)
+TextButton_Roundify_4px_3.ScaleType = Enum.ScaleType.Slice
+TextButton_Roundify_4px_3.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Toggle_2.Name = "Toggle"
+Toggle_2.Parent = Button
+Toggle_2.BackgroundColor3 = Color3.new(1, 1, 1)
+Toggle_2.BackgroundTransparency = 1
+Toggle_2.Position = UDim2.new(0, 5, 0, 0)
+Toggle_2.Size = UDim2.new(0, 20, 0, 20)
+Toggle_2.Image = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=4731371541"
+
+Objects_2.Name = "Objects"
+Objects_2.Parent = Folder
+Objects_2.BackgroundColor3 = Color3.new(1, 1, 1)
+Objects_2.BackgroundTransparency = 1
+Objects_2.Position = UDim2.new(0, 10, 0, 25)
+Objects_2.Size = UDim2.new(1, -10, 1, -25)
+Objects_2.Visible = false
+
+UIListLayout_5.Parent = Objects_2
+UIListLayout_5.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout_5.Padding = UDim.new(0, 5)
+
+HorizontalAlignment.Name = "HorizontalAlignment"
+HorizontalAlignment.Parent = Prefabs
+HorizontalAlignment.BackgroundColor3 = Color3.new(1, 1, 1)
+HorizontalAlignment.BackgroundTransparency = 1
+HorizontalAlignment.Size = UDim2.new(1, 0, 0, 20)
+
+UIListLayout_6.Parent = HorizontalAlignment
+UIListLayout_6.FillDirection = Enum.FillDirection.Horizontal
+UIListLayout_6.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout_6.Padding = UDim.new(0, 5)
+
+Console.Name = "Console"
+Console.Parent = Prefabs
+Console.BackgroundColor3 = Color3.new(1, 1, 1)
+Console.BackgroundTransparency = 1
+Console.Size = UDim2.new(1, 0, 0, 200)
+Console.Image = "rbxassetid://2851928141"
+Console.ImageColor3 = Color3.new(0.129412, 0.133333, 0.141176)
+Console.ScaleType = Enum.ScaleType.Slice
+Console.SliceCenter = Rect.new(8, 8, 8, 8)
+
+ScrollingFrame.Parent = Console
+ScrollingFrame.BackgroundColor3 = Color3.new(1, 1, 1)
+ScrollingFrame.BackgroundTransparency = 1
+ScrollingFrame.BorderSizePixel = 0
+ScrollingFrame.Size = UDim2.new(1, 0, 1, 1)
+ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+ScrollingFrame.ScrollBarThickness = 4
+
+Source.Name = "Source"
+Source.Parent = ScrollingFrame
+Source.BackgroundColor3 = Color3.new(1, 1, 1)
+Source.BackgroundTransparency = 1
+Source.Position = UDim2.new(0, 40, 0, 0)
+Source.Size = UDim2.new(1, -40, 0, 10000)
+Source.ZIndex = 3
+Source.ClearTextOnFocus = false
+Source.Font = Enum.Font.Code
+Source.MultiLine = true
+Source.PlaceholderColor3 = Color3.new(0.8, 0.8, 0.8)
+Source.Text = ""
+Source.TextColor3 = Color3.new(1, 1, 1)
+Source.TextSize = 15
+Source.TextStrokeColor3 = Color3.new(1, 1, 1)
+Source.TextWrapped = true
+Source.TextXAlignment = Enum.TextXAlignment.Left
+Source.TextYAlignment = Enum.TextYAlignment.Top
+
+Comments.Name = "Comments"
+Comments.Parent = Source
+Comments.BackgroundColor3 = Color3.new(1, 1, 1)
+Comments.BackgroundTransparency = 1
+Comments.Size = UDim2.new(1, 0, 1, 0)
+Comments.ZIndex = 5
+Comments.Font = Enum.Font.Code
+Comments.Text = ""
+Comments.TextColor3 = Color3.new(0.231373, 0.784314, 0.231373)
+Comments.TextSize = 15
+Comments.TextXAlignment = Enum.TextXAlignment.Left
+Comments.TextYAlignment = Enum.TextYAlignment.Top
+
+Globals.Name = "Globals"
+Globals.Parent = Source
+Globals.BackgroundColor3 = Color3.new(1, 1, 1)
+Globals.BackgroundTransparency = 1
+Globals.Size = UDim2.new(1, 0, 1, 0)
+Globals.ZIndex = 5
+Globals.Font = Enum.Font.Code
+Globals.Text = ""
+Globals.TextColor3 = Color3.new(0.517647, 0.839216, 0.968628)
+Globals.TextSize = 15
+Globals.TextXAlignment = Enum.TextXAlignment.Left
+Globals.TextYAlignment = Enum.TextYAlignment.Top
+
+Keywords.Name = "Keywords"
+Keywords.Parent = Source
+Keywords.BackgroundColor3 = Color3.new(1, 1, 1)
+Keywords.BackgroundTransparency = 1
+Keywords.Size = UDim2.new(1, 0, 1, 0)
+Keywords.ZIndex = 5
+Keywords.Font = Enum.Font.Code
+Keywords.Text = ""
+Keywords.TextColor3 = Color3.new(0.972549, 0.427451, 0.486275)
+Keywords.TextSize = 15
+Keywords.TextXAlignment = Enum.TextXAlignment.Left
+Keywords.TextYAlignment = Enum.TextYAlignment.Top
+
+RemoteHighlight.Name = "RemoteHighlight"
+RemoteHighlight.Parent = Source
+RemoteHighlight.BackgroundColor3 = Color3.new(1, 1, 1)
+RemoteHighlight.BackgroundTransparency = 1
+RemoteHighlight.Size = UDim2.new(1, 0, 1, 0)
+RemoteHighlight.ZIndex = 5
+RemoteHighlight.Font = Enum.Font.Code
+RemoteHighlight.Text = ""
+RemoteHighlight.TextColor3 = Color3.new(0, 0.568627, 1)
+RemoteHighlight.TextSize = 15
+RemoteHighlight.TextXAlignment = Enum.TextXAlignment.Left
+RemoteHighlight.TextYAlignment = Enum.TextYAlignment.Top
+
+Strings.Name = "Strings"
+Strings.Parent = Source
+Strings.BackgroundColor3 = Color3.new(1, 1, 1)
+Strings.BackgroundTransparency = 1
+Strings.Size = UDim2.new(1, 0, 1, 0)
+Strings.ZIndex = 5
+Strings.Font = Enum.Font.Code
+Strings.Text = ""
+Strings.TextColor3 = Color3.new(0.678431, 0.945098, 0.584314)
+Strings.TextSize = 15
+Strings.TextXAlignment = Enum.TextXAlignment.Left
+Strings.TextYAlignment = Enum.TextYAlignment.Top
+
+Tokens.Name = "Tokens"
+Tokens.Parent = Source
+Tokens.BackgroundColor3 = Color3.new(1, 1, 1)
+Tokens.BackgroundTransparency = 1
+Tokens.Size = UDim2.new(1, 0, 1, 0)
+Tokens.ZIndex = 5
+Tokens.Font = Enum.Font.Code
+Tokens.Text = ""
+Tokens.TextColor3 = Color3.new(1, 1, 1)
+Tokens.TextSize = 15
+Tokens.TextXAlignment = Enum.TextXAlignment.Left
+Tokens.TextYAlignment = Enum.TextYAlignment.Top
+
+Numbers.Name = "Numbers"
+Numbers.Parent = Source
+Numbers.BackgroundColor3 = Color3.new(1, 1, 1)
+Numbers.BackgroundTransparency = 1
+Numbers.Size = UDim2.new(1, 0, 1, 0)
+Numbers.ZIndex = 4
+Numbers.Font = Enum.Font.Code
+Numbers.Text = ""
+Numbers.TextColor3 = Color3.new(1, 0.776471, 0)
+Numbers.TextSize = 15
+Numbers.TextXAlignment = Enum.TextXAlignment.Left
+Numbers.TextYAlignment = Enum.TextYAlignment.Top
+
+Info.Name = "Info"
+Info.Parent = Source
+Info.BackgroundColor3 = Color3.new(1, 1, 1)
+Info.BackgroundTransparency = 1
+Info.Size = UDim2.new(1, 0, 1, 0)
+Info.ZIndex = 5
+Info.Font = Enum.Font.Code
+Info.Text = ""
+Info.TextColor3 = Color3.new(0, 0.635294, 1)
+Info.TextSize = 15
+Info.TextXAlignment = Enum.TextXAlignment.Left
+Info.TextYAlignment = Enum.TextYAlignment.Top
+
+Lines.Name = "Lines"
+Lines.Parent = ScrollingFrame
+Lines.BackgroundColor3 = Color3.new(1, 1, 1)
+Lines.BackgroundTransparency = 1
+Lines.BorderSizePixel = 0
+Lines.Size = UDim2.new(0, 40, 0, 10000)
+Lines.ZIndex = 4
+Lines.Font = Enum.Font.Code
+Lines.Text = "1\n"
+Lines.TextColor3 = Color3.new(1, 1, 1)
+Lines.TextSize = 15
+Lines.TextWrapped = true
+Lines.TextYAlignment = Enum.TextYAlignment.Top
+
+ColorPicker.Name = "ColorPicker"
+ColorPicker.Parent = Prefabs
+ColorPicker.BackgroundColor3 = Color3.new(1, 1, 1)
+ColorPicker.BackgroundTransparency = 1
+ColorPicker.Size = UDim2.new(0, 180, 0, 110)
+ColorPicker.Image = "rbxassetid://2851929490"
+ColorPicker.ImageColor3 = Color3.new(0.203922, 0.207843, 0.219608)
+ColorPicker.ScaleType = Enum.ScaleType.Slice
+ColorPicker.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Palette.Name = "Palette"
+Palette.Parent = ColorPicker
+Palette.BackgroundColor3 = Color3.new(1, 1, 1)
+Palette.BackgroundTransparency = 1
+Palette.Position = UDim2.new(0.0500000007, 0, 0.0500000007, 0)
+Palette.Size = UDim2.new(0, 100, 0, 100)
+Palette.Image = "rbxassetid://698052001"
+Palette.ScaleType = Enum.ScaleType.Slice
+Palette.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Indicator_3.Name = "Indicator"
+Indicator_3.Parent = Palette
+Indicator_3.BackgroundColor3 = Color3.new(1, 1, 1)
+Indicator_3.BackgroundTransparency = 1
+Indicator_3.Size = UDim2.new(0, 5, 0, 5)
+Indicator_3.ZIndex = 2
+Indicator_3.Image = "rbxassetid://2851926732"
+Indicator_3.ImageColor3 = Color3.new(0, 0, 0)
+Indicator_3.ScaleType = Enum.ScaleType.Slice
+Indicator_3.SliceCenter = Rect.new(12, 12, 12, 12)
+
+Sample.Name = "Sample"
+Sample.Parent = ColorPicker
+Sample.BackgroundColor3 = Color3.new(1, 1, 1)
+Sample.BackgroundTransparency = 1
+Sample.Position = UDim2.new(0.800000012, 0, 0.0500000007, 0)
+Sample.Size = UDim2.new(0, 25, 0, 25)
+Sample.Image = "rbxassetid://2851929490"
+Sample.ScaleType = Enum.ScaleType.Slice
+Sample.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Saturation.Name = "Saturation"
+Saturation.Parent = ColorPicker
+Saturation.BackgroundColor3 = Color3.new(1, 1, 1)
+Saturation.Position = UDim2.new(0.649999976, 0, 0.0500000007, 0)
+Saturation.Size = UDim2.new(0, 15, 0, 100)
+Saturation.Image = "rbxassetid://3641079629"
+
+Indicator_4.Name = "Indicator"
+Indicator_4.Parent = Saturation
+Indicator_4.BackgroundColor3 = Color3.new(1, 1, 1)
+Indicator_4.BorderSizePixel = 0
+Indicator_4.Size = UDim2.new(0, 20, 0, 2)
+Indicator_4.ZIndex = 2
+
+Switch.Name = "Switch"
+Switch.Parent = Prefabs
+Switch.BackgroundColor3 = Color3.new(1, 1, 1)
+Switch.BackgroundTransparency = 1
+Switch.BorderSizePixel = 0
+Switch.Position = UDim2.new(0.229411766, 0, 0.20714286, 0)
+Switch.Size = UDim2.new(0, 20, 0, 20)
+Switch.ZIndex = 2
+Switch.Font = Enum.Font.SourceSans
+Switch.Text = ""
+Switch.TextColor3 = Color3.new(1, 1, 1)
+Switch.TextSize = 18
+
+TextButton_Roundify_4px_4.Name = "TextButton_Roundify_4px"
+TextButton_Roundify_4px_4.Parent = Switch
+TextButton_Roundify_4px_4.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton_Roundify_4px_4.BackgroundTransparency = 1
+TextButton_Roundify_4px_4.Size = UDim2.new(1, 0, 1, 0)
+TextButton_Roundify_4px_4.Image = "rbxassetid://2851929490"
+TextButton_Roundify_4px_4.ImageColor3 = Color3.new(0.160784, 0.290196, 0.478431)
+TextButton_Roundify_4px_4.ImageTransparency = 0.5
+TextButton_Roundify_4px_4.ScaleType = Enum.ScaleType.Slice
+TextButton_Roundify_4px_4.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Title_3.Name = "Title"
+Title_3.Parent = Switch
+Title_3.BackgroundColor3 = Color3.new(1, 1, 1)
+Title_3.BackgroundTransparency = 1
+Title_3.Position = UDim2.new(1.20000005, 0, 0, 0)
+Title_3.Size = UDim2.new(0, 20, 0, 20)
+Title_3.Font = Enum.Font.GothamSemibold
+Title_3.Text = "Switch"
+Title_3.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+Title_3.TextSize = 14
+Title_3.TextXAlignment = Enum.TextXAlignment.Left
+
+Button_2.Name = "Button"
+Button_2.Parent = Prefabs
+Button_2.BackgroundColor3 = Color3.new(0.160784, 0.290196, 0.478431)
+Button_2.BackgroundTransparency = 1
+Button_2.BorderSizePixel = 0
+Button_2.Size = UDim2.new(0, 91, 0, 20)
+Button_2.ZIndex = 2
+Button_2.Font = Enum.Font.GothamSemibold
+Button_2.TextColor3 = Color3.new(1, 1, 1)
+Button_2.TextSize = 14
+
+TextButton_Roundify_4px_5.Name = "TextButton_Roundify_4px"
+TextButton_Roundify_4px_5.Parent = Button_2
+TextButton_Roundify_4px_5.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton_Roundify_4px_5.BackgroundTransparency = 1
+TextButton_Roundify_4px_5.Size = UDim2.new(1, 0, 1, 0)
+TextButton_Roundify_4px_5.Image = "rbxassetid://2851929490"
+TextButton_Roundify_4px_5.ImageColor3 = Color3.new(0.160784, 0.290196, 0.478431)
+TextButton_Roundify_4px_5.ScaleType = Enum.ScaleType.Slice
+TextButton_Roundify_4px_5.SliceCenter = Rect.new(4, 4, 4, 4)
+
+DropdownButton.Name = "DropdownButton"
+DropdownButton.Parent = Prefabs
+DropdownButton.BackgroundColor3 = Color3.new(0.129412, 0.133333, 0.141176)
+DropdownButton.BorderSizePixel = 0
+DropdownButton.Size = UDim2.new(1, 0, 0, 20)
+DropdownButton.ZIndex = 3
+DropdownButton.Font = Enum.Font.GothamBold
+DropdownButton.Text = "      Button"
+DropdownButton.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+DropdownButton.TextSize = 14
+DropdownButton.TextXAlignment = Enum.TextXAlignment.Left
+
+Keybind.Name = "Keybind"
+Keybind.Parent = Prefabs
+Keybind.BackgroundColor3 = Color3.new(1, 1, 1)
+Keybind.BackgroundTransparency = 1
+Keybind.Size = UDim2.new(0, 200, 0, 20)
+Keybind.Image = "rbxassetid://2851929490"
+Keybind.ImageColor3 = Color3.new(0.203922, 0.207843, 0.219608)
+Keybind.ScaleType = Enum.ScaleType.Slice
+Keybind.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Title_4.Name = "Title"
+Title_4.Parent = Keybind
+Title_4.BackgroundColor3 = Color3.new(1, 1, 1)
+Title_4.BackgroundTransparency = 1
+Title_4.Size = UDim2.new(0, 0, 1, 0)
+Title_4.Font = Enum.Font.GothamBold
+Title_4.Text = "Keybind"
+Title_4.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+Title_4.TextSize = 14
+Title_4.TextXAlignment = Enum.TextXAlignment.Left
+
+Input.Name = "Input"
+Input.Parent = Keybind
+Input.BackgroundColor3 = Color3.new(1, 1, 1)
+Input.BackgroundTransparency = 1
+Input.BorderSizePixel = 0
+Input.Position = UDim2.new(1, -85, 0, 2)
+Input.Size = UDim2.new(0, 80, 1, -4)
+Input.ZIndex = 2
+Input.Font = Enum.Font.GothamSemibold
+Input.Text = "RShift"
+Input.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+Input.TextSize = 12
+Input.TextWrapped = true
+
+Input_Roundify_4px.Name = "Input_Roundify_4px"
+Input_Roundify_4px.Parent = Input
+Input_Roundify_4px.BackgroundColor3 = Color3.new(1, 1, 1)
+Input_Roundify_4px.BackgroundTransparency = 1
+Input_Roundify_4px.Size = UDim2.new(1, 0, 1, 0)
+Input_Roundify_4px.Image = "rbxassetid://2851929490"
+Input_Roundify_4px.ImageColor3 = Color3.new(0.290196, 0.294118, 0.313726)
+Input_Roundify_4px.ScaleType = Enum.ScaleType.Slice
+Input_Roundify_4px.SliceCenter = Rect.new(4, 4, 4, 4)
+
+Windows.Name = "Windows"
+Windows.Parent = imgui
+Windows.BackgroundColor3 = Color3.new(1, 1, 1)
+Windows.BackgroundTransparency = 1
+Windows.Position = UDim2.new(0, 20, 0, 20)
+Windows.Size = UDim2.new(1, 20, 1, -20)
+
+--[[ Script ]]--
+script.Parent = imgui
+
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RS = game:GetService("RunService")
+local ps = game:GetService("Players")
+
+local p = ps.LocalPlayer
+local mouse = p:GetMouse()
+
+local Prefabs = script.Parent:WaitForChild("Prefabs")
+local Windows = script.Parent:FindFirstChild("Windows")
+
+local checks = {
+	["binding"] = false,
+}
+
+UIS.InputBegan:Connect(function(input, gameProcessed)
+	if input.KeyCode == ((typeof(ui_options.toggle_key) == "EnumItem") and ui_options.toggle_key or Enum.KeyCode.RightShift) then
+		if script.Parent then
+			if not checks.binding then
+				script.Parent.Enabled = not script.Parent.Enabled
+			end
+		end
+	end
+end)
+
+local function Resize(part, new, _delay)
+	_delay = _delay or 0.5
+	local tweenInfo = TweenInfo.new(_delay, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	local tween = TweenService:Create(part, tweenInfo, new)
+	tween:Play()
+end
+
+local function rgbtohsv(r, g, b) -- idk who made this function, but thanks
+	r, g, b = r / 255, g / 255, b / 255
+	local max, min = math.max(r, g, b), math.min(r, g, b)
+	local h, s, v
+	v = max
+
+	local d = max - min
+	if max == 0 then
+		s = 0
+	else
+		s = d / max
+	end
+
+	if max == min then
+		h = 0
+	else
+		if max == r then
+			h = (g - b) / d
+			if g < b then
+				h = h + 6
+			end
+		elseif max == g then
+			h = (b - r) / d + 2
+		elseif max == b then
+			h = (r - g) / d + 4
+		end
+		h = h / 6
+	end
+
+	return h, s, v
+end
+
+local function hasprop(object, prop)
+	local a, b = pcall(function()
+		return object[tostring(prop)]
+	end)
+	if a then
+		return b
+	end
+end
+
+local function gNameLen(obj)
+	return obj.TextBounds.X + 15
+end
+
+local function gMouse()
+	return Vector2.new(UIS:GetMouseLocation().X + 1, UIS:GetMouseLocation().Y - 35)
+end
+
+local function ripple(button, x, y)
+	spawn(function()
+		button.ClipsDescendants = true
+
+		local circle = Prefabs:FindFirstChild("Circle"):Clone()
+
+		circle.Parent = button
+		circle.ZIndex = 1000
+
+		local new_x = x - circle.AbsolutePosition.X
+		local new_y = y - circle.AbsolutePosition.Y
+		circle.Position = UDim2.new(0, new_x, 0, new_y)
+
+		local size = 0
+		if button.AbsoluteSize.X > button.AbsoluteSize.Y then
+			 size = button.AbsoluteSize.X * 1.5
+		elseif button.AbsoluteSize.X < button.AbsoluteSize.Y then
+			 size = button.AbsoluteSize.Y * 1.5
+		elseif button.AbsoluteSize.X == button.AbsoluteSize.Y then
+			size = button.AbsoluteSize.X * 1.5
+		end
+
+		circle:TweenSizeAndPosition(UDim2.new(0, size, 0, size), UDim2.new(0.5, -size / 2, 0.5, -size / 2), "Out", "Quad", 0.5, false, nil)
+		Resize(circle, {ImageTransparency = 1}, 0.5)
+
+		wait(0.5)
+		circle:Destroy()
+	end)
+end
+
+local windows = 0
+local library = {}
+
+local function format_windows()
+	local ull = Prefabs:FindFirstChild("UIListLayout"):Clone()
+	ull.Parent = Windows
+	local data = {}
+
+	for i,v in next, Windows:GetChildren() do
+		if not (v:IsA("UIListLayout")) then
+			data[v] = v.AbsolutePosition
+		end
+	end
+
+	ull:Destroy()
+
+	for i,v in next, data do
+		i.Position = UDim2.new(0, v.X, 0, v.Y)
+	end
+end
+
+function library:FormatWindows()
+	format_windows()
+end
+
+function library:AddWindow(title, options)
+	windows = windows + 1
+	local dropdown_open = false
+	title = tostring(title or "New Window")
+	options = (typeof(options) == "table") and options or ui_options
+	options.tween_time = 0.1
+
+	local Window = Prefabs:FindFirstChild("Window"):Clone()
+	Window.Parent = Windows
+	Window:FindFirstChild("Title").Text = title
+	Window.Size = UDim2.new(0, options.min_size.X, 0, options.min_size.Y)
+	Window.ZIndex = Window.ZIndex + (windows * 10)
+
+	do -- Altering Window Color
+		local Title = Window:FindFirstChild("Title")
+		local Bar = Window:FindFirstChild("Bar")
+		local Base = Bar:FindFirstChild("Base")
+		local Top = Bar:FindFirstChild("Top")
+		local SplitFrame = Window:FindFirstChild("TabSelection"):FindFirstChild("Frame")
+		local Toggle = Bar:FindFirstChild("Toggle")
+
+		spawn(function()
+			while true do
+				Bar.BackgroundColor3 = options.main_color
+				Base.BackgroundColor3 = options.main_color
+				Base.ImageColor3 = options.main_color
+				Top.ImageColor3 = options.main_color
+				SplitFrame.BackgroundColor3 = options.main_color
+
+				RS.Heartbeat:Wait()
+			end
+		end)
+
+	end
+
+	local Resizer = Window:WaitForChild("Resizer")
+
+	local window_data = {}
+	Window.Draggable = true
+
+	do -- Resize Window
+		local oldIcon = mouse.Icon
+		local Entered = false
+		Resizer.MouseEnter:Connect(function()
+			Window.Draggable = false
+			if options.can_resize then
+				oldIcon = mouse.Icon
+				-- mouse.Icon = "http://www.roblox.com/asset?id=4745131330"
+			end
+			Entered = true
+		end)
+
+		Resizer.MouseLeave:Connect(function()
+			Entered = false
+			if options.can_resize then
+				mouse.Icon = oldIcon
+			end
+			Window.Draggable = true
+		end)
+
+		local Held = false
+		UIS.InputBegan:Connect(function(inputObject)
+			if inputObject.UserInputType == Enum.UserInputType.MouseButton1 then
+				Held = true
+
+				spawn(function() -- Loop check
+					if Entered and Resizer.Active and options.can_resize then
+						while Held and Resizer.Active do
+
+							local mouse_location = gMouse()
+							local x = mouse_location.X - Window.AbsolutePosition.X
+							local y = mouse_location.Y - Window.AbsolutePosition.Y
+
+							--
+							if x >= options.min_size.X and y >= options.min_size.Y then
+								Resize(Window, {Size = UDim2.new(0, x, 0, y)}, options.tween_time)
+							elseif x >= options.min_size.X then
+								Resize(Window, {Size = UDim2.new(0, x, 0, options.min_size.Y)}, options.tween_time)
+							elseif y >= options.min_size.Y then
+								Resize(Window, {Size = UDim2.new(0, options.min_size.X, 0, y)}, options.tween_time)
+							else
+								Resize(Window, {Size = UDim2.new(0, options.min_size.X, 0, options.min_size.Y)}, options.tween_time)
+							end
+
+							RS.Heartbeat:Wait()
+						end
+					end
+				end)
+			end
+		end)
+		UIS.InputEnded:Connect(function(inputObject)
+			if inputObject.UserInputType == Enum.UserInputType.MouseButton1 then
+				Held = false
+			end
+		end)
+	end
+
+	do -- [Open / Close] Window
+		local open_close = Window:FindFirstChild("Bar"):FindFirstChild("Toggle")
+		local open = true
+		local canopen = true
+
+		local oldwindowdata = {}
+		local oldy = Window.AbsoluteSize.Y
+		open_close.MouseButton1Click:Connect(function()
+			if canopen then
+				canopen = false
+
+				if open then
+					-- Close
+
+					oldwindowdata = {}
+					for i,v in next, Window:FindFirstChild("Tabs"):GetChildren() do
+						oldwindowdata[v] = v.Visible
+						v.Visible = false
+					end
+
+					Resizer.Active = false
+
+					oldy = Window.AbsoluteSize.Y
+					Resize(open_close, {Rotation = 0}, options.tween_time)
+					Resize(Window, {Size = UDim2.new(0, Window.AbsoluteSize.X, 0, 26)}, options.tween_time)
+					open_close.Parent:FindFirstChild("Base").Transparency = 1
+
+				else
+					-- Open
+
+					for i,v in next, oldwindowdata do
+						i.Visible = v
+					end
+
+					Resizer.Active = true
+
+					Resize(open_close, {Rotation = 90}, options.tween_time)
+					Resize(Window, {Size = UDim2.new(0, Window.AbsoluteSize.X, 0, oldy)}, options.tween_time)
+					open_close.Parent:FindFirstChild("Base").Transparency = 0
+
+				end
+
+				open = not open
+				wait(options.tween_time)
+				canopen = true
+
+			end
+		end)
+	end
+
+	do -- UI Elements
+		local tabs = Window:FindFirstChild("Tabs")
+		local tab_selection = Window:FindFirstChild("TabSelection")
+		local tab_buttons = tab_selection:FindFirstChild("TabButtons")
+
+		do -- Add Tab
+			function window_data:AddTab(tab_name)
+				local tab_data = {}
+				tab_name = tostring(tab_name or "New Tab")
+				tab_selection.Visible = true
+
+				local new_button = Prefabs:FindFirstChild("TabButton"):Clone()
+				new_button.Parent = tab_buttons
+				new_button.Text = tab_name
+				new_button.Size = UDim2.new(0, gNameLen(new_button), 0, 20)
+				new_button.ZIndex = new_button.ZIndex + (windows * 10)
+				new_button:GetChildren()[1].ZIndex = new_button:GetChildren()[1].ZIndex + (windows * 10)
+
+				local new_tab = Prefabs:FindFirstChild("Tab"):Clone()
+				new_tab.Parent = tabs
+				new_tab.ZIndex = new_tab.ZIndex + (windows * 10)
+
+				local function show()
+					if dropdown_open then return end
+					for i, v in next, tab_buttons:GetChildren() do
+						if not (v:IsA("UIListLayout")) then
+							v:GetChildren()[1].ImageColor3 = Color3.fromRGB(52, 53, 56)
+							Resize(v, {Size = UDim2.new(0, v.AbsoluteSize.X, 0, 20)}, options.tween_time)
+						end
+					end
+					for i, v in next, tabs:GetChildren() do
+						v.Visible = false
+					end
+
+					Resize(new_button, {Size = UDim2.new(0, new_button.AbsoluteSize.X, 0, 25)}, options.tween_time)
+					new_button:GetChildren()[1].ImageColor3 = Color3.fromRGB(73, 75, 79)
+					new_tab.Visible = true
+				end
+
+				new_button.MouseButton1Click:Connect(function()
+					show()
+				end)
+
+				function tab_data:Show()
+					show()
+				end
+
+				do -- Tab Elements
+
+					function tab_data:AddLabel(label_text) -- [Label]
+						label_text = tostring(label_text or "New Label")
+
+						local label = Prefabs:FindFirstChild("Label"):Clone()
+
+						label.Parent = new_tab
+						label.Text = label_text
+						label.Size = UDim2.new(0, gNameLen(label), 0, 20)
+						label.ZIndex = label.ZIndex + (windows * 10)
+
+						return label
+					end
+
+					function tab_data:AddButton(button_text, callback) -- [Button]
+						button_text = tostring(button_text or "New Button")
+						callback = typeof(callback) == "function" and callback or function()end
+
+						local button = Prefabs:FindFirstChild("Button"):Clone()
+
+						button.Parent = new_tab
+						button.Text = button_text
+						button.Size = UDim2.new(0, gNameLen(button), 0, 20)
+						button.ZIndex = button.ZIndex + (windows * 10)
+						button:GetChildren()[1].ZIndex = button:GetChildren()[1].ZIndex + (windows * 10)
+
+						spawn(function()
+							while true do
+								if button and button:GetChildren()[1] then
+									button:GetChildren()[1].ImageColor3 = options.main_color
+								end
+								RS.Heartbeat:Wait()
+							end
+						end)
+
+						button.MouseButton1Click:Connect(function()
+							ripple(button, mouse.X, mouse.Y)
+							pcall(callback)
+						end)
+
+						return button
+					end
+
+					function tab_data:AddSwitch(switch_text, callback) -- [Switch]
+						local switch_data = {}
+
+						switch_text = tostring(switch_text or "New Switch")
+						callback = typeof(callback) == "function" and callback or function()end
+
+						local switch = Prefabs:FindFirstChild("Switch"):Clone()
+
+						switch.Parent = new_tab
+						switch:FindFirstChild("Title").Text = switch_text
+
+						switch:FindFirstChild("Title").ZIndex = switch:FindFirstChild("Title").ZIndex + (windows * 10)
+						switch.ZIndex = switch.ZIndex + (windows * 10)
+						switch:GetChildren()[1].ZIndex = switch:GetChildren()[1].ZIndex + (windows * 10)
+
+						spawn(function()
+							while true do
+								if switch and switch:GetChildren()[1] then
+									switch:GetChildren()[1].ImageColor3 = options.main_color
+								end
+								RS.Heartbeat:Wait()
+							end
+						end)
+
+						local toggled = false
+						switch.MouseButton1Click:Connect(function()
+							toggled = not toggled
+							switch.Text = toggled and utf8.char(10003) or ""
+							pcall(callback, toggled)
+						end)
+
+						function switch_data:Set(bool)
+							toggled = (typeof(bool) == "boolean") and bool or false
+							switch.Text = toggled and utf8.char(10003) or ""
+							pcall(callback,toggled)
+						end
+
+						return switch_data, switch
+					end
+
+					function tab_data:AddTextBox(textbox_text, callback, textbox_options)
+						textbox_text = tostring(textbox_text or "New TextBox")
+						callback = typeof(callback) == "function" and callback or function()end
+						textbox_options = typeof(textbox_options) == "table" and textbox_options or {["clear"] = true}
+						textbox_options = {
+							["clear"] = ((textbox_options.clear) == true)
+						}
+
+						local textbox = Prefabs:FindFirstChild("TextBox"):Clone()
+
+						textbox.Parent = new_tab
+						textbox.PlaceholderText = textbox_text
+						textbox.ZIndex = textbox.ZIndex + (windows * 10)
+						textbox:GetChildren()[1].ZIndex = textbox:GetChildren()[1].ZIndex + (windows * 10)
+
+						textbox.FocusLost:Connect(function(ep)
+							if ep then
+								if #textbox.Text > 0 then
+									pcall(callback, textbox.Text)
+									if textbox_options.clear then
+										textbox.Text = ""
+									end
+								end
+							end
+						end)
+
+						return textbox
+					end
+
+					function tab_data:AddSlider(slider_text, callback, slider_options)
+						local slider_data = {}
+
+						slider_text = tostring(slider_text or "New Slider")
+						callback = typeof(callback) == "function" and callback or function()end
+						slider_options = typeof(slider_options) == "table" and slider_options or {}
+						slider_options = {
+							["min"] = slider_options.min or 0,
+							["max"] = slider_options.max or 100,
+							["readonly"] = slider_options.readonly or false,
+						}
+
+						local slider = Prefabs:FindFirstChild("Slider"):Clone()
+
+						slider.Parent = new_tab
+						slider.ZIndex = slider.ZIndex + (windows * 10)
+
+						local title = slider:FindFirstChild("Title")
+						local indicator = slider:FindFirstChild("Indicator")
+						local value = slider:FindFirstChild("Value")
+						title.ZIndex = title.ZIndex + (windows * 10)
+						indicator.ZIndex = indicator.ZIndex + (windows * 10)
+						value.ZIndex = value.ZIndex + (windows * 10)
+
+						title.Text = slider_text
+
+						do -- Slider Math
+							local Entered = false
+							slider.MouseEnter:Connect(function()
+								Entered = true
+								Window.Draggable = false
+							end)
+							slider.MouseLeave:Connect(function()
+								Entered = false
+								Window.Draggable = true
+							end)
+
+							local Held = false
+							UIS.InputBegan:Connect(function(inputObject)
+								if inputObject.UserInputType == Enum.UserInputType.MouseButton1 then
+									Held = true
+
+									spawn(function() -- Loop check
+										if Entered and not slider_options.readonly then
+											while Held and (not dropdown_open) do
+												local mouse_location = gMouse()
+												local x = (slider.AbsoluteSize.X - (slider.AbsoluteSize.X - ((mouse_location.X - slider.AbsolutePosition.X)) + 1)) / slider.AbsoluteSize.X
+
+												local min = 0
+												local max = 1
+
+												local size = min
+												if x >= min and x <= max then
+													size = x
+												elseif x < min then
+													size = min
+												elseif x > max then
+													size = max
+												end
+
+												Resize(indicator, {Size = UDim2.new(size or min, 0, 0, 20)}, options.tween_time)
+												local p = math.floor((size or min) * 100)
+
+												local maxv = slider_options.max
+												local minv = slider_options.min
+												local diff = maxv - minv
+
+												local sel_value = math.floor(((diff / 100) * p) + minv)
+
+												value.Text = tostring(sel_value)
+												pcall(callback, sel_value)
+
+												RS.Heartbeat:Wait()
+											end
+										end
+									end)
+								end
+							end)
+							UIS.InputEnded:Connect(function(inputObject)
+								if inputObject.UserInputType == Enum.UserInputType.MouseButton1 then
+									Held = false
+								end
+							end)
+
+							function slider_data:Set(new_value)
+								new_value = tonumber(new_value) or 0
+								new_value = (((new_value >= 0 and new_value <= 100) and new_value) / 100)
+
+								Resize(indicator, {Size = UDim2.new(new_value or 0, 0, 0, 20)}, options.tween_time)
+								local p = math.floor((new_value or 0) * 100)
+
+								local maxv = slider_options.max
+								local minv = slider_options.min
+								local diff = maxv - minv
+
+								local sel_value = math.floor(((diff / 100) * p) + minv)
+
+								value.Text = tostring(sel_value)
+								pcall(callback, sel_value)
+							end
+
+							slider_data:Set(slider_options["min"])
+						end
+
+						return slider_data, slider
+					end
+
+					function tab_data:AddKeybind(keybind_name, callback, keybind_options)
+						local keybind_data = {}
+
+						keybind_name = tostring(keybind_name or "New Keybind")
+						callback = typeof(callback) == "function" and callback or function()end
+						keybind_options = typeof(keybind_options) == "table" and keybind_options or {}
+						keybind_options = {
+							["standard"] = keybind_options.standard or Enum.KeyCode.RightShift,
+						}
+
+						local keybind = Prefabs:FindFirstChild("Keybind"):Clone()
+						local input = keybind:FindFirstChild("Input")
+						local title = keybind:FindFirstChild("Title")
+						keybind.ZIndex = keybind.ZIndex + (windows * 10)
+						input.ZIndex = input.ZIndex + (windows * 10)
+						input:GetChildren()[1].ZIndex = input:GetChildren()[1].ZIndex + (windows * 10)
+						title.ZIndex = title.ZIndex + (windows * 10)
+
+						keybind.Parent = new_tab
+						title.Text = "  " .. keybind_name
+						keybind.Size = UDim2.new(0, gNameLen(title) + 80, 0, 20)
+
+						local shortkeys = { -- thanks to stroketon for helping me out with this
+				            RightControl = 'RightCtrl',
+				            LeftControl = 'LeftCtrl',
+				            LeftShift = 'LShift',
+				            RightShift = 'RShift',
+				            MouseButton1 = "Mouse1",
+				            MouseButton2 = "Mouse2"
+				        }
+
+						local keybind = keybind_options.standard
+
+						function keybind_data:SetKeybind(Keybind)
+							local key = shortkeys[Keybind.Name] or Keybind.Name
+							input.Text = key
+							keybind = Keybind
+						end
+
+						UIS.InputBegan:Connect(function(a, b)
+							if checks.binding then
+								spawn(function()
+									wait()
+									checks.binding = false
+								end)
+								return
+							end
+							if a.KeyCode == keybind and not b then
+								pcall(callback, keybind)
+							end
+						end)
+
+						keybind_data:SetKeybind(keybind_options.standard)
+
+						input.MouseButton1Click:Connect(function()
+							if checks.binding then return end
+							input.Text = "..."
+							checks.binding = true
+							local a, b = UIS.InputBegan:Wait()
+							keybind_data:SetKeybind(a.KeyCode)
+						end)
+
+						return keybind_data, keybind
+					end
+
+					function tab_data:AddDropdown(dropdown_name, callback)
+						local dropdown_data = {}
+						dropdown_name = tostring(dropdown_name or "New Dropdown")
+						callback = typeof(callback) == "function" and callback or function()end
+
+						local dropdown = Prefabs:FindFirstChild("Dropdown"):Clone()
+						local box = dropdown:FindFirstChild("Box")
+						local objects = box:FindFirstChild("Objects")
+						local indicator = dropdown:FindFirstChild("Indicator")
+						dropdown.ZIndex = dropdown.ZIndex + (windows * 10)
+						box.ZIndex = box.ZIndex + (windows * 10)
+						objects.ZIndex = objects.ZIndex + (windows * 10)
+						indicator.ZIndex = indicator.ZIndex + (windows * 10)
+						dropdown:GetChildren()[3].ZIndex = dropdown:GetChildren()[3].ZIndex + (windows * 10)
+
+						dropdown.Parent = new_tab
+						dropdown.Text = "      " .. dropdown_name
+						box.Size = UDim2.new(1, 0, 0, 0)
+
+						local open = false
+						dropdown.MouseButton1Click:Connect(function()
+							open = not open
+
+							local len = (#objects:GetChildren() - 1) * 20
+							if #objects:GetChildren() - 1 >= 10 then
+								len = 10 * 20
+								objects.CanvasSize = UDim2.new(0, 0, (#objects:GetChildren() - 1) * 0.1, 0)
+							end
+
+							if open then -- Open
+								if dropdown_open then return end
+								dropdown_open = true
+								Resize(box, {Size = UDim2.new(1, 0, 0, len)}, options.tween_time)
+								Resize(indicator, {Rotation = 90}, options.tween_time)
+							else -- Close
+								dropdown_open = false
+								Resize(box, {Size = UDim2.new(1, 0, 0, 0)}, options.tween_time)
+								Resize(indicator, {Rotation = -90}, options.tween_time)
+							end
+
+						end)
+
+						function dropdown_data:Add(n)
+							local object_data = {}
+							n = tostring(n or "New Object")
+
+							local object = Prefabs:FindFirstChild("DropdownButton"):Clone()
+
+							object.Parent = objects
+							object.Text = n
+							object.ZIndex = object.ZIndex + (windows * 10)
+
+							object.MouseEnter:Connect(function()
+								object.BackgroundColor3 = options.main_color
+							end)
+							object.MouseLeave:Connect(function()
+								object.BackgroundColor3 = Color3.fromRGB(33, 34, 36)
+							end)
+
+							if open then
+								local len = (#objects:GetChildren() - 1) * 20
+								if #objects:GetChildren() - 1 >= 10 then
+									len = 10 * 20
+									objects.CanvasSize = UDim2.new(0, 0, (#objects:GetChildren() - 1) * 0.1, 0)
+								end
+								Resize(box, {Size = UDim2.new(1, 0, 0, len)}, options.tween_time)
+							end
+
+							object.MouseButton1Click:Connect(function()
+								if dropdown_open then
+									dropdown.Text = "      [ " .. n .. " ]"
+									dropdown_open = false
+									open = false
+									Resize(box, {Size = UDim2.new(1, 0, 0, 0)}, options.tween_time)
+									Resize(indicator, {Rotation = -90}, options.tween_time)
+									pcall(callback, n)
+								end
+							end)
+							function object_data:Remove()
+								object:Destroy()
+							end
+
+							return object, object_data
+						end
+
+						return dropdown_data, dropdown
+					end
+
+					function tab_data:AddColorPicker(callback)
+						local color_picker_data = {}
+						callback = typeof(callback) == "function" and callback or function()end
+
+						local color_picker = Prefabs:FindFirstChild("ColorPicker"):Clone()
+
+						color_picker.Parent = new_tab
+						color_picker.ZIndex = color_picker.ZIndex + (windows * 10)
+
+						local palette = color_picker:FindFirstChild("Palette")
+						local sample = color_picker:FindFirstChild("Sample")
+						local saturation = color_picker:FindFirstChild("Saturation")
+						palette.ZIndex = palette.ZIndex + (windows * 10)
+						sample.ZIndex = sample.ZIndex + (windows * 10)
+						saturation.ZIndex = saturation.ZIndex + (windows * 10)
+
+						do -- Color Picker Math
+							local h = 0
+							local s = 1
+							local v = 1
+
+							local function update()
+								local color = Color3.fromHSV(h, s, v)
+								sample.ImageColor3 = color
+								saturation.ImageColor3 = Color3.fromHSV(h, 1, 1)
+								pcall(callback, color)
+							end
+
+							do
+								local color = Color3.fromHSV(h, s, v)
+								sample.ImageColor3 = color
+								saturation.ImageColor3 = Color3.fromHSV(h, 1, 1)
+							end
+
+							local Entered1, Entered2 = false, false
+							palette.MouseEnter:Connect(function()
+								Window.Draggable = false
+								Entered1 = true
+							end)
+							palette.MouseLeave:Connect(function()
+								Window.Draggable = true
+								Entered1 = false
+							end)
+							saturation.MouseEnter:Connect(function()
+								Window.Draggable = false
+								Entered2 = true
+							end)
+							saturation.MouseLeave:Connect(function()
+								Window.Draggable = true
+								Entered2 = false
+							end)
+
+							local palette_indicator = palette:FindFirstChild("Indicator")
+							local saturation_indicator = saturation:FindFirstChild("Indicator")
+							palette_indicator.ZIndex = palette_indicator.ZIndex + (windows * 10)
+							saturation_indicator.ZIndex = saturation_indicator.ZIndex + (windows * 10)
+
+							local Held = false
+							UIS.InputBegan:Connect(function(inputObject)
+								if inputObject.UserInputType == Enum.UserInputType.MouseButton1 then
+									Held = true
+
+									spawn(function() -- Loop check
+										while Held and Entered1 and (not dropdown_open) do -- Palette
+											local mouse_location = gMouse()
+
+											local x = ((palette.AbsoluteSize.X - (mouse_location.X - palette.AbsolutePosition.X)) + 1)
+											local y = ((palette.AbsoluteSize.Y - (mouse_location.Y - palette.AbsolutePosition.Y)) + 1.5)
+
+											local color = Color3.fromHSV(x / 100, y / 100, 0)
+											h = x / 100
+											s = y / 100
+
+											Resize(palette_indicator, {Position = UDim2.new(0, math.abs(x - 100) - (palette_indicator.AbsoluteSize.X / 2), 0, math.abs(y - 100) - (palette_indicator.AbsoluteSize.Y / 2))}, options.tween_time)
+
+											update()
+											RS.Heartbeat:Wait()
+										end
+
+										while Held and Entered2 and (not dropdown_open) do -- Saturation
+											local mouse_location = gMouse()
+											local y = ((palette.AbsoluteSize.Y - (mouse_location.Y - palette.AbsolutePosition.Y)) + 1.5)
+											v = y / 100
+
+											Resize(saturation_indicator, {Position = UDim2.new(0, 0, 0, math.abs(y - 100))}, options.tween_time)
+
+											update()
+											RS.Heartbeat:Wait()
+										end
+									end)
+								end
+							end)
+							UIS.InputEnded:Connect(function(inputObject)
+								if inputObject.UserInputType == Enum.UserInputType.MouseButton1 then
+									Held = false
+								end
+							end)
+
+							function color_picker_data:Set(color)
+								color = typeof(color) == "Color3" and color or Color3.new(1, 1, 1)
+								local h2, s2, v2 = rgbtohsv(color.r * 255, color.g * 255, color.b * 255)
+								sample.ImageColor3 = color
+								saturation.ImageColor3 = Color3.fromHSV(h2, 1, 1)
+								pcall(callback, color)
+							end
+						end
+
+						return color_picker_data, color_picker
+					end
+
+					function tab_data:AddConsole(console_options)
+						local console_data = {}
+
+						console_options = typeof(console_options) == "table" and console_options or {["readonly"] = true,["full"] = false,}
+						console_options = {
+							["y"] = tonumber(console_options.y) or 200,
+							["source"] = console_options.source or "Logs",
+							["readonly"] = ((console_options.readonly) == true),
+							["full"] = ((console_options.full) == true),
+						}
+
+						local console = Prefabs:FindFirstChild("Console"):Clone()
+
+						console.Parent = new_tab
+						console.ZIndex = console.ZIndex + (windows * 10)
+						console.Size = UDim2.new(1, 0, console_options.full and 1 or 0, console_options.y)
+
+						local sf = console:GetChildren()[1]
+						local Source = sf:FindFirstChild("Source")
+						local Lines = sf:FindFirstChild("Lines")
+						Source.ZIndex = Source.ZIndex + (windows * 10)
+						Lines.ZIndex = Lines.ZIndex + (windows * 10)
+
+						Source.TextEditable = not console_options.readonly
+
+						do -- Syntax Zindex
+							for i,v in next, Source:GetChildren() do
+								v.ZIndex = v.ZIndex + (windows * 10) + 1
+							end
+						end
+						Source.Comments.ZIndex = Source.Comments.ZIndex + 1
+
+						do -- Highlighting (thanks to whoever made this)
+							local lua_keywords = {"and", "break", "do", "else", "elseif", "end", "false", "for", "function", "goto", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while"}
+							local global_env = {"getrawmetatable", "newcclosure", "islclosure", "setclipboard", "game", "workspace", "script", "math", "string", "table", "print", "wait", "BrickColor", "Color3", "next", "pairs", "ipairs", "select", "unpack", "Instance", "Vector2", "Vector3", "CFrame", "Ray", "UDim2", "Enum", "assert", "error", "warn", "tick", "loadstring", "_G", "shared", "getfenv", "setfenv", "newproxy", "setmetatable", "getmetatable", "os", "debug", "pcall", "ypcall", "xpcall", "rawequal", "rawset", "rawget", "tonumber", "tostring", "type", "typeof", "_VERSION", "coroutine", "delay", "require", "spawn", "LoadLibrary", "settings", "stats", "time", "UserSettings", "version", "Axes", "ColorSequence", "Faces", "ColorSequenceKeypoint", "NumberRange", "NumberSequence", "NumberSequenceKeypoint", "gcinfo", "elapsedTime", "collectgarbage", "PhysicalProperties", "Rect", "Region3", "Region3int16", "UDim", "Vector2int16", "Vector3int16", "load", "fire", "Fire"}
+
+							local Highlight = function(string, keywords)
+							    local K = {}
+							    local S = string
+							    local Token =
+							    {
+							        ["="] = true,
+							        ["."] = true,
+							        [","] = true,
+							        ["("] = true,
+							        [")"] = true,
+							        ["["] = true,
+							        ["]"] = true,
+							        ["{"] = true,
+							        ["}"] = true,
+							        [":"] = true,
+							        ["*"] = true,
+							        ["/"] = true,
+							        ["+"] = true,
+							        ["-"] = true,
+							        ["%"] = true,
+									[";"] = true,
+									["~"] = true
+							    }
+							    for i, v in pairs(keywords) do
+							        K[v] = true
+							    end
+							    S = S:gsub(".", function(c)
+							        if Token[c] ~= nil then
+							            return "\32"
+							        else
+							            return c
+							        end
+							    end)
+							    S = S:gsub("%S+", function(c)
+							        if K[c] ~= nil then
+							            return c
+							        else
+							            return (" "):rep(#c)
+							        end
+							    end)
+
+							    return S
+							end
+
+							local hTokens = function(string)
+							    local Token =
+							    {
+							        ["="] = true,
+							        ["."] = true,
+							        [","] = true,
+							        ["("] = true,
+							        [")"] = true,
+							        ["["] = true,
+							        ["]"] = true,
+							        ["{"] = true,
+							        ["}"] = true,
+							        [":"] = true,
+							        ["*"] = true,
+							        ["/"] = true,
+							        ["+"] = true,
+							        ["-"] = true,
+							        ["%"] = true,
+									[";"] = true,
+									["~"] = true
+							    }
+							    local A = ""
+							    string:gsub(".", function(c)
+							        if Token[c] ~= nil then
+							            A = A .. c
+							        elseif c == "\n" then
+							            A = A .. "\n"
+									elseif c == "\t" then
+										A = A .. "\t"
+							        else
+							            A = A .. "\32"
+							        end
+							    end)
+
+							    return A
+							end
+
+							local strings = function(string)
+							    local highlight = ""
+							    local quote = false
+							    string:gsub(".", function(c)
+							        if quote == false and c == "\34" then
+							            quote = true
+							        elseif quote == true and c == "\34" then
+							            quote = false
+							        end
+							        if quote == false and c == "\34" then
+							            highlight = highlight .. "\34"
+							        elseif c == "\n" then
+							            highlight = highlight .. "\n"
+									elseif c == "\t" then
+									    highlight = highlight .. "\t"
+							        elseif quote == true then
+							            highlight = highlight .. c
+							        elseif quote == false then
+							            highlight = highlight .. "\32"
+							        end
+							    end)
+
+							    return highlight
+							end
+
+							local info = function(string)
+							    local highlight = ""
+							    local quote = false
+							    string:gsub(".", function(c)
+							        if quote == false and c == "[" then
+							            quote = true
+							        elseif quote == true and c == "]" then
+							            quote = false
+							        end
+							        if quote == false and c == "]" then
+							            highlight = highlight .. "]"  -- fig bug
+							        elseif c == "\n" then
+							            highlight = highlight .. "\n"
+									elseif c == "\t" then
+									    highlight = highlight .. "\t"
+							        elseif quote == true then
+							            highlight = highlight .. c
+							        elseif quote == false then
+							            highlight = highlight .. "\32"
+							        end
+							    end)
+
+							    return highlight
+							end
+
+							local comments = function(string)
+							    local ret = ""
+							    string:gsub("[^\r\n]+", function(c)
+							        local comm = false
+							        local i = 0
+							        c:gsub(".", function(n)
+							            i = i + 1
+							            if c:sub(i, i + 1) == "--" then
+							                comm = true
+							            end
+							            if comm == true then
+							                ret = ret .. n
+							            else
+							                ret = ret .. "\32"
+							            end
+							        end)
+							        ret = ret
+							    end)
+
+							    return ret
+							end
+
+							local numbers = function(string)
+							    local A = ""
+							    string:gsub(".", function(c)
+							        if tonumber(c) ~= nil then
+							            A = A .. c
+							        elseif c == "\n" then
+							            A = A .. "\n"
+									elseif c == "\t" then
+										A = A .. "\t"
+							        else
+							            A = A .. "\32"
+							        end
+							    end)
+
+							    return A
+							end
+
+							local highlight_lua = function(type)
+								if type == "Text" then
+									Source.Text = Source.Text:gsub("\13", "")
+									Source.Text = Source.Text:gsub("\t", "      ")
+									local s = Source.Text
+
+									Source.Keywords.Text = Highlight(s, lua_keywords)
+									Source.Globals.Text = Highlight(s, global_env)
+									Source.RemoteHighlight.Text = Highlight(s, {"FireServer", "fireServer", "InvokeServer", "invokeServer"})
+									Source.Tokens.Text = hTokens(s)
+									Source.Numbers.Text = numbers(s)
+									Source.Strings.Text = strings(s)
+									Source.Comments.Text = comments(s)
+
+									local lin = 1
+									s:gsub("\n", function()
+										lin = lin + 1
+									end)
+
+									Lines.Text = ""
+									for i = 1, lin do
+										Lines.Text = Lines.Text .. i .. "\n"
+									end
+
+									sf.CanvasSize = UDim2.new(0, 0, lin * 0.153846154, 0)
+								end
+
+							local highlight_logs = function(type)
+							end
+								if type == "Text" then
+									Source.Text = Source.Text:gsub("\13", "")
+									Source.Text = Source.Text:gsub("\t", "      ")
+									local s = Source.Text
+
+									Source.Info.Text = info(s)
+
+									local lin = 1
+									s:gsub("\n", function()
+										lin = lin + 1
+									end)
+
+									sf.CanvasSize = UDim2.new(0, 0, lin * 0.153846154, 0)
+								end
+							end
+
+							if console_options.source == "Lua" then
+								highlight_lua("Text")
+								Source.Changed:Connect(highlight_lua)
+							elseif console_options.source == "Logs" then
+								Lines.Visible = false
+
+								highlight_logs("Text")
+								Source.Changed:Connect(highlight_logs)
+							end
+
+							function console_data:Set(code)
+								Source.Text = tostring(code)
+							end
+
+							function console_data:Get()
+								return Source.Text
+							end
+
+							function console_data:Log(msg)
+								Source.Text = Source.Text .. "[*] " .. tostring(msg) .. "\n"
+							end
+
+						end
+
+						return console_data, console
+					end
+
+					function tab_data:AddHorizontalAlignment()
+						local ha_data = {}
+
+						local ha = Prefabs:FindFirstChild("HorizontalAlignment"):Clone()
+						ha.Parent = new_tab
+
+						function ha_data:AddButton(...)
+							local data, object
+							local ret = {tab_data:AddButton(...)}
+							if typeof(ret[1]) == "table" then
+								data = ret[1]
+								object = ret[2]
+								object.Parent = ha
+								return data, object
+							else
+								object = ret[1]
+								object.Parent = ha
+								return object
+							end
+						end
+
+						return ha_data, ha
+					end
+
+					function tab_data:AddFolder(folder_name) -- [Folder]
+						local folder_data = {}
+
+						folder_name = tostring(folder_name or "New Folder")
+
+						local folder = Prefabs:FindFirstChild("Folder"):Clone()
+						local button = folder:FindFirstChild("Button")
+						local objects = folder:FindFirstChild("Objects")
+						local toggle = button:FindFirstChild("Toggle")
+						folder.ZIndex = folder.ZIndex + (windows * 10)
+						button.ZIndex = button.ZIndex + (windows * 10)
+						objects.ZIndex = objects.ZIndex + (windows * 10)
+						toggle.ZIndex = toggle.ZIndex + (windows * 10)
+						button:GetChildren()[1].ZIndex = button:GetChildren()[1].ZIndex + (windows * 10)
+
+						folder.Parent = new_tab
+						button.Text = "      " .. folder_name
+
+						spawn(function()
+							while true do
+								if button and button:GetChildren()[1] then
+									button:GetChildren()[1].ImageColor3 = options.main_color
+								end
+								RS.Heartbeat:Wait()
+							end
+						end)
+
+						local function gFolderLen()
+							local n = 25
+							for i,v in next, objects:GetChildren() do
+								if not (v:IsA("UIListLayout")) then
+									n = n + v.AbsoluteSize.Y + 5
+								end
+							end
+							return n
+						end
+
+						local open = false
+						button.MouseButton1Click:Connect(function()
+							if open then -- Close
+								Resize(toggle, {Rotation = 0}, options.tween_time)
+								objects.Visible = false
+							else -- Open
+								Resize(toggle, {Rotation = 90}, options.tween_time)
+								objects.Visible = true
+							end
+
+							open = not open
+						end)
+
+						spawn(function()
+							while true do
+								Resize(folder, {Size = UDim2.new(1, 0, 0, (open and gFolderLen() or 20))}, options.tween_time)
+								wait()
+							end
+						end)
+
+						for i,v in next, tab_data do
+							folder_data[i] = function(...)
+								local data, object
+								local ret = {v(...)}
+								if typeof(ret[1]) == "table" then
+									data = ret[1]
+									object = ret[2]
+									object.Parent = objects
+									return data, object
+								else
+									object = ret[1]
+									object.Parent = objects
+									return object
+								end
+							end
+						end
+
+						return folder_data, folder
+					end
+
+				end
+
+				return tab_data, new_tab
+			end
+		end
+	end
+
+	do
+		for i, v in next, Window:GetDescendants() do
+			if hasprop(v, "ZIndex") then
+				v.ZIndex = v.ZIndex + (windows * 10)
+			end
+		end
+	end
+
+	return window_data, Window
 end
 
 --#endregion
@@ -2239,6 +2413,82 @@ function update_data()
 	getgenv().resultGems = myGems
 	updatejson()
 
+	print('Log 5')
+	--print(Table_All_Items_New_data["entertainment_district_item"]['Count'])
+	-- // Raid // --
+
+
+	--
+	--tostring(Table_All_Items_New_data["six_eyes"]['Name']) .. ": x" .. tostring(Table_All_Items_New_data["six_eyes"]['Count'] or 0)
+	--Table_All_Items_New_data["six_eyes"]['Count'] or 0
+
+	for name, amount in pairs(itemDifference) do
+		if getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Alien Scouter" and name == "west_city_frieza_item" then
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
+			if tonumber(getgenv().textGem) <= 1 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
+			updatejson()
+			task.wait(1)
+			break
+		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Tomoe" and name == "uchiha_item" then
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
+			if tonumber(getgenv().textGem) <= 1 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
+			updatejson()
+			task.wait(1)
+			break
+		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Entertain Shard" and name == "entertainment_district_item" then
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
+			if tonumber(getgenv().textGem) <= 1 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
+			updatejson()
+			task.wait(1)
+			break
+		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Demon Shard" and name == "april_symbol" then
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
+			if tonumber(getgenv().textGem) <= 1 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
+			updatejson()
+			task.wait(1)
+			break
+		elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Relic Shard" and name == "relic_shard" then
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
+			if tonumber(getgenv().textGem) <= 0 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
+			updatejson()
+			task.wait(1)
+			break
+		elseif getgenv().autoSelectMode == "ฟาร์มตาโกโจ" and getgenv().autoSelectItem == "SIX EYE" and name == "six_eyes" then
+			getgenv().textGem = tonumber(getgenv().textGem) - amount
+			if tonumber(getgenv().textGem) <= 0 then
+				pcall(function () webhook_finish() end)
+				updatejson()
+				return
+			end
+			updatejson()
+			task.wait(1)
+			break
+		end
+		
+	end
+
+	
+
 	print('Log 6')
 
   return {
@@ -2319,6 +2569,25 @@ end
 function update_data_Finish()
 	getgenv().end_time = os.time()
 
+	local itemDifference = getItemChangesNormal(getgenv().startingInventoryNormalItems, getNormalItems())
+	local TextDropLabel = ""
+  local CountAmount = 1
+
+	for name, amount in pairs(itemDifference) do
+		for code , nameCode in pairs(Table_All_Items_New_data) do
+			if code == name then
+				TextDropLabel = TextDropLabel .. tostring(CountAmount) .. ". " .. tostring(nameCode["Name"]) .. " : " .. tostring(amount) .. "\n"
+				CountAmount = CountAmount + 1
+				break
+			end
+		end
+	end
+
+  if TextDropLabel == "" then
+    TextDropLabel = "ไม่มีไอเท็มที่ได้รับ"
+  end
+
+	print('Log 1')
   user_level = tostring(LocalPlayer.PlayerGui.spawn_units.Lives.Main.Desc.Level.Text)
 	total_gems = tostring(LocalPlayer._stats.gem_amount.Value)
 	gem_reward = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.LevelRewards.ScrollingFrame.GemReward.Main.Amount.Text)
@@ -2327,6 +2596,27 @@ function update_data_Finish()
 	total_wave = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Middle.WavesCompleted.Text):split(": ")[2]
 	total_time = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Middle.Timer.Text):split(": ")[2]
 	result = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Title.Text)
+
+	local itemInventory = getNormalItems()
+	local portal_name = getCSMPortals()
+	local demon_portal = 0
+	local alien_portal = 0
+	local devil_Academy = 0
+
+
+	for i, v in pairs(portal_name) do
+		if v["item_id"] == "portal_zeldris" then
+			demon_portal = demon_portal + 1
+		elseif v["item_id"] == "portal_boros_g"  then
+			alien_portal = alien_portal + 1
+		elseif v["item_id"] == "april_portal_item"  then
+			devil_Academy = devil_Academy + 1
+		end
+	end
+
+	print('Log 2')
+
+
 
 	if gem_reward == "+99999" then gem_reward = "+0" end
 	if xp_reward == "+99999" then xp_reward = "+0" end
@@ -2397,7 +2687,9 @@ function webhook_finish()
 end
 --#endregion
 
-----------------------------
+----
+
+--------------------
 --#region Modul Units --
 
 getgenv().UnitCache = {}
@@ -2412,837 +2704,574 @@ end
 --#endregion
 ---------------------------
 
+--#region Create UI
+
 function PjxInit()
-	
---#region Getgenv()
-	local jsonData = readfile(savefilename)
-	local data = HttpService:JSONDecode(jsonData)
-	getgenv().autoHideUI = data.autoHideUI
 
-	local Window = OrionLib:MakeWindow({ 
-		Name = "|| PROJECT X || " .. versionx, 
-		IntroText = "PROJECT X HUB",
-		IntroIcon = "rbxassetid://6031094678",
-		HidePremium = false, 
-		SaveConfig = true,
-		AutoHideUI = getgenv().autoHideUI,
-		ConfigFolder = "ProjectX" 
-	}) -- TITLE
+	--#region Getgenv Json()
+		local jsonData = readfile(savefilename)
+		local data = HttpService:JSONDecode(jsonData)
 
-	-- Save Script
-	getgenv().AutoLoadTP = data.AutoLoadTP or true
-	-- Warp Friends
-	getgenv().warpfriend = data.warpfriend or false
+		-- AUTO
+		getgenv().AutoStart = data.AutoStart  or false
+		getgenv().AutoReplay = data.AutoReplay  or false
+		getgenv().chickenFarm = data.chickenFarm or false
+		getgenv().warpfriend = data.warpfriend or false
+		getgenv().autoSelectMode = data.autoSelectMode or "เลือกโหมดที่ต้องการฟาร์ม"
+		getgenv().autoSelectItem = data.autoSelectItem or "เลือกไอเท็มเรท"
+		getgenv().dreander3d = data.dreander3d or false
+		getgenv().autoportal = data.autoportal or false
+		getgenv().jobID = data.jobID or nil
+		getgenv().textGem = data.textGem or "0"
+		getgenv().resultGems = data.resultGems or 0
+		getgenv().BattlePass = data.BattlePass or 0
+		getgenv().SelectedUnits = data.xselectedUnits or {}
+		getgenv().weburl = "https://discordapp.com/api/webhooks/1101553771663868055/LxQbGxqRQgqv5qu45IdUWvfSzI9Dm0Jxpa-MvMs39XCjtZLgsCyCQXxwhhCaonCodIvs"
+		getgenv().weburlfinish = "https://discordapp.com/api/webhooks/1101553908901498994/i2xNsFDQuSUTi5NVhcvn_ZrFWnRDe9QxYtC-wS1cwwqDYaJq-TMg8Hp1VBSFgd0ZlrxU"
+		getgenv().dctage = "1007497655653498950"
+		-- MANUAL
+		getgenv().manualStart = data.manualStart  or false
+		getgenv().replayFarm = data.replayFarm or false
+		getgenv().farmprotal = data.farmprotal or false
+		getgenv().portalnameX = data.portalnameX or "เลือก Portal"
+		
 
-	--Suto Start
-	getgenv().AutoStart = data.AutoStart or false
-	getgenv().AutoReplay = data.AutoReplay or false
-	--Select Mode
-	getgenv().autoSelectMode = data.autoSelectMode or "เลือกโหมดที่ต้องการฟาร์ม"
-	getgenv().textGem = data.textGem or 0
-	getgenv().resultGems = data.resultGems or 0
+		function updatejson()
+			local xdata = {
+				-- AUTO
+				AutoStart = getgenv().AutoStart,
+				chickenFarm = getgenv().chickenFarm,
+				autoSelectMode = getgenv().autoSelectMode,
+				warpfriend = getgenv().warpfriend,
+				jobID = getgenv().jobID,
+				textGem = getgenv().textGem,
+				resultGems = getgenv().resultGems,
+				webhook = getgenv().weburl,
+				weburlfinish = getgenv().weburlfinish,
+				dctage = getgenv().dctage,
+				BattlePass = getgenv().BattlePass,
+				dreander3d = getgenv().dreander3d,
+				farmprotal = getgenv().farmprotal,
+				AutoReplay = getgenv().AutoReplay,
+				portalnameX = getgenv().portalnameX,
+				autoSelectItem = getgenv().autoSelectItem,
+				xselectedUnits = getgenv().SelectedUnits,
+				autoportal = getgenv().autoportal,
+				-- MANUAL
+				manualStart = getgenv().manualStart,
+				replayFarm = getgenv().replayFarm,
 
-	--BattlePass
-	getgenv().BattlePass = data.BattlePass or 0
+			}
+			local json = HttpService:JSONEncode(xdata)
+			writefile(savefilename, json)
+		end
+	--#endregion
 
-	-- Select Item Raid
-	getgenv().autoSelectItem = data.autoSelectItem or "เลือกไอเท็มเรท"
+	--#region Init White Screen
+	local screenGui = Instance.new("ScreenGui")
+	screenGui.IgnoreGuiInset = true
+	screenGui.Enabled = getgenv().dreander3d
+	screenGui.Parent = playerGui
 
-	-- Map
-	getgenv().world = data.world
-	getgenv().levels = data.levels
-	getgenv().level = data.level
-	getgenv().difficulty = data.difficulty
+	local textLabel = Instance.new("TextLabel")
+	textLabel.Size = UDim2.new(1, 0, 1, 0)
+	textLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	textLabel.Font = Enum.Font.GothamSemibold
+	if game.PlaceId == 8304191830 then
+		textLabel.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+	else
+		textLabel.TextColor3 = Color3.fromRGB(255, 0, 255)
+	end
+	textLabel.Text = LocalPlayer.Name
+	textLabel.TextSize = 28
+	textLabel.Parent = screenGui
 
-	-- WebHook
-	getgenv().weburl = "https://discordapp.com/api/webhooks/1101553771663868055/LxQbGxqRQgqv5qu45IdUWvfSzI9Dm0Jxpa-MvMs39XCjtZLgsCyCQXxwhhCaonCodIvs"
-	getgenv().weburlfinish = "https://discordapp.com/api/webhooks/1101553908901498994/i2xNsFDQuSUTi5NVhcvn_ZrFWnRDe9QxYtC-wS1cwwqDYaJq-TMg8Hp1VBSFgd0ZlrxU"
-	getgenv().dctage = "1007497655653498950"
-	-- Lock FPS
-	getgenv().lockfps = data.lockfps or false
-	getgenv().renderring = data.renderring or false
-	-- Other
-	getgenv().questtoday = data.questtoday  or true
-	-- Job ID
-	getgenv().jobID = data.jobID or ""
+	local loadingRing = Instance.new("ImageLabel")
+	loadingRing.Size = UDim2.new(0, 256, 0, 256)
+	loadingRing.BackgroundTransparency = 1
+	loadingRing.Image = "rbxassetid://4965945816"
+	loadingRing.AnchorPoint = Vector2.new(0.5, 0.5)
+	loadingRing.Position = UDim2.new(0.5, 0, 0.5, 0)
+	loadingRing.Parent = screenGui
 
-	-- Select Unit
-	getgenv().SelectedUnits = data.xselectedUnits or {}
+	-- Remove the default loading screen
+	ReplicatedFirst:RemoveDefaultLoadingScreen()
+	RunService:Set3dRenderingEnabled(not getgenv().dreander3d)
 
-	-- time Lag
-	getgenv().timelock = data.timelock
-	getgenv().takeTime = data.takeTime
+	local tweenInfo = TweenInfo.new(4, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1)
+	local tween = TweenService:Create(loadingRing, tweenInfo, {Rotation = 360})
+	tween:Play()
 
-	function updatejson()
-		local xdata = {
-
-			-- Auto Hide UI
-			autoHideUI = getgenv().autoHideUI,
-			-- Save Script
-			AutoLoadTP = getgenv().AutoLoadTP,
-			-- Warp Friends
-			warpfriend = getgenv().warpfriend,
-			-- Auto Start
-			AutoStart = getgenv().AutoStart,
-			AutoReplay = getgenv().AutoReplay,
-			--Select Mode
-			autoSelectMode	= getgenv().autoSelectMode,
-			textGem = getgenv().textGem,
-			resultGems = getgenv().resultGems,
-			--Battlepass
-			BattlePass = getgenv().BattlePass,
-			-- Select Item Raid
-			autoSelectItem = getgenv().autoSelectItem,
-			-- Map
-			world = getgenv().world,
-			levels = getgenv().levels,
-			level = getgenv().level,
-			difficulty = getgenv().difficulty,
-
-			-- Webhook
-			dctage = getgenv().dctage,
-			webhook = getgenv().weburl,
-			weburlfinish = getgenv().weburlfinish,
-			-- Select Unit
-			xselectedUnits = getgenv().SelectedUnits,
-			-- Lock FPS
-			lockfps = getgenv().lockfps,
-			renderring = getgenv().renderring,
-			-- Other
-			questtoday = getgenv().questtoday,
-			-- Job ID
-			jobID = getgenv().jobID,
-
-			-- time Lag
-			timelock = getgenv().timelock,
-			takeTime = getgenv().takeTime,
-
-		}
-		local json = HttpService:JSONEncode(xdata)
-		writefile(savefilename, json)
+	function toggleLoadingScreen()
+		screenGui.Enabled = getgenv().dreander3d
 	end
 
---#endregion
+	-- Remove the default loading screen
+	ReplicatedFirst:RemoveDefaultLoadingScreen()
+	--#endregion
 
---###### UI ######--
+do
+	local Window = library:AddWindow(LocalPlayer.Name .. " version " .. versionx, {
+		main_color = Color3.fromRGB(41, 74, 122),
+		min_size = Vector2.new(500, 600),
+		toggle_key = Enum.KeyCode.RightShift,
+		can_resize = true,
+	})
 
---#region setting Map
-
-	--เช็คแบทเทิลพาส
-	
+	local AutoFarm = Window:AddTab("ฟาร์มอัตโนมัติ")
+	local ManualFarm = Window:AddTab("ฟาร์มแบบกำหนดเอง")
+	local partyFarm = Window:AddTab("ปาร์ตี้")
+	local otherSetting = Window:AddTab("ตั้งค่าทั่วไป")
+	local webhookSetting = Window:AddTab("เว็บฮุก")
 	
 	if game.PlaceId == 8304191830 then --//Battle Pass
 		pcall(function()
-			repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.FurthestRoom.V.Text ~= "99" 
-			levelBattlepass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.FurthestRoom.V.Text
+			repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text ~= "99" 
+			--levelBattlepass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.FurthestRoom.V.Text
 			--getgenv().BattlePass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text .. "[" .. levelBattlepass .."]"
-			getgenv().BattlePass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text
+			levelBattlepass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text
+			getgenv().BattlePass = tostring(levelBattlepass)
 			updatejson()
 		end)
 	end
+	---
 
-	local Tab = Window:MakeTab({Name = "🌎 เลือกระบบที่ต้องการ",Icon = "rbxassetid://6022668966",PremiumOnly = false,}) -- MAP
-
-	Tab:AddToggle({
-		Name = "🛠️ เริ่มเกมอัตโนมัติ",
-		Default = getgenv().AutoStart,
-		Callback = function(bool)
-				getgenv().AutoStart = bool
-				updatejson()
-		end,
-	})
-
-	--เล่นซ้ำเมื่อจบด่าน // getgenv().autoSelectItem
-	Tab:AddToggle({
-		Name = "🛠️ เล่นซ้ำเมื่อจบด่าน",
-		Default = getgenv().AutoReplay,
-		Callback = function(bool)
-				getgenv().AutoReplay = bool
-				updatejson()
-		end,
-	})
-
-	--เลือกโหมด
-	local myMode = {"เลือกโหมดที่ต้องการฟาร์ม","ฟาร์มสตอรี่","ฟาร์มเพชร","ฟาร์มเพชรเลือกด่าน","ฟาร์ม BattlePass","ฟาร์มเวลตัวละคร","ฟาร์มหอคอย","ฟาร์มไก่เพชร","ฟาร์มไอเท็มเรด"}
-	local Section = Tab:AddSection({ Name = "เลือกโหมด" })
-	Tab:AddDropdown({
-		Name = "🎚️ เลือกโหมด",
-		Default = getgenv().autoSelectMode or "เลือกโหมดที่ต้องการฟาร์ม" ,
-		Options = myMode ,
-		Callback = function(Value)
-				getgenv().autoSelectMode = Value
-				updatejson()
-		end
-	})
-
-	--เลือกไอเท็ม
-	local myRaid = {"เลือกไอเท็มเรท","Alien Scouter","Tomoe","Entertain Shard","Demon Shard","Relic Shard"}
-	Tab:AddDropdown({
-		Name = "🎚️ เลือกไอเท็ม",
-		Default = getgenv().autoSelectItem or "เลือกไอเท็มเรท" ,
-		Options = myRaid ,
-		Callback = function(Value)
-			getgenv().autoSelectItem = Value
+	do
+		--#region Auto Farm UI
+		AutoFarm:AddLabel("เลือกโหมดที่ต้องการฟาร์ม")
+		local acriveFarm = AutoFarm:AddSwitch("เริ่มการฟาร์ม", function(bool)
+			getgenv().AutoStart = bool
 			updatejson()
+		end)
+		acriveFarm:Set(getgenv().AutoStart)
+
+		local mymodeFuction = AutoFarm:AddDropdown(getgenv().autoSelectMode, function(object)
+			print(object)
+			getgenv().autoSelectMode = object
+			updatejson()
+		end)
+		local myMode = {"เลือกโหมดที่ต้องการฟาร์ม","ฟาร์มสตอรี่","ฟาร์มเพชร","ฟาร์มตาโกโจ","ฟาร์ม BattlePass","ฟาร์มเวลตัวละคร","ฟาร์มหอคอย","ฟาร์มผลไม้","ฟาร์มไก่เพชร","ฟาร์มไอเท็มเรด"}
+		for _,v in pairs(myMode) do
+			mymodeFuction:Add(tostring(v))
 		end
-	})
 
-	--ใส่จำนวนเพชร
-	Tab:AddTextbox({
-		Name = "💎 ใส่จำนวน",
-		Default = tonumber(getgenv().textGem),
-		TextDisappear = false,
-		Callback = function(t)
-				getgenv().textGem = tonumber(t)
-				updatejson()
-		end,
-	})
+		local mymodeRaid = AutoFarm:AddDropdown(getgenv().autoSelectItem, function(object)
+			print(object)
+			getgenv().autoSelectItem = object
+			updatejson()
+		end)
+		local myRaid = {"เลือกไอเท็มเรท","Alien Scouter","Tomoe","Entertain Shard","Demon Shard","Relic Shard","SIX EYE"}
+		for _,v in pairs(myRaid) do
+			mymodeRaid:Add(tostring(v))
+		end
 
-	local Section = Tab:AddSection({ Name = "เลือกด่าน" })
-	--เลือกด่าน
-	Tab:AddDropdown({
-			Name = "🌎 เลือกแมพ",
-			Default = getgenv().world,
-			Options = {
-					"Plannet Namak",
-					"Shiganshinu District",
-					"Snowy Town",
-					"Hidden Sand Village",
-					"Marine's Ford",
-					"Ghoul City",
-					"Hollow World",
-					"Ant Kingdom",
-					"Magic Town",
-					"Cursed Academy",
-					"Clover Kingdom",
-					"Cape Canaveral",
-					"Alien Spaceship",
-					"Fabled Kingdom",
-					"Hero City",
-					"Puppet Island",
-					"Clover Legend - HARD",
-					"Hollow Legend - HARD",
-					"Cape Legend - HARD",
-					"Fabled Legend - HARD",
-					"Hero Legend - HARD",
-			},
-			Callback = function(Value)
-					getgenv().world = Value
-					if Value == "Plannet Namak" then
-							getgenv().levels = {
-									"namek_infinite",
-									"namek_level_1",
-									"namek_level_2",
-									"namek_level_3",
-									"namek_level_4",
-									"namek_level_5",
-									"namek_level_6"
-							}
-					elseif Value == "Shiganshinu District" then
-							getgenv().levels = {
-									"aot_infinite",
-									"aot_level_1",
-									"aot_level_2",
-									"aot_level_3",
-									"aot_level_4",
-									"aot_level_5",
-									"aot_level_6"
-							}
-					elseif Value == "Snowy Town" then
-							getgenv().levels = {
-									"demonslayer_infinite",
-									"demonslayer_level_1",
-									"demonslayer_level_2",
-									"demonslayer_level_3",
-									"demonslayer_level_4",
-									"demonslayer_level_5",
-									"demonslayer_level_6"
-							}
-					elseif Value == "Hidden Sand Village" then
-							getgenv().levels = {
-									"naruto_infinite",
-									"naruto_level_1",
-									"naruto_level_2",
-									"naruto_level_3",
-									"naruto_level_4",
-									"naruto_level_5",
-									"naruto_level_6"
-							}
-					elseif Value == "Marine's Ford" then
-							getgenv().levels = {
-									"marineford_infinite",
-									"marineford_level_1",
-									"marineford_level_2",
-									"marineford_level_3",
-									"marineford_level_4",
-									"marineford_level_5",
-									"marineford_level_6"
-							}
-					elseif Value == "Ghoul City" then
-							getgenv().levels = {
-									"tokyoghoul_infinite",
-									"tokyoghoul_level_1",
-									"tokyoghoul_level_2",
-									"tokyoghoul_level_3",
-									"tokyoghoul_level_4",
-									"tokyoghoul_level_5",
-									"tokyoghoul_level_6"
-							}
-					elseif Value == "Hollow World" then
-							getgenv().levels = {
-									"hueco_infinite",
-									"hueco_level_1",
-									"hueco_level_2",
-									"hueco_level_3",
-									"hueco_level_4",
-									"hueco_level_5",
-									"hueco_level_6"
-							}
-					elseif Value == "Ant Kingdom" then
-							getgenv().levels = {
-									"hxhant_infinite",
-									"hxhant_level_1",
-									"hxhant_level_2",
-									"hxhant_level_3",
-									"hxhant_level_4",
-									"hxhant_level_5",
-									"hxhant_level_6"
-							}
-					elseif Value == "Magic Town" then
-							getgenv().levels = {
-									"magnolia_infinite",
-									"magnolia_level_1",
-									"magnolia_level_2",
-									"magnolia_level_3",
-									"magnolia_level_4",
-									"magnolia_level_5",
-									"magnolia_level_6"
-							}
-					elseif Value == "Cursed Academy" then
-							getgenv().levels = {
-									"jjk_infinite",
-									"jjk_level_1",
-									"jjk_level_2",
-									"jjk_level_3",
-									"jjk_level_4",
-									"jjk_level_5",
-									"jjk_level_6"
-							}
-					elseif Value == "Clover Kingdom" then
-							getgenv().levels = {
-									"clover_infinite",
-									"clover_level_1",
-									"clover_level_2",
-									"clover_level_3",
-									"clover_level_4",
-									"clover_level_5",
-									"clover_level_6"
-							}
-					elseif Value == "Clover Legend - HARD" then
-							getgenv().levels = {
-									"clover_legend_1",
-									"clover_legend_2",
-									"clover_legend_3"
-							}
-					elseif Value == "Cape Legend - HARD" then
-							getgenv().levels = {
-									"jojo_legend_1",
-									"jojo_legend_2",
-									"jojo_legend_3"
-							}
-					elseif Value == "Fabled Legend - HARD" then
-							getgenv().levels = {
-									"7ds_legend_1",
-									"7ds_legend_2",
-									"7ds_legend_3"
-							}
-					elseif Value == "Hollow Legend - HARD" then
-							getgenv().levels = {
-									"bleach_legend_1",
-									"bleach_legend_2",
-									"bleach_legend_3",
-									"bleach_legend_4",
-									"bleach_legend_5",
-									"bleach_legend_6"
-							}
-					elseif Value == "Cape Canaveral" then
-							getgenv().levels = {
-									"jojo_infinite",
-									"jojo_level_1",
-									"jojo_level_2",
-									"jojo_level_3",
-									"jojo_level_4",
-									"jojo_level_5",
-									"jojo_level_6"
-							}
-					elseif Value == "Alien Spaceship" then
-							getgenv().levels = {
-									"opm_infinite",
-									"opm_level_1",
-									"opm_level_2",
-									"opm_level_3",
-									"opm_level_4",
-									"opm_level_5",
-									"opm_level_6"
-							}
-					elseif Value == "Fabled Kingdom" then
-							getgenv().levels = {
-									"7ds_infinite",
-									"7ds_level_1",
-									"7ds_level_2",
-									"7ds_level_3",
-									"7ds_level_4",
-									"7ds_level_5",
-									"7ds_level_6"
-							}
-					elseif Value == "Hero City" then
-							getgenv().levels = {
-									"mha_infinite",
-									"mha_level_1",
-									"mha_level_2",
-									"mha_level_3",
-									"mha_level_4",
-									"mha_level_5",
-									"mha_level_6"
-							}
-					elseif Value == "Hero Legend - HARD" then
-							getgenv().levels = {
-									"mha_legend_1",
-									"mha_legend_2",
-									"mha_legend_3",
-									"mha_legend_4",
-									"mha_legend_5",
-									"mha_legend_6"
-							}
-					elseif Value == "Puppet Island" then
-						getgenv().levels = {
-								"dressrosa_infinite",
-								"dressrosa_level_1",
-								"dressrosa_level_2",
-								"dressrosa_level_3",
-								"dressrosa_level_4",
-								"dressrosa_level_5",
-								"dressrosa_level_6"
-						}
-					end
-					updatejson()
-					pcall(function()
-							getgenv().select_level_dropdown:Refresh(getgenv().levels, true)
-					end)
-			end
-	})
+		AutoFarm:AddLabel("ใส่จำนวนที่ต้องการฟาร์ม - เพชร - BattlePass - เลเวลตัวละคร - ชั้นหอคอย - ")
+		AutoFarm:AddTextBox(getgenv().textGem, function(text)
+			getgenv().textGem = text
+			updatejson()
+		end, {
+			["clear"] = false, -- Default: true (options are optional)
+		})
 
-	--เลือกเลเวล
-	getgenv().select_level_dropdown = Tab:AddDropdown({
-			Name = "🎚️ เลือกเลเวล",
-			Default = getgenv().level,
-			Options = getgenv().levels,
-			Callback = function(Value)
-					getgenv().level = Value
-					updatejson()
-			end
-	})
+		AutoFarm:AddLabel("ออกห้องหรือรีเพลย์")
+		local autoReplay = AutoFarm:AddSwitch("รีเพลย์", function(bool)
+			getgenv().AutoReplay = bool
+			updatejson()
+		end)
+		autoReplay:Set(getgenv().AutoReplay)
 
-	local Section = Tab:AddSection({ Name = "รับโค้ดเกม" })
-	--รับโค้ดเกม
-	Tab:AddButton({
-			Name = "รับโค้ดทั้งหมด",
-			Callback = function()
-		if game.PlaceId == 8304191830 then
-			local redeem_code = {
-				"ENTERTAINMENT",
-				"HAPPYEASTER",
-				"VIGILANTE",
-				"GOLDEN",
-				"SINS2",
-				"SINS",
-				"HERO",
-				"UCHIHA",
-				"CLOUD",
-				"CHAINSAW",
-				"NEWYEAR2023",
-				"kingluffy",
-				"toadboigaming",
-				"noclypso",
-				"fictionthefirst",
-				"subtomaokuma",
-				"subtokelvingts",
-				"subtoblamspot",
-			}
-			for i, v in ipairs(redeem_code) do
-				local args = {
-					[1] = tostring(v),
+		AutoFarm:AddLabel("ฟังชั่นเสริม")
+
+		local acriveMarcolag = AutoFarm:AddSwitch("มาโครแลค", function(bool)
+			print(bool)
+		end)
+		acriveMarcolag:Set(false)
+
+		local acriveWhiteScreen = AutoFarm:AddSwitch("จอขาว", function(bool)
+			getgenv().dreander3d = bool
+			RunService:Set3dRenderingEnabled(not getgenv().dreander3d)
+			updatejson()
+			toggleLoadingScreen()
+		end)
+		acriveWhiteScreen:Set(getgenv().dreander3d)
+
+		AutoFarm:AddKeybind("จอขาว", function(key)
+			--print(key)
+			game:GetService("RunService"):Set3dRenderingEnabled(getgenv().dreander3d)
+			getgenv().dreander3d = not getgenv().dreander3d
+			toggleLoadingScreen()
+			updatejson()
+		end, { -- (options are optional)
+			["standard"] = Enum.KeyCode.F1 -- Default: RightShift
+		})
+
+		AutoFarm:AddButton("รับโค้ดทั้งหมด", function()
+			if game.PlaceId == 8304191830 then
+				local redeem_code = {
+					"DRESSROSA",
+					"BILLION",
+					"ENTERTAINMENT",
+					"HAPPYEASTER",
+					"VIGILANTE",
+					"GOLDEN",
+					"SINS2",
+					"SINS",
+					"HERO",
+					"UCHIHA",
+					"CLOUD",
+					"CHAINSAW",
+					"NEWYEAR2023",
+					"kingluffy",
+					"toadboigaming",
+					"noclypso",
+					"fictionthefirst",
+					"subtomaokuma",
+					"subtokelvingts",
+					"subtoblamspot",
 				}
-				game:GetService("ReplicatedStorage").endpoints.client_to_server.redeem_code:InvokeServer(unpack(args))
+				for i, v in ipairs(redeem_code) do
+					local args = {
+						[1] = tostring(v),
+					}
+					game:GetService("ReplicatedStorage").endpoints.client_to_server.redeem_code:InvokeServer(unpack(args))
+				end
 			end
+		end)
+
+
+		
+		--#endregion
+
+		--#region ManualFarm Farm UI
+
+		ManualFarm:AddLabel("ฟาร์มแบบเลือกด่าน")
+
+		local manualFarm = ManualFarm:AddSwitch("เริ่มการฟาร์ม", function(bool)
+			getgenv().manualStart = bool
+		end)
+		manualFarm:Set(getgenv().manualStart)
+
+		local replayFarm = ManualFarm:AddSwitch("เล่นซ้ำเมื่อจบด่าน", function(bool)
+			getgenv().replayFarm = bool
+		end)
+		replayFarm:Set(getgenv().replayFarm)
+
+		local laveFarm = ManualFarm:AddSwitch("ออกแมพเมื่อจบด่าน", function(bool)
+			print(bool)
+		end)
+		laveFarm:Set(false)
+
+		ManualFarm:AddLabel("เลือกแมพ")
+		local mymapFuction = ManualFarm:AddDropdown("เลือกแมพที่ต้องการฟาร์ม", function(object)
+			print(object)
+		end)
+
+		local myMap = {"เลือกด่าน","Namek","Aot","Sand Village","Cover Kingdom","Cape Canavira"}
+		for _,v in pairs(myMap) do
+			mymapFuction:Add(tostring(v))
 		end
-			end,
-	})
 
-	--///////////////////////////////////////////////////////////////////////////////////////////////////--
-  
---#endregion
+		ManualFarm:AddLabel("เลือกเลเวล")
+		local mylevelFuction = ManualFarm:AddDropdown("เลือกเลเวล", function(object)
+			print(object)
+		end)
+		
+		local myLevel = {"เลือกเลเวล","level 1","level 2","level 3","level 4","level 5"}
+		for _,v in pairs(myLevel) do
+			mylevelFuction:Add(tostring(v))
+		end
 
+		ManualFarm:AddLabel("เลือกความยาก")
+		local myreditFuction = ManualFarm:AddDropdown("เลือกความยาก", function(object)
+			print(object)
+		end)
 
---#region setting SettingScript
-		local Tab = Window:MakeTab({ Name = "⚙️ การตั้งค่าสคริป", Icon = "rbxassetid://6022668966", PremiumOnly = false, }) -- SETTING SCRIPT
-		local Section = Tab:AddSection({ Name = "ซ่อน UI เมื่อเริ่มเกมส์" })
-		--ซ่อน UI
-		Tab:AddToggle({
-			Name = "⚙️ ซ่อน UI เมื่อเริ่มเกมส์",
-			Default = getgenv().autoHideUI,
-			Callback = function(bool)
-					getgenv().autoHideUI = bool
-					updatejson()
-			end,
+		local myRedit = {"เลือกความยาก","Normal","Hard"}
+		for _,v in pairs(myRedit) do
+			myreditFuction:Add(tostring(v))
+		end
+
+		ManualFarm:AddLabel("ใส่เวฟที่ต้องการขาย")
+		ManualFarm:AddTextBox("wave ที่ต้องการขาย", function(text)
+			print(text)
+		end, {
+			["clear"] = false, -- Default: true (options are optional)
 		})
 
-		local Section = Tab:AddSection({ Name = "ตั้งค่า" })
-
-		--บันทึก/โหลด สคริปต์อัตโนมัติเมื่อเปิดใช้งาน
-		Tab:AddToggle({
-				Name = "⚙️ บันทึก/โหลด สคริปต์อัตโนมัติเมื่อเปิดใช้งาน",
-				Default = getgenv().AutoLoadTP,
-				Callback = function(bool)
-						getgenv().AutoLoadTP = bool
-						updatejson()
-				end,
+		ManualFarm:AddLabel("ใส่เพชรที่ต้องการฟาร์ม")
+		ManualFarm:AddTextBox("เพชรที่จะฟาร์ม", function(text)
+			print(text)
+		end, {
+			["clear"] = false, -- Default: true (options are optional)
 		})
-		--รับเควสอัตโนมัติ
-		Tab:AddToggle({
-				Name = "⚙️ รับเควสอัตโนมัติ",
-				Default = getgenv().questtoday,
-				Callback = function(x)
-						getgenv().questtoday = true
-						updatejson()
-						if game.PlaceId == 8304191830 then
-							if getgenv().questtoday then
-								game:GetService("ReplicatedStorage").endpoints.client_to_server.claim_daily_reward:InvokeServer() --รับเควสประจำวัน
-								local questStory = game:GetService("Players").LocalPlayer.PlayerGui.QuestsUI.Main.Main.Main.Content.story.Scroll:GetChildren()
-								local questEvent = game:GetService("Players").LocalPlayer.PlayerGui.QuestsUI.Main.Main.Main.Content.event.Scroll:GetChildren()
-								local questDaily = game:GetService("Players").LocalPlayer.PlayerGui.QuestsUI.Main.Main.Main.Content.daily.Scroll:GetChildren()
-								local questInfinity = game:GetService("Players").LocalPlayer.PlayerGui.QuestsUI.Main.Main.Main.Content.infinite.Scroll:GetChildren()
-								for i , v in pairs(questStory) do
-									if v.Name ~= "UIListLayout" and v.Name ~= "RefreshFrame" then
-										pcall(function()
-											local args = {
-												[1] = tostring(v.Name)
-											}
-											game:GetService("ReplicatedStorage").endpoints.client_to_server.redeem_quest:InvokeServer(unpack(args))
-										end)
-									end
-								end
-								for i , v in pairs(questEvent) do
-									if v.Name ~= "UIListLayout" and v.Name ~= "RefreshFrame" then
-										pcall(function()
-											local args = {
-												[1] = tostring(v.Name)
-											}
-											game:GetService("ReplicatedStorage").endpoints.client_to_server.redeem_quest:InvokeServer(unpack(args))
-										end)
-									end
-								end
-								
-								for i , v in pairs(questDaily) do
-									if v.Name ~= "UIListLayout" and v.Name ~= "RefreshFrame" then
-										pcall(function()
-											local args = {
-												[1] = tostring(v.Name)
-											}
-											game:GetService("ReplicatedStorage").endpoints.client_to_server.redeem_quest:InvokeServer(unpack(args))
-										end)
-									end
-								end
-								for i , v in pairs(questInfinity) do
-									if v.Name ~= "UIListLayout" and v.Name ~= "RefreshFrame" then
-										pcall(function()
-											local args = {
-												[1] = tostring(v.Name)
-											}
-											game:GetService("ReplicatedStorage").endpoints.client_to_server.redeem_quest:InvokeServer(unpack(args))
-										end)
-									end
-								end
-							end
-						end
-				end,
+		ManualFarm:AddLabel("ฟังชั่นเสริม")
+
+		local acriveMarcolag = ManualFarm:AddSwitch("มาโครแลค", function(bool)
+			print(bool)
+		end)
+		acriveMarcolag:Set(false)
+
+		local acriveWhiteScreen = ManualFarm:AddSwitch("จอขาว", function(bool)
+			print(bool)
+		end)
+		acriveWhiteScreen:Set(false)
+
+		local deleteMap = ManualFarm:AddSwitch("ลบแมพ", function(bool)
+			print(bool)
+		end)
+		deleteMap:Set(false)
+
+		--#endregion
+
+		--#region Party UI
+		partyFarm:AddLabel("ระบบปาร์ตี้")
+
+		if getgenv().portalnameX == "One Punch Man" or getgenv().portalnameX == "Demon Leaders" or getgenv().portalnameX == "Demon Academy" or getgenv().portalnameX == "csm_contract_0" or getgenv().portalnameX == "csm_contract_1" or getgenv().portalnameX == "csm_contract_2" or getgenv().portalnameX == "csm_contract_3" or getgenv().portalnameX == "csm_contract_4" or getgenv().portalnameX == "csm_contract_5" then
+				print("_")
+		else
+				getgenv().portalnameX = "เลือกระดับ"
+		end
+
+		local portalFarm = partyFarm:AddDropdown(getgenv().portalnameX, function(object)
+			print(object)
+			getgenv().portalnameX = object
+			updatejson()
+		end)
+		local portal_select = {"เลือกระดับ","One Punch Man","Demon Leaders","Demon Academy","csm_contract_0","csm_contract_1","csm_contract_2","csm_contract_3","csm_contract_4","csm_contract_5",}
+		for _,v in pairs(portal_select) do
+			portalFarm:Add(tostring(v))
+		end
+		
+		local autoStartPortal = partyFarm:AddSwitch("ออโต้ Start Portal", function(bool)
+			getgenv().farmprotal = bool
+			updatejson()
+		end)
+		autoStartPortal:Set(getgenv().farmprotal)
+
+		local autoPortalfr = partyFarm:AddSwitch("เข้า Portal ผู้อื่นออโต้", function(bool)
+			getgenv().autoportal = bool
+			updatejson()
+		end)
+		autoPortalfr:Set(getgenv().autoportal)
+
+		local joinParty = partyFarm:AddSwitch("เข้าวาร์ปตามเพื่อน", function(bool)
+			getgenv().warpfriend = bool
+			updatejson()
+		end)
+		joinParty:Set(getgenv().warpfriend)
+
+		partyFarm:AddLabel("ระบบเข้าห้อง")
+
+		partyFarm:AddButton("ก็อปเลขห้อง", function()
+			setclipboard(game.JobId)
+		end)
+
+		partyFarm:AddTextBox(getgenv().jobID, function(text)
+			getgenv().jobID = text
+			updatejson()
+		end, {
+			["clear"] = false, -- Default: true (options are optional)
 		})
 
-		--ลบแมพ
-		Tab:AddToggle({
-			Name = "⚙️ ลบแมพ",
-			Default = true,
-			Callback = function(x)
-				getgenv().deleteMap = x
-				if game.PlaceId ~= 8304191830 then
-					if deleteMap then
-						local removeMap = game:GetService("Workspace")["_map"]:GetChildren()
-						local removeTerrain = game:GetService("Workspace")["_terrain"].terrain:GetChildren()
-						for i , v in pairs(removeMap) do
-							if v.Name ~= "Union" 
-							and v.Name ~= "houses_new"
-							and v.Name ~= "namek mushroom model"
-							and v.Name ~= "Snow Particles"
-							and v.Name ~= "sand_gate"
-							and v.Name ~= "icebergs"
-							and v.Name ~= "Helicopter Pad"
-							and v.Name ~= "castle top"
-							and v.Name ~= "Village Path"
-							and v.Name ~= "wooden stacks"
-							and v.Name ~= "skeleton"
-							and v.Name ~= "SpaceCenter"
-							and v.Name ~= "boat and bus"
-							and v.Name ~= "LanternsGround"
-							and v.Name ~= "ThreeDTextObject"
-							and v.Name ~= "misc nonocollide obstacles"
-							and v.Name ~= "parking spots"
-							and v.Name ~= "vegetation"
-							and v.Name ~= "crashed spaceships"
-							and v.Name ~= "bridge nocollide"
-							and v.Name ~= "Support_Beam"
-							and v.Name ~= "hay"
-							then
-								v:Destroy()
-							end
-						end
-						for i , v in pairs(removeTerrain) do
-								v:Destroy()
+		partyFarm:AddButton("เข้าห้อง", function()
+			game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
+		end)
+
+		partyFarm:AddLabel("ระบบรีห้อง (หรือกด F5 เพื่อรีห้อง)")
+
+		partyFarm:AddButton("รีห้อง", function()
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		end)
+
+		--#endregion
+	
+		--#region otherSetting UI
+		otherSetting:AddLabel("การตั้งค่าระบบ")
+		local claimQuest = otherSetting:AddSwitch("รับเควสอัตโนมัติ", function(bool)
+			claimQuest = bool
+			if claimQuest then
+				if game.PlaceId == 8304191830 then
+					game:GetService("ReplicatedStorage").endpoints.client_to_server.claim_daily_reward:InvokeServer() --รับเควสประจำวัน
+					local questStory = game:GetService("Players").LocalPlayer.PlayerGui.QuestsUI.Main.Main.Main.Content.story.Scroll:GetChildren()
+					local questEvent = game:GetService("Players").LocalPlayer.PlayerGui.QuestsUI.Main.Main.Main.Content.event.Scroll:GetChildren()
+					local questDaily = game:GetService("Players").LocalPlayer.PlayerGui.QuestsUI.Main.Main.Main.Content.daily.Scroll:GetChildren()
+					local questInfinity = game:GetService("Players").LocalPlayer.PlayerGui.QuestsUI.Main.Main.Main.Content.infinite.Scroll:GetChildren()
+					for i , v in pairs(questStory) do
+						if v.Name ~= "UIListLayout" and v.Name ~= "RefreshFrame" then
+							pcall(function()
+								local args = {
+									[1] = tostring(v.Name)
+								}
+								game:GetService("ReplicatedStorage").endpoints.client_to_server.redeem_quest:InvokeServer(unpack(args))
+							end)
 						end
 					end
-				end
-			end,
-		})
-
-		--เปิดจอขาว(ลดCPU)
-		Tab:AddToggle({
-				Name = "⚙️ เปิดจอขาว(ลดCPU)",
-				Default = getgenv().renderring,
-				Callback = function(x)
-					getgenv().renderring = x
-					updatejson()
-					if getgenv().renderring then
-						game:GetService("RunService"):Set3dRenderingEnabled(false)
-					else
-						game:GetService("RunService"):Set3dRenderingEnabled(true)
+					for i , v in pairs(questEvent) do
+						if v.Name ~= "UIListLayout" and v.Name ~= "RefreshFrame" then
+							pcall(function()
+								local args = {
+									[1] = tostring(v.Name)
+								}
+								game:GetService("ReplicatedStorage").endpoints.client_to_server.redeem_quest:InvokeServer(unpack(args))
+							end)
+						end
 					end
-				end,
-		})
-
-		--ตั้งค่าล็อค FPS
-		Tab:AddToggle({
-				Name = "⚙️ ตั้งค่าล็อค FPS",
-				Default = getgenv().lockfps,
-				Callback = function(x)
-						getgenv().lockfps = x
-						updatejson()
-				end,
-		})
-
-		-- ปุ่มกด ตั้งค่าล็อค FPS
-		Tab:AddBind({
-			Name = "ปุ่มเปิด-ปิด Lock FPS [F2]",
-			Default = Enum.KeyCode.F2,
-			Hold = false,
-			Callback = function(x)
-				getgenv().lockfps = not getgenv().lockfps
-				updatejson()
-				if getgenv().lockfps then
-					setfpscap(5)
-				else
-					setfpscap(15)
+					
+					for i , v in pairs(questDaily) do
+						if v.Name ~= "UIListLayout" and v.Name ~= "RefreshFrame" then
+							pcall(function()
+								local args = {
+									[1] = tostring(v.Name)
+								}
+								game:GetService("ReplicatedStorage").endpoints.client_to_server.redeem_quest:InvokeServer(unpack(args))
+							end)
+						end
+					end
+					for i , v in pairs(questInfinity) do
+						if v.Name ~= "UIListLayout" and v.Name ~= "RefreshFrame" then
+							pcall(function()
+								local args = {
+									[1] = tostring(v.Name)
+								}
+								game:GetService("ReplicatedStorage").endpoints.client_to_server.redeem_quest:InvokeServer(unpack(args))
+							end)
+						end
+					end
 				end
 			end
-		})
+		end)
+		claimQuest:Set(true)
 
-		--มอนไม่เดิน
-		Tab:AddToggle({
-				Name = "🚨 มอนเตอร์ไม่เดิน",
-				Default = getgenv().timelock,
-				Callback = function(bool)
-						getgenv().timelock = bool
-						updatejson()
-				end,
-		})
-		--ระดับความแลค
-		Tab:AddSlider({
-			Name = "ระดับความแลค(ยิ่งน้อยยิ่งแลค)",
-			Min = 0,
-			Max = 3,
-			Default = getgenv().takeTime,
-			Color = Color3.fromRGB(247,4,203),
-			Increment = 0.2,
-			ValueName = " -> ปรับระดับ",
-			Callback = function(Value)
-					getgenv().takeTime = Value
-					updatejson()
-			end    
-		})
+		local deleteMap = otherSetting:AddSwitch("ลบแมพ", function(bool)
+			if game.PlaceId ~= 8304191830 then
+				if deleteMap then
+					local removeMap = game:GetService("Workspace")["_map"]:GetChildren()
+					local removeTerrain = game:GetService("Workspace")["_terrain"].terrain:GetChildren()
+					for i , v in pairs(removeMap) do
+						if v.Name ~= "Union" 
+						and v.Name ~= "houses_new"
+						and v.Name ~= "namek mushroom model"
+						and v.Name ~= "Snow Particles"
+						and v.Name ~= "sand_gate"
+						and v.Name ~= "icebergs"
+						and v.Name ~= "Helicopter Pad"
+						and v.Name ~= "castle top"
+						and v.Name ~= "Village Path"
+						and v.Name ~= "wooden stacks"
+						and v.Name ~= "skeleton"
+						and v.Name ~= "SpaceCenter"
+						and v.Name ~= "boat and bus"
+						and v.Name ~= "LanternsGround"
+						and v.Name ~= "ThreeDTextObject"
+						and v.Name ~= "misc nonocollide obstacles"
+						and v.Name ~= "parking spots"
+						and v.Name ~= "vegetation"
+						and v.Name ~= "crashed spaceships"
+						and v.Name ~= "bridge nocollide"
+						and v.Name ~= "Support_Beam"
+						and v.Name ~= "hay"
+                        and v.Name ~= "mha_city_night_rain"
+                        and v.Name ~= "fireflies"
+						then
+							v:Destroy()
+						end
+					end
+	
+					for i , v in pairs(removeTerrain) do
+							v:Destroy()
+					end
+				end
+			end
+		end)
+		deleteMap:Set(true)
 
-		local Section = Tab:AddSection({ Name = "ตั้งค่าเกม" })
-		--รีสตาทเกม
-		Tab:AddButton({
-				Name = "🚨 รีสตาร์ทเกม",
-				Callback = function()
-						task.wait(2)
-						game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-				end,
-		})
-		--ปุ่มรีเกมส์
-		Tab:AddBind({
-			Name = "ปุ่มรีเกมส์ [กด F5 เพื่อรีเกมส์]",
-			Default = Enum.KeyCode.F5,
-			Hold = false,
-			Callback = function()
-				OrionLib:MakeNotification({
-					Name = "ระบบกำลังรีเกมส์!",
-					Content = "ในอีก 5 4 3 2 1..",
-					Image = "rbxassetid://6026568227",
-					Time = 5,
-				}) -- Notifi	
-				task.wait(2)			
+		local antiAFK = otherSetting:AddSwitch("ป้องกัน AFK", function(bool)
+			print(bool)
+		end)
+		antiAFK:Set(true)
+
+		local clickTeleport = otherSetting:AddSwitch("คลิกเพื่อวาป (กด Ctrl + Click)", function(bool)
+			local player = game:GetService("Players").LocalPlayer
+			local UserInputService = game:GetService("UserInputService")
+			local mouse = player:GetMouse()
+			repeat wait() until mouse
+			UserInputService.InputBegan:Connect(function(input, gameProcessed)
+				if input.UserInputType == Enum.UserInputType.MouseButton1 then
+					if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+						player.Character:MoveTo(Vector3.new(mouse.Hit.x, mouse.Hit.y, mouse.Hit.z)) 
+					end
+				end
+			end)
+		end)
+		clickTeleport:Set(true)
+
+		otherSetting:AddLabel("ระบบตั้งค่า fps")
+
+		local autoFPS = otherSetting:AddSwitch("Auto FPS", function(bool)
+			print(bool)
+		end)
+		autoFPS:Set(true)
+
+		otherSetting:AddLabel("ระบบรีห้อง (หรือกด F5 เพื่อรีห้อง)")
+		otherSetting:AddButton("รีห้อง", function()
+			if getgenv().jobID ~= nil then
+				game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
+			else
 				game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
 			end
-		})
-
-		--ลบไฟล์
-		Tab:AddButton({
-			Name = "🚨 Fix แก้บัค",
-			Callback = function()
-					pcall(function()
-						delfile(getgenv().savefilename)
-					end)
-					OrionLib:MakeNotification({
-						Name = "ระบบกำลังรีเกมส์!",
-						Content = "แก้ไขบัคเรียบร้อยแล้ว..",
-						Image = "rbxassetid://6026568227",
-						Time = 5,
-					}) -- Notifi	
-					task.wait(2)			
+		end)
+		function onKeyPress(inputObject, gameProcessedEvent)
+			if inputObject.KeyCode == Enum.KeyCode.F5 then
+				if getgenv().jobID ~= nil then
+					game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
+				else
 					game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-			end,
-		})
-		-- ปุ่มกด จอขาว
-		Tab:AddBind({
-			Name = "ปุ่มเปิด-ปิด จอขาว [F1 White Screen]",
-			Default = Enum.KeyCode.F1,
-			Hold = false,
-			Callback = function(x)
-				game:GetService("RunService"):Set3dRenderingEnabled(getgenv().renderring)
-				getgenv().renderring = not getgenv().renderring
-				updatejson()
+				end
 			end
-		})
---#endregion
+		end
+		game:GetService("UserInputService").InputBegan:connect(onKeyPress)
 
---#region setting Webhook
-		local Tab = Window:MakeTab({ Name = "📌 webhook", Icon = "rbxassetid://6022668966", PremiumOnly = false }) -- WEBHOOK
-		local Section = Tab:AddSection({ Name = "แจ้งผลการฟาร์ม" })
-		Tab:AddTextbox({
-				Name = "📌 ใส่ webhook แจ้งเตือนเพรช",
-				Default = tostring(getgenv().weburl),
-				TextDisappear = false,
-				Callback = function(web_url)
-						getgenv().weburl = web_url
-						updatejson()
-				end,
-		})
-		local Section = Tab:AddSection({ Name = "แจ้งผลเมื่อฟาร์มเสร็จ" })
-		Tab:AddTextbox({
-				Name = "📌 ใส่ webhook แจ้งเตือนเมื่อฟาร์มเสร็จ",
-				Default = tostring(getgenv().weburlfinish),
-				TextDisappear = false,
-				Callback = function(web_url)
-						getgenv().weburlfinish = web_url
-						updatejson()
-				end,
-		})
-		local Section = Tab:AddSection({ Name = "Discord" })
-		Tab:AddTextbox({
-				Name = "📌 ใส่ ID Discord",
-				Default = tostring(getgenv().dctage),
-				TextDisappear = false,
-				Callback = function(t)
-						getgenv().dctage = t
-						updatejson()
-				end,
-		})
-		Tab:AddButton({
-					Name = "ทดสอบเว็บฮุก",
-					Callback = function()
-							webhook()
-					end,
-		})
-		Tab:AddButton({
-			Name = "ทดสอบเว็บฮุกจบงาน",
-			Callback = function()
-					webhook_finish()
-			end,
-		})
---#endregion
+		otherSetting:AddLabel("แก้บัค (Fix Bug)")
+		otherSetting:AddButton("กดเมื่อสคริปทำงานผิดปกติ", function()
+			pcall(function()
+				delfile(getgenv().savefilename)
+			end)
+			task.wait(2)			
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		end)
 
---#region setting TPFriend
-		local Tab = Window:MakeTab({Name = "🏝️ ตามเพื่อน", Icon = "rbxassetid://6022668966",  PremiumOnly = false, }) -- FRIENDS
-		local Section = Tab:AddSection({ Name = "เข้าวาร์ปเพื่อน" })
-		-- เข้าวาร์ปเพื่อนเท่านั้น
-		Tab:AddToggle({
-					Name = "⚙️ เข้าวาร์ปเพื่อนเท่านั้น",
-					Default = getgenv().warpfriend,
-					Callback = function(x)
-							getgenv().warpfriend = x
-							updatejson()
-					end,
-		})
-		local Section = Tab:AddSection({ Name = "เข้าแมพตามเพื่อน" })
-		-- ใส่เลขห้อง
-		Tab:AddTextbox({
-					Name = "📌 ใส่เลขห้อง",
-					Default = tostring(getgenv().jobID),
-					TextDisappear = false,
-					Callback = function(t)
-							getgenv().jobID = t
-							updatejson()
-					end,
-		})
-		--เข้าแมพ
-		Tab:AddButton({
-				Name = "เข้าแมพ",
-				Callback = function()
-						if getgenv().jobID ~= nil then
-								OrionLib:MakeNotification({
-									Name = "TELEPORT SUCCESS!",
-									Content = "ระบบกำลังวาร์ป..",
-									Image = "rbxassetid://6026568227",
-									Time = 5,
-								})
-								game:GetService("TeleportService"):TeleportToPlaceInstance(8304191830, getgenv().jobID,  game.Players.LocalPlayer)
-						else
-								OrionLib:MakeNotification({
-									Name = "ERROR!",
-									Content = "วาร์ปไม่สำเร็จ..",
-									Image = "rbxassetid://2795966663",
-									Time = 5,
-								})
-						end
-				end,
-		})
-		local Section = Tab:AddSection({ Name = "เลขห้อง" })
-		--ก็อปเลขห้อง
-		Tab:AddButton({
-					Name = "ก็อปเลขห้อง",
-					Callback = function()
-							OrionLib:MakeNotification({
-								Name = "COPY SUCCESS!",
-								Content = "ก็อปปี้สำเร็จแล้ว..",
-								Image = "rbxassetid://6026568227",
-								Time = 5,
-							})
-							setclipboard(game.JobId)
-					end,
-		})
---#endregion
+		--#endregion
 
---#region SELL BUY
-		local Tab = Window:MakeTab({Name = "💵 ซื้อ / ขาย ตัวละคร",Icon = "rbxassetid://6022668966",PremiumOnly = false,}) -- SELL BUY
+		--#region webhookSetting UI
+		webhookSetting:AddLabel("การตั้งเว็บฮุกแจ้งเตือน")
+		webhookSetting:AddTextBox(getgenv().weburl, function(text)
+			getgenv().weburl = tostring(text)
+		end, {
+			["clear"] = false, -- Default: true (options are optional)
+		})
+		webhookSetting:AddLabel("การตั้งเว็บฮุกจบงาน")
+		webhookSetting:AddTextBox(getgenv().weburlfinish, function(text)
+			getgenv().weburlfinish = tostring(text)
+		end, {
+			["clear"] = false, -- Default: true (options are optional)
+		})
+		webhookSetting:AddLabel("ตั้งค่า Discord")
+		webhookSetting:AddTextBox(getgenv().dctage, function(text)
+			getgenv().dctage = tostring(text)
+		end, {
+			["clear"] = false, -- Default: true (options are optional)
+		})
+
+		webhookSetting:AddButton("ทดสอบเว็บฮุก", function()
+			pcall(function () webhook() end)
+		end)
+		webhookSetting:AddButton("ทดสอบเว็บฮุก เสร็จงาน", function()
+			pcall(function () webhook_finish() end)
+		end)
+
+		--#endregion
+
+		--#region Sell - Buy Shop Mystic
 		getgenv().UnitSellTog = false
 		getgenv().autosummontickets = false
 		getgenv().autosummongem = false
@@ -3250,6 +3279,8 @@ function PjxInit()
 		getgenv().autosummonticketse = false
 		getgenv().autosummongeme = false
 		getgenv().autosummongem10e = false
+		toggle_buyunit = false
+		toggle_sell = false
 		local function autobuyfunc(xx, item)
 			task.wait()
 			local args = {
@@ -3258,143 +3289,101 @@ function PjxInit()
 			}
 			game:GetService("ReplicatedStorage").endpoints.client_to_server.buy_from_banner:InvokeServer(unpack(args))
 		end
-		local Section = Tab:AddSection({ Name = "Special - 2x Mythic" })
-		Tab:AddToggle({
-				Name = "💵 ซื้อตัวอัตโนมัติ [ใช้ Ticket 1]",
-				Default = getgenv().autosummonticketse,
-				Callback = function(bool)
-						getgenv().autosummonticketse = bool
-						if game.PlaceId == 8304191830 then
-							while getgenv().autosummonticketse do
-								autobuyfunc("EventClover", "ticket")
-							end
-						end
-						updatejson()
-				end,
-		})
-		Tab:AddToggle({
-				Name = "💴 ซื้อตัวอัตโนมัติ [ทีละ 1ตัว]",
-				Default = getgenv().autosummongeme,
-				Callback = function(bool)
-						getgenv().autosummongeme = bool
-						if game.PlaceId == 8304191830 then
-							while getgenv().autosummongeme do
-								autobuyfunc("EventClover", "gems")
-							end
-						end
-						updatejson()
-				end,
-		})
-		Tab:AddToggle({
-				Name = "💶 ซื้อตัวอัตโนมัติ [ทีละ 10 ตัว]",
-				Default = getgenv().autosummongem10e,
-				Callback = function(bool)
-						getgenv().autosummongem10 = bool
-						if game.PlaceId == 8304191830 then
-							while getgenv().autosummongem10 do
-									autobuyfunc("EventClover", "gems10")
-							end
-						end
-						updatejson()
-				end,
-		})
-		local Section = Tab:AddSection({ Name = "ซื้อ Standard" })
-		Tab:AddToggle({
-				Name = "💷 ซื้อตัวอัตโนมัติ [ใช้ Ticket 1]",
-				Default = getgenv().autosummontickets,
-				Callback = function(bool)
-						getgenv().autosummontickets = bool
-						if game.PlaceId == 8304191830 then
-							while getgenv().autosummontickets do
-								autobuyfunc("Standard", "ticket")
-							end
-						end
-						updatejson()
-				end,
-		})
-		Tab:AddToggle({
-				Name = "💶 ซื้อตัวอัตโนมัติ [ทีละ 1ตัว]",
-				Default = getgenv().autosummongem,
-				Callback = function(bool)
-						getgenv().autosummongem = bool
-						if game.PlaceId == 8304191830 then
-							while getgenv().autosummongem do
-								autobuyfunc("Standard", "gems")
-							end
-						end
-						updatejson()
-				end,
-		})
-		Tab:AddToggle({
-				Name = "💵 ซื้อตัวอัตโนมัติ [ทีละ 10 ตัว]",
-				Default = getgenv().autosummongem10,
-				Callback = function(bool)
-						getgenv().autosummongem10 = bool
-						if game.PlaceId == 8304191830 then
-							while getgenv().autosummongem10 do
-								autobuyfunc("Standard", "gems10")
-							end
-						end
-						updatejson()
-				end,
-		})
-		local Section = Tab:AddSection({Name = "ตั้งค่าการขายตัวละครอัตโนมัติ", })
-		Tab:AddToggle({
-				Name = "🗿 เริ่มการขายตัวละคร [Rare,Epic]",
-				Default = getgenv().UnitSellTog,
-				Callback = function(bool)
-						getgenv().UnitSellTog = bool
-				end,
-		})
-		local Section = Tab:AddSection({Name = "คีย์ลัด กการซื้อ-ขาย อัตโนมัติ", })
-		Tab:AddBind({
-			Name = "Buy Mythic x2 [F7 Auto Buy]",
-			Default = Enum.KeyCode.F7,
-			Hold = false,
-			Callback = function()
-				if getgenv().autosummongem10 then
-					getgenv().autosummongem10 = false
-					OrionLib:MakeNotification({
-						Name = "ปิดการซื้อออโต้แล้ว!",
-						Content = "Auto Buy Close..",
-						Image = "rbxassetid://6026568227",
-						Time = 5,
-					}) -- Notifi
-				else
+
+		local autoBuyunit = AutoFarm:AddSwitch("ซื้อ Unit [หรือกด F7]", function(bool)
+			toggle_buyunit = bool
+			if game.PlaceId == 8304191830 then
+				if toggle_buyunit  then
+					toggle_buyunit = true
 					getgenv().autosummongem10 = true
-					OrionLib:MakeNotification({
-						Name = "กำลังทำการซื้อออโต้!",
-						Content = "Auto Buy Loaded..",
-						Image = "rbxassetid://6026568227",
-						Time = 5,
-					}) -- Notifi
-					if game.PlaceId == 8304191830 then
-						while getgenv().autosummongem10 do
-								autobuyfunc("EventClover", "gems10")
-						end
+					while getgenv().autosummongem10 do
+						autobuyfunc("EventClover", "gems10")
 					end
 				end
-			end
-		})
-		Tab:AddBind({
-			Name = "Sell Rare-Epic [F8 Auto Sell]",
-			Default = Enum.KeyCode.F8,
-			Hold = false,
-			Callback = function()
-				if getgenv().UnitSellTog then
-					getgenv().UnitSellTog = false
-				else
-					getgenv().UnitSellTog = true
+
+				if toggle_buyunit ==  false then
+					toggle_buyunit = false
+					getgenv().autosummongem10 = false
 				end
 			end
-		})
+		end)
+		autoBuyunit:Set(toggle_buyunit)
+
+		local autoSellunit = AutoFarm:AddSwitch("ขาย Unit [หรือกด F8]", function(bool)
+			getgenv().UnitSellTog = bool
+		end)
+		autoSellunit:Set(toggle_sell)
+
+		function onKeyPress(inputObject, gameProcessedEvent)
+				if inputObject.KeyCode == Enum.KeyCode.F7 then
+						if toggle == false then
+							getgenv().autosummongem10 = true
+								toggle = true
+								if game.PlaceId == 8304191830 then
+									while getgenv().autosummongem10 do
+											autobuyfunc("EventClover", "gems10")
+									end
+								end
+						else
+								getgenv().autosummongem10 = false
+								toggle = false
+						end
+				end
+		end
+
+		function onKeyPress(inputObject, gameProcessedEvent)
+			if inputObject.KeyCode == Enum.KeyCode.F7 then
+					if toggle == false then
+						getgenv().autosummongem10 = true
+							toggle = true
+							if game.PlaceId == 8304191830 then
+								while getgenv().autosummongem10 do
+										autobuyfunc("EventClover", "gems10")
+								end
+							end
+					else
+							getgenv().autosummongem10 = false
+							toggle = false
+					end
+			end
+	end
+
+		function onKeyPress(inputObject, gameProcessedEvent)
+			if inputObject.KeyCode == Enum.KeyCode.F8 then
+					if toggle == false then
+						toggle = true
+						if game.PlaceId == 8304191830 then
+							getgenv().UnitSellTog = true
+						end
+					else
+						toggle = false
+						if game.PlaceId == 8304191830 then
+							getgenv().UnitSellTog = false
+						end
+							
+					end 
+			end
+	end
+		game:GetService("UserInputService").InputBegan:connect(onKeyPress)
+		--#endregion
+
+	end
+
+	webhookSetting:Show()
+	otherSetting:Show()
+	partyFarm:Show()
+	ManualFarm:Show()
+  AutoFarm:Show()
+	library:FormatWindows()
 --#endregion
 
---###### END UI ######--
 end
 
---###### Function ######--
---------------------------------------------------
+--###### END UI ######--
+
+end
+
+
 --#region Check File JSon WorkSpace
 
 if isfile(savefilename) then
@@ -3406,49 +3395,29 @@ if isfile(savefilename) then
 else
 	local xdata = {
 
-		-- Save Script
-		AutoLoadTP = true,
-		-- Warp Friends
-		warpfriend = false,
-		-- Auto Start
+		-- AUTO
 		AutoStart = false,
+		chickenFarm = false,
+		dreander3d = false,
 		AutoReplay = false,
-		-- Select Mode
+		warpfriend = false,
+		autoportal = false,
+		farmprotal = false,
+		portalnameX = "เลือก Portal",
 		autoSelectMode = "เลือกโหมดที่ต้องการฟาร์ม",
-		textGem = 0,
-		resultGems = 0,
-		-- BattlePass
-		BattlePass = 0,
-		-- Select Item Raid
-		autoSelectItem = "เลือกไอเท็มเรท",
-		-- Map
-		world = "nil",
-		level = "nil",
-		difficulty = "nil",
-		levels = {},
-		door = "nil",
-		-- Lock FPS
-		lockfps = false,
-		renderring = false,
-		autoHideUI = false,
-		-- Other
-		questtoday = true,
-
-		-- Webhook
-		webhook = "",
-		weburlfinish = "",
-		webportal = "",
-		dctage = "",
-
-		-- Job ID
 		jobID = "",
+		textGem = "0",
+		resultGems = "0",
+		webhook = "ใส่ เว็บฮุก สำหรับการแจ้งเตือนปกติ",
+		weburlfinish = "ใส่ ไอดี Discord",
+		dctage = "",
+		BattlePass = "",
+		autoSelectItem = "เลือกไอเท็มเรท",
 
-		-- time Lag
-		timelock = false,
-		takeTime = 3,
-
-		--Select Unit
 		xselectedUnits = {},
+		-- MANUAL
+		manualStart = false,
+		replayFarm = false,
 
 	}
 	local json = HttpService:JSONEncode(xdata)
@@ -3457,9 +3426,6 @@ else
 end
 
 --#endregion
---------------------------------------------------
-
--- [[ ฟั่งชั่น วางมอน เลือกมอน อัพเกรด ]] --
 
 --#region Plate Unit
 
@@ -3523,12 +3489,11 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = -2959.61, y = 94.53, z = -696.83 }, -- hill unit position
 					[3] = { x = -2952.06, y = 94.41, z = -721.40 }, -- hill unit position
 				})
-				elseif game.Workspace._map:FindFirstChild("hay") then  -- ONE PICE
-					print('plate unit')
+                elseif game.Workspace._map:FindFirstChild("mha_city_night_rain") then  -- NEW RAID
 				auto_place_units({
-					[1] = { x = pos_x, y = 2.60, z = pos_z }, -- ground unit position 
-					[2] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
-					[3] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+					[1] = { x = pos_x, y =  -13.24, z = pos_z }, -- ground unit position 
+					[2] = { x = -55.57, y = -8.89, z = 3.31 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+					[3] = { x = -50.44, y = -8.89, z = 3.05}, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
 				})
 				elseif game.Workspace._map:FindFirstChild("bridge nocollide") then  -- MY HERO
 				auto_place_units({
@@ -3650,70 +3615,25 @@ coroutine.resume(coroutine.create(function()
 					[2] = { x = -130.05, y = 504.78, z = -93.73 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
 					[3] = { x = -97.27, y = -97.27, z = -92.03 }, -- hill unit position -97.27552032470703, 500.6242980957031, -92.03937530517578
 				})
-				
+				elseif game.Workspace._map:FindFirstChild("hay") then  -- ONE PICE
+				auto_place_units({
+					[1] = { x = pos_x, y = 2.60, z = pos_z }, -- ground unit position 
+					[2] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+					[3] = { x = -35.40, y = 5.98, z = -201.43 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+				})
+                elseif game.Workspace._map:FindFirstChild("fireflies") then  -- NEW STORY
+				auto_place_units({
+					[1] = { x = pos_x, y =  37.53, z = pos_z }, -- ground unit position 
+					[2] = { x = 99.65, y = 41.67, z = 16.28 }, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+					[3] = { x = 157.75, y = 41.67, z = -19.18}, -- hill unit position -130.05752563476562, 504.7899169921875, -93.732666015625
+				})
+                
 			end
 		end
 	end
 end))
 --Puppet Island
 --#endregion 
-
---#region Auto Upgrade
-coroutine.resume(coroutine.create(function()
-	while task.wait(0) do
-		local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
-		if _wave.Value >= 6 then
-			pcall(function() --///
-				repeat task.wait() until game:GetService("Workspace"):WaitForChild("_UNITS")
-				for i, v in ipairs(game:GetService("Workspace")["_UNITS"]:GetChildren()) do
-					if v:FindFirstChild("_stats") then
-						if tostring(v["_stats"].player.Value) == game.Players.LocalPlayer.Name and v["_stats"].xp.Value >= 0 then
-							if v.Name == "wendy" or v.Name == "wendy:shiny" or v.Name == "sakura" then
-								-- print(v.Name)
-							else
-								game:GetService("ReplicatedStorage").endpoints.client_to_server.upgrade_unit_ingame:InvokeServer(v)
-							end
-						end
-					end
-				end
-			end)
-		end
-	end
-end))
-
---#endregion 
-
---#region Auto Abilities
-getgenv().autoabilityerr = false
-function autoabilityfunc()
-	pcall(function() --///
-		repeat task.wait() until game:GetService("Workspace"):WaitForChild("_UNITS")
-		for i, v in ipairs(game:GetService("Workspace")["_UNITS"]:GetChildren()) do
-			if v:FindFirstChild("_stats") then
-				if v._stats:FindFirstChild("player") and v._stats:FindFirstChild("xp") then
-					if v.Name == "ichigo_mugetsu_evolved" or v.Name == "ichigo_mugetsu" then
-						print('ichigo')
-					elseif v.Name == "gojo_evolved" or v.Name == "kisuke_evolved" then
-						game:GetService("ReplicatedStorage").endpoints.client_to_server.use_active_attack:InvokeServer(v)
-					elseif v.Name == "wendy" or v.Name == "erwin" then
-						game:GetService("ReplicatedStorage").endpoints.client_to_server.use_active_attack:InvokeServer(v)
-						task.wait(11)
-					end
-				end
-			end
-		end
-	end)
-end
-coroutine.resume(coroutine.create(function()
-	while task.wait(2) do
-		if game.PlaceId ~= 8304191830 then
-			pcall(function()
-				autoabilityfunc()
-			end)
-		end
-	end
-end))
---#endregion
 
 --#region SelectUnit
 
@@ -3730,173 +3650,38 @@ coroutine.resume(coroutine.create(function()
 end))
 --#endregion
 
--- [[ จบฟั่งชั่นอัพเกรด + วางมอน ]] --
---------------------------------------------------
+--#region Auto Upgrade
 
-
--- [[ ฟังชั่นสำหรับวาปเข้าแมพ ]] --
-
---#region FarmGem
-
-function farmGem()
-	if game.PlaceId == 8304191830 then
-		local cpos = plr.Character.HumanoidRootPart.CFrame
-		if tostring(Workspace._LOBBIES.Story[getgenv().door].Owner.Value) ~= plr.Name then
-			for _, v in pairs(game:GetService("Workspace")["_LOBBIES"].Story:GetDescendants()) do
-				if v.Name == "Owner" and v.Value == nil then
-					local args = {
-						[1] = tostring(v.Parent.Name),
-					}
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
-					task.wait(4)
-					local args = {
-						[1] = tostring(v.Parent.Name), -- Lobby
-						[2] = "namek_infinite", -- World
-						[3] = false, -- Friends Only or not
-						[4] = "Hard",
-					}
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_lock_level:InvokeServer(unpack(args))
-					task.wait(2)
-					local args = {
-						[1] = tostring(v.Parent.Name),
-					}
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
-					getgenv().door = v.Parent.Name
-					plr.Character.HumanoidRootPart.CFrame = v.Parent.Door.CFrame
-					break
-				end
-			end
-		end
-		task.wait()
-		plr.Character.HumanoidRootPart.CFrame = cpos
-	end
-end
-
---#endregion
-
---#region Farm Pass
-
-function farmPass()
-	if game.PlaceId == 8304191830 then
-		local cpos = plr.Character.HumanoidRootPart.CFrame
-		if tostring(Workspace._LOBBIES.Story[getgenv().door].Owner.Value) ~= plr.Name then
-			for _, v in pairs(game:GetService("Workspace")["_LOBBIES"].Story:GetDescendants()) do
-				if v.Name == "Owner" and v.Value == nil then
-					local args = {
-						[1] = tostring(v.Parent.Name),
-					}
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
-					task.wait(4)
-					local args = {
-						[1] = tostring(v.Parent.Name), -- Lobby
-						[2] = "aot_infinite", -- World
-						[3] = false, -- Friends Only or not
-						[4] = "Hard",
-					}
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_lock_level:InvokeServer(unpack(args))
-					task.wait(2)
-					local args = {
-						[1] = tostring(v.Parent.Name),
-					}
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
-					getgenv().door = v.Parent.Name
-					plr.Character.HumanoidRootPart.CFrame = v.Parent.Door.CFrame
-					break
-				end
-			end
-		end
-		task.wait()
-		plr.Character.HumanoidRootPart.CFrame = cpos
-	end
-end
-
---#endregion
-
---#region FarmLevel
-
-function farmLevel()
-	if game.PlaceId == 8304191830 then
-		local cpos = plr.Character.HumanoidRootPart.CFrame
-		if tostring(Workspace._LOBBIES.Story[getgenv().door].Owner.Value) ~= plr.Name then
-			for _, v in pairs(game:GetService("Workspace")["_LOBBIES"].Story:GetDescendants()) do
-				if v.Name == "Owner" and v.Value == nil then
-					local args = {
-						[1] = tostring(v.Parent.Name),
-					}
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
-					task.wait(4)
-					if getgenv().autoSelectMode == "ฟาร์มเพชร" then
-						local args = {
-							[1] = tostring(v.Parent.Name), -- Lobby
-							[2] = "namek_level_1", -- World
-							[3] = false, -- Friends Only or not
-							[4] = "Normal",
-						}
-						game:GetService("ReplicatedStorage").endpoints.client_to_server.request_lock_level:InvokeServer(unpack(args))
+coroutine.resume(coroutine.create(function()
+	while task.wait(0) do
+		if game.PlaceId ~= 8304191830 then
+			local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
+			if _wave.Value >= 4 then
+				pcall(function() --///
+					repeat task.wait() until game:GetService("Workspace"):WaitForChild("_UNITS")
+					for _, v in ipairs(game:GetService("Workspace")["_UNITS"]:GetChildren()) do
+						if v:FindFirstChild("_stats") then
+							if tostring(v["_stats"].player.Value) == game.Players.LocalPlayer.Name and v["_stats"].xp.Value >= 0 then
+								if v.Name == "wendy" or v.Name == "wendy:shiny" or v.Name == "sakura" then
+									-- print(v.Name)
+								else
+									game:GetService("ReplicatedStorage").endpoints.client_to_server.upgrade_unit_ingame:InvokeServer(v)
+								end
+							end
+						end
 					end
-					task.wait(2)
-					local args = {
-						[1] = tostring(v.Parent.Name),
-					}
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
-					getgenv().door = v.Parent.Name
-					plr.Character.HumanoidRootPart.CFrame = v.Parent.Door.CFrame
-					break
-				end
+				end)
 			end
 		end
-		task.wait()
-		plr.Character.HumanoidRootPart.CFrame = cpos
 	end
-end
+end))
 
---#endregion
+--#endregion 
 
---#region Farm Clstel
-
-function farmCaltans()
-
-	if getgenv().autoSelectMode == "ฟาร์มหอคอย" then
-		if game.PlaceId == 8304191830 then
-			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new( 12423.1855, 155.24025, 3198.07593, -1.34111269e-06, -2.02512282e-08, 1, 3.91705386e-13, 1, 2.02512282e-08, -1, 4.18864542e-13, -1.34111269e-06 )
-			getgenv().infinityroom = 0
-			for i, v in pairs( game:GetService("Players")[game.Players.LocalPlayer.Name].PlayerGui.InfiniteTowerUI.LevelSelect.InfoFrame.LevelButtons :GetChildren() ) do
-				if v.Name == "FloorButton" then
-					if v.clear.Visible == false and v.Locked.Visible == false then
-						local room = string.split(v.Main.text.Text, " ")
-						local args = {
-							[1] = tonumber(room[2]),
-						}
-						game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower :InvokeServer(unpack(args))
-						getgenv().infinityroom = tonumber(room[2])
-						break
-					end
-				end
-			end
-			task.wait(6)
-		end
-	elseif getgenv().autoSelectMode == "ฟาร์มหอคอย" then
-		if game.PlaceId == 8304191830 then
-			local args = {
-				[1] = "_lobbytemplate_event330",
-			}
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby :InvokeServer(unpack(args))
-			task.wait(5)
-		end
-	end
-
-end
-
---#endregion
-
---#region story and Chicken
-
+--#region fram Story
 tp_check = true
-function storyFarm()
-	if getgenv().autoSelectMode == "ฟาร์มสตอรี่" or getgenv().autoSelectMode == "ฟาร์มไก่เพชร"  then
+local function startfarming_Story()
+	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มสตอรี่" or getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มไก่เพชร"  then
 		if game.PlaceId == 8304191830 then
 			task.wait(5)
 			local cpos = plr.Character.HumanoidRootPart.CFrame
@@ -3963,127 +3748,235 @@ function storyFarm()
 		end
 	end
 end
-
 --#endregion
 
---#region FarmGem in MapSelect
-
-function farmGMAP()
-	if game.PlaceId == 8304191830 then
-		local cpos = plr.Character.HumanoidRootPart.CFrame
-		if tostring(Workspace._LOBBIES.Story[getgenv().door].Owner.Value) ~= plr.Name then
-			for _, v in pairs(game:GetService("Workspace")["_LOBBIES"].Story:GetDescendants()) do
-				if v.Name == "Owner" and v.Value == nil then
-					local args = {
-						[1] = tostring(v.Parent.Name),
-					}
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
-					task.wait(4)
-					local args = {
-						[1] = tostring(v.Parent.Name), -- Lobby
-						[2] = getgenv().level, -- World
-						[3] = false, -- Friends Only or not
-						[4] = getgenv().difficulty,
-					}
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_lock_level:InvokeServer(unpack(args))
-					task.wait(2)
-					local args = {
-						[1] = tostring(v.Parent.Name),
-					}
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
-					game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
-					getgenv().door = v.Parent.Name
-					plr.Character.HumanoidRootPart.CFrame = v.Parent.Door.CFrame
-					break
-				end
-			end
-		end
-		task.wait()
-		plr.Character.HumanoidRootPart.CFrame = cpos
-	end
-end
-
---#endregion
-
------- [[ เลือกโหมดที่ต้องการฟาร์ม ]] ------
-
---#region Functions SelectMode
-function modefarm()
-	if getgenv().autoSelectMode == "ฟาร์มเพชร" then
-		farmGem()
-		task.wait(30)
-	end
-
-	if getgenv().autoSelectMode == "ฟาร์ม BattlePass" then
-		farmPass()
-		task.wait(30)
-	end
-
-	if getgenv().autoSelectMode == "ฟาร์มเวลตัวละคร" then
-		farmLevel()
-		task.wait(30)
-	end
-
-	if getgenv().autoSelectMode == "ฟาร์มหอคอย" then
-		farmCaltans()
-		task.wait(30)
-	end
-
-	if getgenv().autoSelectMode == "ฟาร์มสตอรี่" or getgenv().autoSelectMode == "ฟาร์มไก่เพชร" then
-		storyFarm()
-		task.wait(30)
-	end
-
-	if getgenv().autoSelectMode == "ฟาร์มเพชรเลือกด่าน" then
-		farmGMAP()
-		task.wait(30)
-	end
-
-end
---#endregion
-
---#region Auto Starts
-
-coroutine.resume(coroutine.create(function()
-	while wait(3) do
-		if getgenv().AutoStart then
-			modefarm()
-		end
-	end
-end))
-
---#endregion
-
--- [[ จบฟังชั่นเข้าแมพ ]] --
---------------------------------------------------
-
-
--- [[ ฟังชั่นเมื่อจบเกมส์ ]] --
-
---#region Check TP Wave Battlepass
-
+--#region Select Mode
 coroutine.resume(coroutine.create(function()
 	while task.wait() do
+		-- Not Lobbies
 		if game.PlaceId ~= 8304191830 then
-			local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
-			if getgenv().autoSelectMode == "ฟาร์ม BattlePass" and tonumber(_wave.Value) >= tonumber(40)		then
-				task.wait(2)
-				if tonumber(getgenv().BattlePass) >= tonumber(getgenv().textGem)  then
-					pcall(function () webhook_finish()  end)
-				else
-					pcall(function () webhook()  end)
+			break
+		end
+
+		--#region Farm Story
+		if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มสตอรี่" or getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มไก่เพชร" then
+			startfarming_Story()
+		end
+		--#endregion
+
+		--#region Farm Gem
+		if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" then
+			if game.PlaceId == 8304191830 then
+				local cpos = plr.Character.HumanoidRootPart.CFrame
+				if tostring(Workspace._LOBBIES.Story[getgenv().door].Owner.Value) ~= plr.Name then
+					for _, v in pairs(game:GetService("Workspace")["_LOBBIES"].Story:GetDescendants()) do
+						if v.Name == "Owner" and v.Value == nil then
+							local args = {
+								[1] = tostring(v.Parent.Name),
+							}
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
+							task.wait(4)
+							if getgenv().autoSelectMode == "ฟาร์มเพชร" then
+								local args = {
+									[1] = tostring(v.Parent.Name), -- Lobby
+									[2] = "namek_infinite", -- World
+									[3] = false, -- Friends Only or not
+									[4] = "Hard",
+								}
+								game:GetService("ReplicatedStorage").endpoints.client_to_server.request_lock_level:InvokeServer(unpack(args))
+							end
+							task.wait(2)
+							local args = {
+								[1] = tostring(v.Parent.Name),
+							}
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
+							getgenv().door = v.Parent.Name
+							plr.Character.HumanoidRootPart.CFrame = v.Parent.Door.CFrame
+							break
+						end
+					end
 				end
-				task.wait(2)
-				game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+				task.wait()
+				plr.Character.HumanoidRootPart.CFrame = cpos
 			end
 		end
+		--#endregion
+
+		--#region Farm Gojo
+		if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มตาโกโจ" then
+			if game.PlaceId == 8304191830 then
+				local cpos = plr.Character.HumanoidRootPart.CFrame
+				if tostring(Workspace._LOBBIES.Story[getgenv().door].Owner.Value) ~= plr.Name then
+					for _, v in pairs(game:GetService("Workspace")["_LOBBIES"].Story:GetDescendants()) do
+						if v.Name == "Owner" and v.Value == nil then
+							local args = {
+								[1] = tostring(v.Parent.Name),
+							}
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
+							task.wait(4)
+							if getgenv().autoSelectMode == "ฟาร์มตาโกโจ" then
+								local args = {
+									[1] = tostring(v.Parent.Name), -- Lobby
+									[2] = "jjk_infinite", -- World
+									[3] = false, -- Friends Only or not
+									[4] = "Hard",
+								}
+								game:GetService("ReplicatedStorage").endpoints.client_to_server.request_lock_level:InvokeServer(unpack(args))
+							end
+							task.wait(2)
+							local args = {
+								[1] = tostring(v.Parent.Name),
+							}
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
+							getgenv().door = v.Parent.Name
+							plr.Character.HumanoidRootPart.CFrame = v.Parent.Door.CFrame
+							break
+						end
+					end
+				end
+				task.wait()
+				plr.Character.HumanoidRootPart.CFrame = cpos
+			end
+		end
+		--#endregion
+
+		--#region Farm BattlePass
+		if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์ม BattlePass" then
+			if game.PlaceId == 8304191830 then
+				local cpos = plr.Character.HumanoidRootPart.CFrame
+				if tostring(Workspace._LOBBIES.Story[getgenv().door].Owner.Value) ~= plr.Name then
+					for _, v in pairs(game:GetService("Workspace")["_LOBBIES"].Story:GetDescendants()) do
+						if v.Name == "Owner" and v.Value == nil then
+							local args = {
+								[1] = tostring(v.Parent.Name),
+							}
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
+							task.wait(4)
+							
+								local args = {
+									[1] = tostring(v.Parent.Name), -- Lobby
+									[2] = "namek_infinite", -- World
+									[3] = false, -- Friends Only or not
+									[4] = "Hard",
+								}
+								game:GetService("ReplicatedStorage").endpoints.client_to_server.request_lock_level:InvokeServer(unpack(args))
+							
+							task.wait(2)
+							local args = {
+								[1] = tostring(v.Parent.Name),
+							}
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
+							getgenv().door = v.Parent.Name
+							plr.Character.HumanoidRootPart.CFrame = v.Parent.Door.CFrame
+							break
+						end
+					end
+				end
+				task.wait()
+				plr.Character.HumanoidRootPart.CFrame = cpos
+			end
+		end
+		--#endregion
+	
+		--#region Farm Level Players
+		if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเวลตัวละคร" then
+			if game.PlaceId == 8304191830 then
+				local cpos = plr.Character.HumanoidRootPart.CFrame
+				if tostring(Workspace._LOBBIES.Story[getgenv().door].Owner.Value) ~= plr.Name then
+					for _, v in pairs(game:GetService("Workspace")["_LOBBIES"].Story:GetDescendants()) do
+						if v.Name == "Owner" and v.Value == nil then
+							local args = {
+								[1] = tostring(v.Parent.Name),
+							}
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
+							task.wait(4)
+							local args = {
+								[1] = tostring(v.Parent.Name), -- Lobby
+								[2] = "namek_level_1", -- World
+								[3] = false, -- Friends Only or not
+								[4] = "Normal",
+							}
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_lock_level:InvokeServer(unpack(args))
+							task.wait(2)
+							local args = {
+								[1] = tostring(v.Parent.Name),
+							}
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
+							getgenv().door = v.Parent.Name
+							plr.Character.HumanoidRootPart.CFrame = v.Parent.Door.CFrame
+							break
+						end
+					end
+				end
+				task.wait()
+				plr.Character.HumanoidRootPart.CFrame = cpos
+			end
+		end
+		--#endregion
+	
+		--#region Farm Clstel
+
+		if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มหอคอย" then
+			if game.PlaceId == 8304191830 then
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new( 12423.1855, 155.24025, 3198.07593, -1.34111269e-06, -2.02512282e-08, 1, 3.91705386e-13, 1, 2.02512282e-08, -1, 4.18864542e-13, -1.34111269e-06 )
+				getgenv().infinityroom = 0
+				for i, v in pairs( game:GetService("Players")[game.Players.LocalPlayer.Name].PlayerGui.InfiniteTowerUI.LevelSelect.InfoFrame.LevelButtons :GetChildren() ) do
+					if v.Name == "FloorButton" then
+						if v.clear.Visible == false and v.Locked.Visible == false then
+							local room = string.split(v.Main.text.Text, " ")
+	
+							local args = {
+								[1] = tonumber(room[2]),
+							}
+	
+							game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower :InvokeServer(unpack(args))
+							getgenv().infinityroom = tonumber(room[2])
+							break
+						end
+					end
+				end
+				task.wait(6)
+			end
+		elseif getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มหอคอย" then
+			if game.PlaceId == 8304191830 then
+				local args = {
+					[1] = "_lobbytemplate_event330",
+				}
+				game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby :InvokeServer(unpack(args))
+				task.wait(5)
+			end
+		end
+		--#endregion
+		
+		--#region Farm Frust
+		if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มผลไม้" then
+			if game.PlaceId == 8304191830 then
+				local cpos = plr.Character.HumanoidRootPart.CFrame
+				for i, v in pairs(game:GetService("Workspace")["_CHALLENGES"].Challenges:GetDescendants()) do
+					if v.Name == "Owner" and v.Value == nil then
+						local args = {
+							[1] = tostring(v.Parent.Name),
+						}
+						game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
+						getgenv().chdoor = v.Parent.Name
+						break
+					end
+				end
+				task.wait()
+				plr.Character.HumanoidRootPart.CFrame = cpos
+			end
+		end
+		--#endregion
 	end
 end))
-
 --#endregion
 
---#region Check Farm Gem
-function amReplay()
+--#region Teleport in Wave
+local function amReplay()
 	while task.wait() do
 		if game.PlaceId ~= 8304191830 then
 			if getgenv().AutoReplay then
@@ -4101,20 +3994,45 @@ function amReplay()
 		end
 	end
 end
-
 coroutine.resume(coroutine.create(function()
 	while task.wait() do
+		local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
 		if game.PlaceId ~= 8304191830 then
 			--#region Teleport Gem
-			local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
-			if getgenv().autoSelectMode == "ฟาร์มเพชร" and  _wave.Value >= 25 then
+			levePlayers = LocalPlayer.PlayerGui.spawn_units.Lives.Main.Desc.Level.Text
+			levelCheck = levePlayers:split(" ")
+			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" and tonumber(levelCheck[2]) <= tonumber(50) and tonumber(_wave.Value) >= tonumber(15) then
 				if tonumber(getgenv().textGem) <= 1 then
 					pcall(function () webhook_finish()  end)
 					task.wait(3)
+					game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
 					break
 				else
 					if getgenv().AutoReplay then
 						amReplay()
+						break
+					else
+						pcall(function () webhook()  end)
+						task.wait(3)
+						game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+						break
+					end
+				end
+			end
+			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มตาโกโจ" and tonumber(_wave.Value) >= tonumber(32)  then
+				if tonumber(getgenv().textGem) <= 0 then
+					pcall(function () webhook_finish()  end)
+					task.wait(3)
+					game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+					break
+				else
+					if getgenv().AutoReplay then
+						amReplay()
+						break
+					else
+						pcall(function () webhook()  end)
+						task.wait(3)
+						game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
 						break
 					end
 				end
@@ -4123,217 +4041,97 @@ coroutine.resume(coroutine.create(function()
 		end
 	end
 end))
+--#endregion
+
+--#region Farm BattlePass
+
+coroutine.resume(coroutine.create(function()
+	while task.wait() do
+		local _wave = game:GetService("Workspace"):WaitForChild("_wave_num")
+		if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์ม BattlePass" and tonumber(_wave.Value) >= tonumber(55)  then
+			if tonumber(getgenv().textGem) <= tonumber(getgenv().BattlePass) then
+				pcall(function () webhook_finish()  end)
+			else
+				pcall(function () webhook()  end)
+			end
+			task.wait(3)
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		end
+	end
+end))
 
 --#endregion
 
---#region Check Gamefinish
-function gameisFinishAuto()
+
+--#region GameFinished Auto
+
+local function gameisFinishAuto()
+	--// Next Story --//
 	task.wait(4)
-	local resultx = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Title.Text)
-	
-	-- // Replay Everthing // --
+
+	-- // Replay // --
 	if getgenv().AutoReplay and  getgenv().autoSelectMode == "เลือกโหมดที่ต้องการฟาร์ม"  then
 		task.wait()
 		pcall(function() webhook() end)
 		local a = { [1] = "replay" }
 		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
 		game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-		task.wait(300)
-		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-		task.wait(100)
-		game:Shutdown()
 	end
-
+	-- // Exit Room //--
+	if getgenv().autoSelectMode == "เลือกโหมดที่ต้องการฟาร์ม"  then
+		task.wait()
+		pcall(function() webhook() end)
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		for i = 1, 180 do
+			warn("Game restart in : " .. i)
+			task.wait(1)
+		end
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+	end
+	
 	-- // Raid // --
 	if getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" then
 		task.wait(3)
-
-		if resultx == "VICTORY" then
-			print('Victory')
-		else
-			if getgenv().AutoReplay then
-				local a = { [1] = "replay" }
-				game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-				game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-				task.wait(300)
-				game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-				task.wait(100)
-				game:Shutdown()
-			else
-				game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-				task.wait(300)
-				game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-				task.wait(100)
-				game:Shutdown()
-			end
-		end
-
-		local itemDifference = getItemChangesNormal(getgenv().startingInventoryNormalItems, getNormalItems())
-		for name, amount in pairs(itemDifference) do
-			if getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Alien Scouter" and name == "west_city_frieza_item" then
-				getgenv().textGem = tonumber(getgenv().textGem) - amount
-				if tonumber(getgenv().textGem) <= 1 then
-					pcall(function () webhook_finish() end)
-					updatejson()
-					wait(99)
-				else
-					pcall(function() webhook() end)
-				end
-				updatejson()
-				task.wait(1)
-				break
-			elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Tomoe" and name == "uchiha_item" then
-				getgenv().textGem = tonumber(getgenv().textGem) - amount
-				if tonumber(getgenv().textGem) <= 1 then
-					pcall(function () webhook_finish() end)
-					updatejson()
-					wait(99)
-				else
-					pcall(function() webhook() end)
-				end
-				updatejson()
-				task.wait(1)
-				break
-			elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Entertain Shard" and name == "entertainment_district_item" then
-				getgenv().textGem = tonumber(getgenv().textGem) - amount
-				if tonumber(getgenv().textGem) <= 1 then
-					pcall(function () webhook_finish() end)
-					updatejson()
-					wait(99)
-				else
-					pcall(function() webhook() end)
-				end
-				updatejson()
-				task.wait(1)
-				break
-			elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Demon Shard" and name == "april_symbol" then
-				getgenv().textGem = tonumber(getgenv().textGem) - amount
-				if tonumber(getgenv().textGem) <= 1 then
-					pcall(function () webhook_finish() end)
-					updatejson()
-					wait(99)
-				else
-					pcall(function() webhook() end)
-				end
-				updatejson()
-				task.wait(1)
-				break
-			elseif getgenv().autoSelectMode == "ฟาร์มไอเท็มเรด" and getgenv().autoSelectItem == "Relic Shard" and name == "relic_shard" then
-				getgenv().textGem = tonumber(getgenv().textGem) - amount
-				if tonumber(getgenv().textGem) <= 0 then
-					pcall(function () webhook_finish() end)
-					updatejson()
-					wait(99)
-				else
-					pcall(function() webhook() end) 
-				end
-				updatejson()
-				task.wait(1)
-				break
-			end
-		end
-
-		if getgenv().AutoReplay then
-			local a = { [1] = "replay" }
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-			wait(99)
-		else
-			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-			task.wait(300)
-			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-			task.wait(100)
-			game:Shutdown()
-		end
-	end
-
-	-- // Story --
-	if getgenv().autoSelectMode == "ฟาร์มสตอรี่" then
-		pcall(function() webhook() end)
-		if resultx == "VICTORY" then
-			while task.wait(5) do
-                local args = {
-                    [1] = "next_story"
-                }
-                game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(args))
-            end
-		else
-			local a = { [1] = "replay" }
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-			wait(99)
-		end
-	end
-
-	-- // Farm Gem and Farm Gem in Map Select --
-	if getgenv().autoSelectMode == "ฟาร์มเพชร" or getgenv().autoSelectMode == "ฟาร์มเพชรเลือกด่าน" then
-		task.wait(2)
 		pcall(function() webhook() end)
 		if getgenv().AutoReplay then
 			local a = { [1] = "replay" }
 			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
 			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-			task.wait(300)
-			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-			task.wait(100)
-			game:Shutdown()
-		else
-			task.wait(2)
-			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-			task.wait(100)
-			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-			task.wait(300)
-			game:Shutdown()
-		end
-	end
-
-	-- // infinityTower --
-	if getgenv().autoSelectMode == "ฟาร์มหอคอย" then
-		task.wait(5)
-		infTower_check = game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Holder.LevelName.Text
-		infinityTower = infTower_check:split(" ")
-		
-		if resultx == "VICTORY" then
-			if tonumber(infinityTower[4]) >= tonumber(getgenv().textGem) then
-				pcall(function() webhook_finish() end)
-			else
-				pcall(function() webhook() end)
-				game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
-				game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
-				wait(99)
+			for i = 1, 180 do
+				warn("Game restart in : " .. i)
+				task.wait(1)
 			end
-		else
-			pcall(function() webhook() end)
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
-			wait(99)
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+			for i = 1, 60 do
+				warn("game Shutdown in : " .. i)
+				task.wait(1)
+			end
+			game:Shutdown()
 		end
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
 	end
 
-	--// Level Players --//
-	if getgenv().autoSelectMode == "ฟาร์มเวลตัวละคร" then
-		levePlayers = LocalPlayer.PlayerGui.spawn_units.Lives.Main.Desc.Level.Text
-		levelCheck = levePlayers:split(" ")
-		if tonumber(levelCheck[2]) >= tonumber(getgenv().textGem) then
-			pcall(function() webhook_finish() end)
-			task.wait(3)
-			wait(99)
-		else
-			pcall(function() webhook() end)
-			local a = { [1] = "replay" }
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
-			wait(99)
+	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มสตอรี่" then
+		pcall(function() webhook() end)
+		while task.wait(5) do
+			local args = {
+				[1] = "next_story"
+			}
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(args))
 		end
+		wait(99)
 	end
 
-	--// Farm Chickent --//
-	if getgenv().autoSelectMode == "ฟาร์มไก่เพชร" then
+	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มไก่เพชร" then
 		pcall(function() webhook() end)
 		while task.wait(5) do
 			local checkMAp = game:GetService("Workspace")._map:FindFirstChild("namek mushroom model")
-			local aceCheck = game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Holder.LevelName			
+			local aceCheck = game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Holder.LevelName
+			local resultx = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Title.Text)
+			
 			if checkMAp then
+
 				if aceCheck == "Act 6 - The Purple Tyrant" then
 					if resultx == "VICTORY" then
 						getgenv().autoSelectMode = "ฟาร์มเพชร" 
@@ -4346,6 +4144,7 @@ function gameisFinishAuto()
 						wait(99)
 					end
 				else
+
 					if resultx == "VICTORY" then
 						local args = {
 							[1] = "next_story"
@@ -4367,6 +4166,83 @@ function gameisFinishAuto()
 		end
 		wait(99)
 	end
+	-- // Gems // --
+	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" then
+		task.wait()
+		pcall(function() webhook() end)
+		if getgenv().AutoReplay then
+			local a = { [1] = "replay" }
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+		end
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		for i = 1, 180 do
+			warn("Game restart in : " .. i)
+			task.wait(1)
+		end
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		for i = 1, 60 do
+			warn("game Shutdown in : " .. i)
+			task.wait(1)
+		end
+		game:Shutdown()
+	end
+
+	--// Level Players --//
+	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเวลตัวละคร" then
+		levePlayers = LocalPlayer.PlayerGui.spawn_units.Lives.Main.Desc.Level.Text
+		levelCheck = levePlayers:split(" ")
+		if tonumber(levelCheck[2]) >= tonumber(getgenv().textGem) then
+			pcall(function() webhook_finish() end)
+			task.wait(3)
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+		else
+			pcall(function() webhook() end)
+			local a = { [1] = "replay" }
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.set_game_finished_vote:InvokeServer(unpack(a))
+			wait(99)
+		end
+	end
+	-- Castle
+
+	-- if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มหอคอย" then
+	-- 	task.wait(5)
+	-- 	pcall(function() webhook() end)
+	-- 	game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+	-- 	game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+	-- 	wait(99)
+	-- end
+
+	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มหอคอย" then
+		task.wait(5)
+		local resultx = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Title.Text)
+		infTower_check = game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Holder.LevelName.Text
+		infinityTower = infTower_check:split(" ")
+		
+		if resultx == "VICTORY" then
+			if tonumber(infinityTower[4]) >= tonumber(getgenv().textGem) then
+				pcall(function() webhook_finish() end)
+			else
+				pcall(function() webhook() end)
+				game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+				game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+				wait(99)
+			end
+		else
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+			wait(99)
+		end
+	end
+
+	-- Fruit
+	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มผลไม้" then
+		pcall(function() webhook() end)
+		task.wait(3)
+		game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+	end
 
 end
 
@@ -4374,64 +4250,12 @@ coroutine.resume(coroutine.create(function()
 	local GameFinished = game:GetService("Workspace"):WaitForChild("_DATA"):WaitForChild("GameFinished")
 	GameFinished:GetPropertyChangedSignal("Value"):Connect(function()
 		if GameFinished.Value == true then
-			gameisFinishAuto()
-		end
-	end)
-end))
-
---#endregion
-
--- [[ จบฟังชั่นจบเกมส์ ]] --
---------------------------------------------------
-
--- [[ ฟังชั่นทั่วไป ]] --
-
---#region Lock FPS
-
-coroutine.resume(coroutine.create(function()
-	while task.wait() do
-		if getgenv().lockfps then
-			setfpscap(5)
-		else
-			setfpscap(15)
-		end
-	end
-end))
-
---#endregion
-
---#region Anti AFK
-
-coroutine.resume(coroutine.create(function()
-	while task.wait(60) do
-		pcall(function()
-			local vu = game:GetService("VirtualUser")
-			game:GetService("Players").LocalPlayer.Idled:connect(function()
-				vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-				wait(1)
-				vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-			end)
-		end)
-	end
-end))
-
---#endregion
-
---#region Teleport to Unit
-
-coroutine.resume(coroutine.create(function()
-	while task.wait() do
-		local _waitUnit = game:GetService("Workspace"):FindFirstChild("_UNITS")
-		local ckUnit = game:GetService("Workspace")["_UNITS"]:GetChildren()
-		if _waitUnit then
-			task.wait(3)
-			for _, v in pairs(ckUnit) do
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace")["_UNITS"][v.Name].HumanoidRootPart.CFrame * CFrame.new(0, 0, 1)
-				break
+			wait(2)
+			if getgenv().AutoStart then -- Mode Auto
+				gameisFinishAuto()
 			end
 		end
-		break
-	end
+	end)
 end))
 
 --#endregion
@@ -4465,6 +4289,148 @@ coroutine.resume(coroutine.create(function()
 				end
 			end
 		end
+	end
+end))
+
+--#endregion
+
+--#region Teleport to Friends
+
+coroutine.resume(coroutine.create(function()
+	while task.wait(5) do
+		if game.PlaceId == 8304191830 then
+			if getgenv().warpfriend then
+				local nameList = listFriends()
+				for _, f_name in pairs(nameList) do
+					for _, v in pairs(game:GetService("Workspace")["_LOBBIES"].Story:GetChildren()) do
+							checkOwner = tostring(game:GetService("Workspace")["_LOBBIES"].Story[v.Name].Owner.Value)
+							if checkOwner == tostring(f_name) then
+								game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace")["_LOBBIES"].Story[v.Name].Door.CFrame * CFrame.new(0, 0, 1)
+								task.wait(3)
+							end
+					end
+					for _, v in pairs(game:GetService("Workspace")["_RAID"].Raid:GetChildren()) do
+						checkOwner = tostring(game:GetService("Workspace")["_RAID"].Raid[v.Name].Owner.Value)
+						if checkOwner == tostring(f_name) then
+							task.wait(3)
+							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace")["_RAID"].Raid[v.Name].Door.CFrame * CFrame.new(0, 0, 1)
+						end
+					end
+				end
+			end
+		end
+	end
+end))
+
+--#endregion
+
+--#region Anti AFK
+
+coroutine.resume(coroutine.create(function()
+	while task.wait(300) do
+			pcall(function()
+				local vu = game:GetService("VirtualUser")
+				game:GetService("Players").LocalPlayer.Idled:connect(function()
+					vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+					wait(1)
+					vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+				end)
+			end)
+	end
+end))
+
+--#endregion
+
+--#region Farm Portal
+
+coroutine.resume(coroutine.create(function()
+	while task.wait(15) do
+		if getgenv().farmprotal then
+			--ipairs(game:GetService("ReplicatedStorage")["_FX_CACHE"]:GetChildren())
+			print('Find Portal')
+			for i, v in ipairs(game:GetService("ReplicatedStorage")["_FX_CACHE"]:GetChildren()) do
+				if getgenv().portalnameX == "One Punch Man" then
+					if v.Name == "portal_boros_g" then
+						getgenv().PortalID = v._uuid_or_id.value
+						break
+					end
+				elseif getgenv().portalnameX == "Demon Leaders" then
+					if v.Name == "portal_zeldris" then
+						getgenv().PortalID = v._uuid_or_id.value
+						break
+					end
+				elseif getgenv().portalnameX == "Demon Academy" then
+					if v.Name == "april_portal_item" then
+						getgenv().PortalID = v._uuid_or_id.value
+						break
+					end
+				elseif getgenv().portalnameX ~= "One Punch Man" and v.Name == "portal_csm" or v.Name == "portal_csm1" or v.Name == "portal_csm2" or v.Name == "portal_csm3" or v.Name == "portal_csm4" or v.Name == "portal_csm5" then
+					getgenv().PortalID = v._uuid_or_id.value
+					break
+				end
+			end
+			task.wait(5)
+
+			local args = {
+				[1] = tostring(getgenv().PortalID),
+				[2] = {
+					["friends_only"] = false,
+				},
+			}
+
+			game:GetService("ReplicatedStorage").endpoints.client_to_server.use_portal:InvokeServer(unpack(args))
+
+			task.wait(45)
+
+			for i, v in pairs(game:GetService("Workspace")["_PORTALS"].Lobbies:GetDescendants()) do
+				if v.Name == "Owner" then
+					if tostring(v.value) == game.Players.LocalPlayer.Name then
+						local args = {
+							[1] = tostring(v.Parent.Name),
+						}
+						game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_game:InvokeServer(unpack(args))
+						break
+					end
+				end
+			end
+			task.wait(7)
+		end
+	end
+end))
+
+--#endregion
+
+--#region Lock FPS
+
+function low_cpu()
+  UserInputService.WindowFocusReleased:Connect(function()
+    setfpscap(10)
+  end)
+  UserInputService.WindowFocused:Connect(function()
+    setfpscap(30)
+  end)
+end
+
+low_cpu()
+
+--#endregion
+
+--#region Aoto JoinPortal
+
+coroutine.resume(coroutine.create(function()
+	while task.wait() do
+    if game.PlaceId == 8304191830 then
+      if getgenv().autoportal then 
+        for i, v in pairs(game:GetService("Workspace")["_PORTALS"].Lobbies:GetChildren()) do
+          local args = {
+            [1] = tostring(v.Name),
+          }
+          game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
+          task.wait(3) 
+        end
+        task.wait(5) --// Wait New Loop 
+      end
+    end
 	end
 end))
 
@@ -4540,14 +4506,14 @@ end))
 
 --#endregion 
 
---#region reconnect
+--#region Auto Reconnect
 function auto_reconnect()
   repeat task.wait() until game.CoreGui:FindFirstChild('RobloxPromptGui')
   game.CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(e)
     if e.Name == 'ErrorPrompt' then
       warn("Trying to Reconnect")
       repeat
-        TeleportService:Teleport(game.PlaceId)
+        game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
         task.wait(3)
       until false
     end
@@ -4556,51 +4522,19 @@ end
 auto_reconnect()
 --#endregion
 
---#region Lag Server
-
+--#region Check Status
 coroutine.resume(coroutine.create(function()
-	while task.wait(1) do
-		if game.PlaceId ~= 8304191830 then
-			if getgenv().timelock then
-				while wait(0.4) do
-					if getgenv().timelock == false then
-						break
-					end
-					local table1 = {}
-					local table2 = {}
-					local function loop(v1,v2)
-						for i = v1,v2 do
-							table.insert(table1, table2)
-						end
-					end
-					local function crash(v1) 
-						for i = 1,v1 do
-							table.insert(table2[1], {})
-						end 
-					
-						if 499999/(v1+2) then
-							loop(1,499999/(v1+2))
-						else
-							loop(1,499999)
-						end
-						game:GetService("RobloxReplicatedStorage").SetPlayerBlockList:FireServer(table1)
-					end
-					table.insert(table2, {})
-					game:GetService("NetworkClient"):SetOutgoingKBPSLimit(math.huge)
-					crash(250)
-				end					
-			end
-		end
+	while task.wait(4) do
+		game:GetService("StarterGui"):SetCore("SendNotification",{
+			Title = "check status", -- Required
+			Text = "ระบบกำลังทำงาน..", -- Required
+			Icon = "rbxthumb://type=AvatarHeadShot&id=" .. plr.UserId .. "&w=180&h=180 true";
+			Duration = 2
+		})
 	end
 end))
-
 --#endregion
 
--- [[ จบฟังชั่นทั่วไป ]] --
---------------------------------------------------
-
---###### End Function ######--
-
-print("Project X Successfully Loaded!!")
----------------------------------------------------------------------
-
+wait(30)
+setfpscap(5)
+print('Loader Suscuess!!')
