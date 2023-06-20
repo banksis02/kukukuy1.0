@@ -4179,6 +4179,12 @@ local function gameisFinishAuto()
 	-- // Gems // --
 	if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" then
 		task.wait()
+		if tonumber(getgenv().textGem) <= 0 then
+			pcall(function () webhook_finish()  end)
+			task.wait(3)
+			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+			task.wait(99)
+		end
 		pcall(function() webhook() end)
 		if getgenv().AutoReplay then
 			local a = { [1] = "replay" }
