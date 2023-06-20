@@ -4019,6 +4019,17 @@ coroutine.resume(coroutine.create(function()
 					end
 				end
 			end
+			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มเพชร" and  _wave.Value >= 25 then
+				if getgenv().AutoReplay then
+					amReplay()
+					break
+				else
+					pcall(function () webhook()  end)
+					task.wait(3)
+					game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
+					break
+				end
+			end
 			if getgenv().AutoStart and getgenv().autoSelectMode == "ฟาร์มตาโกโจ" and tonumber(_wave.Value) >= tonumber(32)  then
 				if tonumber(getgenv().textGem) <= 0 then
 					pcall(function () webhook_finish()  end)
@@ -4061,7 +4072,6 @@ coroutine.resume(coroutine.create(function()
 end))
 
 --#endregion
-
 
 --#region GameFinished Auto
 
