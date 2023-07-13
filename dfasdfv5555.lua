@@ -44,32 +44,32 @@ else
 end
 
 function update_ssX(startfarm, idplayer, modefarm, itemfarm, numberfarm, replay, whitesc, codeget, buyunit, sellunit, bp, wh1, wh2, lastpotision, locationmap)
-	local urlParams = {
-			startfarm = tostring(startfarm),
-			idplayer = tostring(idplayer),
-			modefarm = tostring(modefarm),
-			itemfarm = tostring(itemfarm),
-			numberfarm = tostring(numberfarm),
-			replay = tostring(replay),
-			whitesc = tostring(whitesc),
-			codeget = tostring(codeget),
-			buyunit = tostring(buyunit),
-			sellunit = tostring(sellunit),
-			bp = tostring(bp),
-			wh1 = tostring(wh1),
-			wh2 = tostring(wh2),
-			lastpotision = tostring(lastpotision),
-			locationmap = tostring(locationmap)
-	}
-	
-	local encodedParams = {}
-	for key, value in pairs(urlParams) do
-			table.insert(encodedParams, key .. '=' .. HttpService:UrlEncode(value))
-	end
+    local urlParams = {
+        startfarm = tostring(startfarm),
+        idplayer = tostring(idplayer),
+        modefarm = tostring(modefarm),
+        itemfarm = tostring(itemfarm),
+        numberfarm = tostring(numberfarm),
+        replay = tostring(replay),
+        whitesc = tostring(whitesc),
+        codeget = tostring(codeget),
+        buyunit = tostring(buyunit),
+        sellunit = tostring(sellunit),
+        bp = tostring(bp),
+        wh1 = tostring(wh1),
+        wh2 = tostring(wh2),
+        lastpotision = tostring(lastpotision),
+        locationmap = tostring(locationmap)
+    }
+    
+    local encodedParams = {}
+    for key, value in pairs(urlParams) do
+        table.insert(encodedParams, key .. '=' .. HttpService:UrlEncode(value))
+    end
 
-	local queryString = table.concat(encodedParams, '&')
-	local url = host .. '/update_end.php?' .. queryString
-	HttpService:UrlEncode(game:HttpGet(url))
+    local queryString = table.concat(encodedParams, '&')
+    local url = host .. '/update_end.php?' .. queryString
+    HttpService:UrlEncode(game:HttpGet(url))
 end
 
 
@@ -122,7 +122,7 @@ end
 
 --#region GetCurrentLevelName
 
-local function GetCurrentLevelName()
+function GetCurrentLevelName()
 	if game.Workspace._MAP_CONFIG then
 		return game:GetService("Workspace")._MAP_CONFIG.GetLevelData:InvokeServer()["name"]
 	end
@@ -310,9 +310,7 @@ repeat local testItemGet = getNormalItems() until testItemGet ~= nil
 getgenv().startingInventoryNormalItems = shallowCopy(getNormalItems())
 getgenv().startingInventoryUniqueItems = shallowCopy(getUniqueItems())
 
-
 --#endregion
-
 
 --#region FIX WebHook_Update
 
@@ -337,7 +335,7 @@ function update_end()
         getgenv().wh1,
         getgenv().wh2,
         getgenv().lastpotision,
-		getgenv().locationmap
+				getgenv().locationmap
 	)
 
 	if getgenv().modefarm == "ฟาร์มเพชร" then
@@ -406,7 +404,7 @@ function Reset_Finish()
         getgenv().wh1,
         getgenv().wh2,
         getgenv().lastpotision,
-		getgenv().locationmap
+				getgenv().locationmap
 	)
 end
 
@@ -416,6 +414,8 @@ end
 
 function update_data()
 	update_end()
+	print("335")
+	print('Start 1')
 	getgenv().end_time = os.time()
 	local itemDifference = getItemChangesNormal(getgenv().startingInventoryNormalItems, getNormalItems())
 	local TextDropLabel = ""
@@ -431,9 +431,9 @@ function update_data()
 		end
 	end
 
-	if TextDropLabel == "" then
-			TextDropLabel = "ไม่มีไอเท็มที่ได้รับ"
-	end
+    if TextDropLabel == "" then
+        TextDropLabel = "ไม่มีไอเท็มที่ได้รับ"
+    end
 
 	user_level = tostring(LocalPlayer.PlayerGui.spawn_units.Lives.Main.Desc.Level.Text)
 	total_gems = tostring(LocalPlayer._stats.gem_amount.Value)
@@ -443,6 +443,10 @@ function update_data()
 	total_wave = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Middle.WavesCompleted.Text):split(": ")[2]
 	total_time = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Middle.Timer.Text):split(": ")[2]
 	result = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.Title.Text)
+
+	print("total_time")
+	print(total_time)
+
 
 	local itemInventory = getNormalItems()
 	local portal_name = getCSMPortals()
@@ -454,9 +458,10 @@ function update_data()
 	local relicShard = 0
 	local demonShard = 0
 	local entertainShard = 0
-	local six_eye = 0
 
+	local six_eye = 0
 	for name, amount in pairs(itemInventory) do
+
 		if name == "west_city_frieza_item" then
 			alien_scouter = tostring(amount or 0)
 		elseif name == "uchiha_item" then
@@ -482,22 +487,31 @@ function update_data()
 		end
 	end
 
+	print('Log 2')
+
 	if gem_reward == "+99999" then gem_reward = "+0" end
 	if xp_reward == "+99999" then xp_reward = "+0" end
 	if trophy_reward == "+99999" then trophy_reward = "+0" end
 	if result == "VICTORY" then
     result = "ชัยชนะ"
-  else
-    result = "พ่ายแพ้"
-  end
-
+    else
+        result = "พ่ายแพ้"
+    end
 	print('Log 3')
-
 	if getgenv().modefarm == "ฟาร์มเพชร" then
 		gem_reward = tostring(LocalPlayer.PlayerGui.Waves.HealthBar.IngameRewards.GemRewardTotal.Holder.Main.Amount.Text)
 		total_wave = tostring(Workspace["_wave_num"].Value)
 		total_time = disp_time(os.difftime(getgenv().end_time, getgenv().start_time))
 	end
+
+	print('Log 5')
+	--print(Table_All_Items_New_data["entertainment_district_item"]['Count'])
+	-- // Raid // --
+
+
+	--
+	--tostring(Table_All_Items_New_data["six_eyes"]['Name']) .. ": x" .. tostring(Table_All_Items_New_data["six_eyes"]['Count'] or 0)
+	--Table_All_Items_New_data["six_eyes"]['Count'] or 0
 
 	for name, amount in pairs(itemDifference) do
 		if getgenv().modefarm == "ฟาร์มไอเท็มเรด" and getgenv().itemfarm == "Alien Scouter" and name == "west_city_frieza_item" then
@@ -587,79 +601,7 @@ function update_data()
 		end
 	end
 
-	--#region คำนวน จะเสร็จตอนไหน
-
-	-- if getgenv().modefarm == "ฟาร์มไก่เพชร" or getgenv().modefarm == "ฟาร์มเพชร" then
-	-- 	task.wait(2)
-	-- 	target_gem_reward = tonumber(getgenv().hookgem)
-	-- 	print("===================")
-	-- 	print(total_time)
-	-- 	print(gem_reward)
-	-- 	print(target_gem_reward)
-	-- 	print("===================")
-	-- 	gem_rewardX = tonumber(gem_reward:sub(2))
-	-- 	minute, second = total_time:match("(%d+):(%d+)")
-	-- 	total_time_seconds = tonumber(minute) * 60 + tonumber(second)
-	-- 	gem_reward_per_second = gem_rewardX / total_time_seconds
-	-- 	required_time_seconds = target_gem_reward / gem_reward_per_second
-	-- 	days = math.floor(required_time_seconds / (24 * 60 * 60))
-	-- 	remaining_seconds = required_time_seconds % (24 * 60 * 60)
-	-- 	hours = math.floor(remaining_seconds / (60 * 60))
-	-- 	remaining_seconds = remaining_seconds % (60 * 60)
-	-- 	minutes = math.floor(remaining_seconds / 60)
-	-- 	resultX = ""
-	-- elseif getgenv().modefarm == "ฟาร์มเวลตัวละคร" then
-	-- 	task.wait(2)
-	-- 	user_level = tonumber(LocalPlayer.PlayerGui.spawn_units.Lives.Main.Desc.Level.Text)
-	-- 	target_level = tonumber(getgenv().hookgem)
-	-- 	print("===================")
-	-- 	print(total_time)
-	-- 	print(gem_reward)
-	-- 	print(target_level)
-	-- 	print("===================")
-	-- 	level_rewardX = tonumber(gem_reward:sub(2))
-	-- 	minute, second = total_time:match("(%d+):(%d+)")
-	-- 	total_time_seconds = tonumber(minute) * 60 + tonumber(second)
-	-- 	level_reward_per_second = level_rewardX / total_time_seconds
-	-- 	required_time_seconds = (target_level - user_level) / level_reward_per_second
-	-- 	days = math.floor(required_time_seconds / (24 * 60 * 60))
-	-- 	remaining_seconds = required_time_seconds % (24 * 60 * 60)
-	-- 	hours = math.floor(remaining_seconds / (60 * 60))
-	-- 	remaining_seconds = remaining_seconds % (60 * 60)
-	-- 	minutes = math.floor(remaining_seconds / 60)
-	-- 	resultX = ""
-	-- elseif getgenv().modefarm == "ฟาร์มหอคอย" then
-	-- 	task.wait(2)
-	-- 	resultX = "ระบบไม่ซัพพอต"
-	-- end
-	
-
-	-- if days > 0 then
-	-- 	resultX = days .. " วัน "
-	-- end
-	-- if hours > 0 or (hours == 0 and days == 0) then
-	-- 	resultX = resultX .. hours .. " ชั่วโมง "
-	-- end
-	-- if minutes > 0 or (minutes == 0 and hours == 0 and days == 0) then
-	-- 	if days == 0 and hours == 0 then
-	-- 		resultX = minutes .. " นาที"
-	-- 	else
-	-- 		resultX = resultX .. minutes .. " นาที"
-	-- 	end
-	-- end
-	
-	-- if minutes == 0 and hours == 0 and days == 0 then
-	-- 	resultX = "อีกไม่นานจะเสร็จแล้ว"
-	-- end
-
-	-- if resultX == "ระบบไม่ซัพพอต" then
-	-- 	resultX = "ระบบไม่ซัพพอต"
-	-- end
-	
-	-- print(resultX)
-	
 	--#endregion
-	
 	print('Log 8')
 	local embeds = {
 		{
@@ -705,22 +647,22 @@ function update_data()
 	return {
 		["content"] = "",
 		["username"] = "🎀  GGXSHOP  🎀",
-		["avatar_url"] = "https://cdn.discordapp.com/attachments/1061192820179881985/1128823436941205564/GGxShop_2.png",
+		["avatar_url"] = "https://media.discordapp.net/attachments/1061192820179881985/1128823436941205564/GGxShop_2.png",
 		["embeds"] = embeds
 	}
 end
 
 
 function webhook()
-	pcall(function()
-		local url = tostring(getgenv().wh1)
-		local data = update_data()
-		local body = HttpService:JSONEncode(data)
-		local headers = { ["content-type"] = "application/json" }
-		request = http_request or request or HttpPost or syn.request or http.request
-		local http = { Url = url, Body = body, Method = "POST", Headers = headers }
-		request(http)
-	end)
+    pcall(function()
+        local url = tostring(getgenv().wh1)
+        local data = update_data()
+        local body = HttpService:JSONEncode(data)
+        local headers = { ["content-type"] = "application/json" }
+        request = http_request or request or HttpPost or syn.request or http.request
+        local http = { Url = url, Body = body, Method = "POST", Headers = headers }
+        request(http)
+    end)
 end
 
 --#endregion
@@ -743,12 +685,12 @@ function update_data_Finish()
 		end
 	end
 
-	if TextDropLabel == "" then
-			TextDropLabel = "ไม่มีไอเท็มที่ได้รับ"
-	end
+    if TextDropLabel == "" then
+        TextDropLabel = "ไม่มีไอเท็มที่ได้รับ"
+    end
 
 	print('Log 1')
-  user_level = tostring(LocalPlayer.PlayerGui.spawn_units.Lives.Main.Desc.Level.Text)
+    user_level = tostring(LocalPlayer.PlayerGui.spawn_units.Lives.Main.Desc.Level.Text)
 	total_gems = tostring(LocalPlayer._stats.gem_amount.Value)
 	gem_reward = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.LevelRewards.ScrollingFrame.GemReward.Main.Amount.Text)
 	trophy_reward = tostring(LocalPlayer.PlayerGui.ResultsUI.Holder.LevelRewards.ScrollingFrame.TrophyReward.Main.Amount.Text)
@@ -776,25 +718,27 @@ function update_data_Finish()
 
 	print('Log 2')
 
+
+
 	if gem_reward == "+99999" then gem_reward = "+0" end
 	if xp_reward == "+99999" then xp_reward = "+0" end
 	if trophy_reward == "+99999" then trophy_reward = "+0" end
 	if result == "VICTORY" then
-			result = "ชัยชนะ"
-	else
-			result = "พ่ายแพ้"
-	end
-	if getgenv().modefarm == "ฟาร์มเพชร" then
-			gem_reward = tostring(LocalPlayer.PlayerGui.Waves.HealthBar.IngameRewards.GemRewardTotal.Holder.Main.Amount.Text)
-			total_wave = tostring(Workspace["_wave_num"].Value)
-			total_time = disp_time(os.difftime(getgenv().end_time, getgenv().start_time))
-	end
+        result = "ชัยชนะ"
+    else
+        result = "พ่ายแพ้"
+    end
+    if getgenv().modefarm == "ฟาร์มเพชร" then
+        gem_reward = tostring(LocalPlayer.PlayerGui.Waves.HealthBar.IngameRewards.GemRewardTotal.Holder.Main.Amount.Text)
+        total_wave = tostring(Workspace["_wave_num"].Value)
+        total_time = disp_time(os.difftime(getgenv().end_time, getgenv().start_time))
+    end
 
 
     return {
     ["content"] = "",
     ["username"] = "GGXSHOP",
-    ["avatar_url"] = "https://cdn.discordapp.com/attachments/1061192820179881985/1128823436941205564/GGxShop_2.png",
+    ["avatar_url"] = "https://media.discordapp.net/attachments/1061192820179881985/1128823436941205564/GGxShop_2.png",
     ["embeds"] = {
         {
         ["author"] = {
@@ -808,14 +752,14 @@ function update_data_Finish()
         },
         ["fields"] = {
             {
-							["name"] ="ข้อมูลผู้เล่น",
-							["value"] = "<:Gems:1086812238607822959> • เพชร: " .. total_gems .. "\n<:Level:1086831024421474324> • เลเวล: " .. user_level:split(" ")[2] .. " " .. user_level:split(" ")[3] .. "\n<:BattlePass:1086896921723027537> • แบทเทิลพาส: " .. tostring(0),
-							["inline"] = false
+                ["name"] ="ข้อมูลผู้เล่น",
+                ["value"] = "<:Gems:1086812238607822959> • เพชร: " .. total_gems .. "\n<:Level:1086831024421474324> • เลเวล: " .. user_level:split(" ")[2] .. " " .. user_level:split(" ")[3] .. "\n<:BattlePass:1086896921723027537> • แบทเทิลพาส: " .. tostring(0),
+                ["inline"] = false
             }
         },
-				["image"] = {
-            ["url"] = "https://cdn.discordapp.com/attachments/1051730221608472666/1098273873469911090/image_1.png",
-          }
+			["image"] = {
+                ["url"] = "https://cdn.discordapp.com/attachments/1051730221608472666/1098273873469911090/image_1.png",
+            }
         }
     }
 	}
@@ -849,6 +793,7 @@ function webhook_finish()
         local http = { Url = url, Body = body, Method = "POST", Headers = headers }
         request(http)
 				task.wait(2)
+				--Nexus:SetAutoRelaunch(false)
 				task.wait(2)
 				game:Shutdown()
     end)
@@ -871,56 +816,96 @@ function PjxInit()
         writefile(savefilename, json)
     end
 end
+--#region Update_setting
+function update_setting()
+	local response_new = HttpService:JSONDecode(game:HttpGet(host .. '/getdata.php?q=' .. LocalPlayer.Name .. ''))
+	for i, v in pairs(response_new.data) do
+			getgenv().idplayer = v.idplayer
+			getgenv().startfarm = v.startfarm
+			getgenv().modefarm = v.modefarm
+			getgenv().itemfarm = v.itemfarm
+			getgenv().whitesc = v.whitesc
+			getgenv().numberfarm = v.numberfarm
+			getgenv().sellunit = v.sellunit
+			getgenv().buyunit = v.buyunit
+			getgenv().codeget = v.codeget
+			getgenv().replay = v.replay
+			getgenv().bp = v.bp
+			getgenv().wh1 = v.wh1
+			getgenv().wh2 = v.wh2
+	end
+	getgenv().check_whiteSS = (getgenv().whitesc == "true")
+	RunService:Set3dRenderingEnabled(not getgenv().check_whiteSS)
+	toggleLoadingScreen()
+end
 
 function PjxInit_newuser()
-    pcall(function()
-        local response_new = HttpService:JSONDecode(game:HttpGet(host..'/getdata.php?q='.. LocalPlayer.Name ..''))
-        for i, v in pairs(response_new.data) do
-            idplayer = v.idplayer
-        end
-    end)
+	pcall(function()
+			local response_new = HttpService:JSONDecode(game:HttpGet(host..'/getdata.php?q='.. LocalPlayer.Name ..''))
+			for i, v in pairs(response_new.data) do
+					idplayer = v.idplayer
+			end
+	end)
 
-    if LocalPlayer.Name == idplayer then
-        return nil
-    end
+	if LocalPlayer.Name == idplayer then
+			update_setting()
+			update_ssX(
+				getgenv().startfarm,
+				LocalPlayer.Name,
+				getgenv().modefarm,
+				getgenv().itemfarm,
+				getgenv().numberfarm,
+				getgenv().replay,
+				getgenv().whitesc,
+				getgenv().codeget,
+				getgenv().buyunit,
+				getgenv().sellunit,
+				getgenv().bp,
+				getgenv().wh1,
+				getgenv().wh2,
+				getgenv().lastpotision,
+				getgenv().locationmap
+			)
+			return nil
+	end
 
-    if game.PlaceId == 8304191830 then -- Battle Pass
-        pcall(function()
-            repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text ~= "99"
-            levelBattlepass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text
-        end)
-    end
+	if game.PlaceId == 8304191830 then -- Battle Pass
+			pcall(function()
+					repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text ~= "99"
+					levelBattlepass = game:GetService("Players").LocalPlayer.PlayerGui.BattlePass.Main.Level.V.Text
+			end)
+	end
 
-    getgenv().startfarm = "false"
-    getgenv().modefarm = "เลือกโหมดที่ต้องการฟาร์ม"
-    getgenv().itemfarm = "เลือกไอเท็มเรท"
-    getgenv().whitesc = "false"
-    getgenv().numberfarm = "0"
-    getgenv().resultGems = 0
-    getgenv().sellunit = "false"
-    getgenv().buyunit = "false"
-    getgenv().codeget = "false"
-    getgenv().replay = "false"
-    getgenv().bp = levelBattlepass
-    getgenv().wh1 = "https://ptb.discord.com/api/webhooks/1101553771663868055/LxQbGxqRQgqv5qu45IdUWvfSzI9Dm0Jxpa-MvMs39XCjtZLgsCyCQXxwhhCaonCodIvs"
-    getgenv().wh2 = "https://ptb.discord.com/api/webhooks/1101553908901498994/i2xNsFDQuSUTi5NVhcvn_ZrFWnRDe9QxYtC-wS1cwwqDYaJq-TMg8Hp1VBSFgd0ZlrxU"
-		update_ssX(
-			getgenv().startfarm,
-			LocalPlayer.Name,
-			getgenv().modefarm,
-			getgenv().itemfarm,
-			getgenv().numberfarm,
-			getgenv().replay,
-			getgenv().whitesc,
-			getgenv().codeget,
-			getgenv().buyunit,
-			getgenv().sellunit,
-			getgenv().bp,
-			getgenv().wh1,
-			getgenv().wh2,
-			getgenv().lastpotision,
-			getgenv().locationmap
-		)
+	getgenv().startfarm = "false"
+	getgenv().modefarm = "เลือกโหมดที่ต้องการฟาร์ม"
+	getgenv().itemfarm = "เลือกไอเท็มเรท"
+	getgenv().whitesc = "false"
+	getgenv().numberfarm = "0"
+	getgenv().resultGems = 0
+	getgenv().sellunit = "false"
+	getgenv().buyunit = "false"
+	getgenv().codeget = "false"
+	getgenv().replay = "false"
+	getgenv().bp = levelBattlepass
+	getgenv().wh1 = "https://ptb.discord.com/api/webhooks/1101553771663868055/LxQbGxqRQgqv5qu45IdUWvfSzI9Dm0Jxpa-MvMs39XCjtZLgsCyCQXxwhhCaonCodIvs"
+	getgenv().wh2 = "https://ptb.discord.com/api/webhooks/1101553908901498994/i2xNsFDQuSUTi5NVhcvn_ZrFWnRDe9QxYtC-wS1cwwqDYaJq-TMg8Hp1VBSFgd0ZlrxU"
+	update_ssX(
+		getgenv().startfarm,
+		LocalPlayer.Name,
+		getgenv().modefarm,
+		getgenv().itemfarm,
+		getgenv().numberfarm,
+		getgenv().replay,
+		getgenv().whitesc,
+		getgenv().codeget,
+		getgenv().buyunit,
+		getgenv().sellunit,
+		getgenv().bp,
+		getgenv().wh1,
+		getgenv().wh2,
+		getgenv().lastpotision,
+		getgenv().locationmap
+	)
 end
 
 
@@ -959,7 +944,7 @@ local tweenInfo = TweenInfo.new(4, Enum.EasingStyle.Linear, Enum.EasingDirection
 local tween = TweenService:Create(loadingRing, tweenInfo, {Rotation = 360})
 tween:Play()
 function toggleLoadingScreen()
-	screenGui.Enabled = getgenv().check_whiteSS
+	-- screenGui.Enabled = getgenv().check_whiteSS
 	
 	-- local guidelete = game:GetService("Players").LocalPlayer.PlayerGui:GetChildren()
 	-- for i, value in pairs(guidelete) do
@@ -979,7 +964,7 @@ ReplicatedFirst:RemoveDefaultLoadingScreen()
 
 --#endregion
 
---#region F1 Whitesc
+--#region HOTKEE F1 Whitesc
 
 local WHITESCZ = false
 
@@ -1004,7 +989,7 @@ UserInputService.InputBegan:Connect(function(input, processed)
             getgenv().wh1,
             getgenv().wh2,
             getgenv().lastpotision,
-			getgenv().locationmap
+						getgenv().locationmap
         )
         getgenv().check_whiteSS = WHITESCZ
         toggleLoadingScreen()
@@ -1018,14 +1003,14 @@ end)
 --#region F5 RESTART
 
 UserInputService.InputBegan:Connect(function(input, processed)
-		if (input.KeyCode == Enum.KeyCode.F5 and not processed) then
+        if (input.KeyCode == Enum.KeyCode.F5 and not processed) then
 			game:GetService("TeleportService"):Teleport(8304191830, game.Players.LocalPlayer)
-		end
+        end
 end)
 
 --#endregion
 
---#region F2 Buy Unit
+--#region F7 Buy Unit
 
 local buyunitX = false
 UserInputService.InputBegan:Connect(function(input, processed)
@@ -1061,34 +1046,9 @@ end
 
 --#endregion
 
---#region Update_setting
-function update_setting()
-    local response_new = HttpService:JSONDecode(game:HttpGet(host .. '/getdata.php?q=' .. LocalPlayer.Name .. ''))
-    for i, v in pairs(response_new.data) do
-        getgenv().idplayer = v.idplayer
-        getgenv().startfarm = v.startfarm
-        getgenv().modefarm = v.modefarm
-        getgenv().itemfarm = v.itemfarm
-        getgenv().whitesc = v.whitesc
-        getgenv().numberfarm = v.numberfarm
-        getgenv().sellunit = v.sellunit
-        getgenv().buyunit = v.buyunit
-        getgenv().codeget = v.codeget
-        getgenv().replay = v.replay
-        getgenv().bp = v.bp
-        getgenv().wh1 = v.wh1
-        getgenv().wh2 = v.wh2
-    end
-		
-    getgenv().check_whiteSS = (getgenv().whitesc == "true")
-    RunService:Set3dRenderingEnabled(not getgenv().check_whiteSS)
-    toggleLoadingScreen()
-end
 
-
-print("986")
 PjxInit_newuser()
-update_setting()
+
 
 --#endregion
 
@@ -1362,12 +1322,12 @@ coroutine.resume(coroutine.create(function()
 					[3] = { x = -122.39, y = 4.86, z = -43.87 }, -- hill unit position
 				})
 			elseif getgenv().getmaps:match('space_center') then
-				print(getgenv().getmaps)
-				auto_place_units({
-						[1] = { x = pos_x, y = 15.25, z = pos_z }, -- ground unit position
-						[2] = { x = -104.66, y = 19.62, z = -524.07 }, -- hill unit position
-						[3] = { x = -106.91, y = 19.62, z = -524.60 }, -- hill unit position
-				})
+                print(getgenv().getmaps)
+                auto_place_units({
+                    [1] = { x = pos_x, y = 15.25, z = pos_z }, -- ground unit position
+                    [2] = { x = -104.66, y = 19.62, z = -524.07 }, -- hill unit position
+                    [3] = { x = -106.91, y = 19.62, z = -524.60 }, -- hill unit position
+                })
 			elseif getgenv().getmaps:match('boros_ship') then
 				print(getgenv().getmaps)
 				auto_place_units({
@@ -1567,6 +1527,7 @@ local function startfarming_Story()
 	end
 end
 --#endregion
+
 --#region Select Mode
 coroutine.resume(coroutine.create(function()
 	while task.wait() do
@@ -2412,6 +2373,7 @@ auto_reconnect()
 
 --#endregion
 
+
 --#region Check Status
 
 coroutine.resume(coroutine.create(function()
@@ -2427,6 +2389,5 @@ end))
 
 --#endregion
 
-setfpscap(15)
-
+setfpscap(5)
 print("Load Script suscess!!!!!")
