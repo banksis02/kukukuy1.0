@@ -45,30 +45,30 @@ end
 
 function update_ssX(startfarm, idplayer, modefarm, itemfarm, numberfarm, replay, whitesc, codeget, buyunit, sellunit, bp, wh1, wh2, lastpotision, locationmap)
 	local urlParams = {
-		startfarm = tostring(getgenv().startfarm),
-		idplayer = LocalPlayer.Name,
-		modefarm = tostring(getgenv().modefarm),
-		itemfarm = tostring(getgenv().itemfarm),
-		numberfarm = tostring(getgenv().numberfarm),
-		replay = tostring(getgenv().replay),
-		whitesc = tostring(getgenv().whitesc),
-		codeget = tostring(getgenv().codeget),
-		buyunit = tostring(getgenv().buyunit),
-		sellunit = tostring(getgenv().sellunit),
-		bp = tostring(getgenv().bp),
-		wh1 = tostring(getgenv().wh1),
-		wh2 = tostring(getgenv().wh2),
-		lastpotision = tostring(getgenv().lastpotision),
-		locationmap = tostring(getgenv().locationmap)
+			startfarm = tostring(startfarm),
+			idplayer = tostring(idplayer),
+			modefarm = tostring(modefarm),
+			itemfarm = tostring(itemfarm),
+			numberfarm = tostring(numberfarm),
+			replay = tostring(replay),
+			whitesc = tostring(whitesc),
+			codeget = tostring(codeget),
+			buyunit = tostring(buyunit),
+			sellunit = tostring(sellunit),
+			bp = tostring(bp),
+			wh1 = tostring(wh1),
+			wh2 = tostring(wh2),
+			lastpotision = tostring(lastpotision),
+			locationmap = tostring(locationmap)
 	}
 	
 	local encodedParams = {}
 	for key, value in pairs(urlParams) do
-		table.insert(encodedParams, key .. '=' .. HttpService:UrlEncode(value))
+			table.insert(encodedParams, key .. '=' .. HttpService:UrlEncode(value))
 	end
 
 	local queryString = table.concat(encodedParams, '&')
-	local url = host .. '/update_end.php?' .. queryString
+	local url = host .. 'update_end.php?' .. queryString
 	HttpService:UrlEncode(game:HttpGet(url))
 end
 
