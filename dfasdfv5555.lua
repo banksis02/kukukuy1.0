@@ -1080,23 +1080,6 @@ function update_setting()
         getgenv().wh2 = v.wh2
     end
 		
-    update_ssX(
-        getgenv().startfarm,
-        LocalPlayer.Name,
-        getgenv().modefarm,
-        getgenv().itemfarm,
-        getgenv().numberfarm,
-        getgenv().replay,
-        getgenv().whitesc,
-        getgenv().codeget,
-        getgenv().buyunit,
-        getgenv().sellunit,
-        getgenv().bp,
-        getgenv().wh1,
-        getgenv().wh2,
-        getgenv().lastpotision,
-				getgenv().locationmap
-    )
     getgenv().check_whiteSS = (getgenv().whitesc == "true")
     RunService:Set3dRenderingEnabled(not getgenv().check_whiteSS)
     toggleLoadingScreen()
