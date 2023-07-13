@@ -944,7 +944,7 @@ local tweenInfo = TweenInfo.new(4, Enum.EasingStyle.Linear, Enum.EasingDirection
 local tween = TweenService:Create(loadingRing, tweenInfo, {Rotation = 360})
 tween:Play()
 function toggleLoadingScreen()
-	-- screenGui.Enabled = getgenv().check_whiteSS
+ screenGui.Enabled = getgenv().check_whiteSS
 	
 	-- local guidelete = game:GetService("Players").LocalPlayer.PlayerGui:GetChildren()
 	-- for i, value in pairs(guidelete) do
