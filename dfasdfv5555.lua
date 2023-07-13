@@ -68,7 +68,7 @@ function update_ssX(startfarm, idplayer, modefarm, itemfarm, numberfarm, replay,
 	end
 
 	local queryString = table.concat(encodedParams, '&')
-	local url = host .. 'update_end.php?' .. queryString
+	local url = host .. '/update_end.php?' .. queryString
 	HttpService:UrlEncode(game:HttpGet(url))
 end
 
